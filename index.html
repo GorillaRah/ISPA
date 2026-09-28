@@ -1,0 +1,1505 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/L.Control.Layers.Tree.css">
+        <link rel="stylesheet" href="css/qgis2web.css">
+        <link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/MarkerCluster.css">
+        <link rel="stylesheet" href="css/MarkerCluster.Default.css">
+        <link rel="stylesheet" href="css/leaflet.photon.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/L.Control.Layers.Tree.min.js"></script>
+        <script src="js/multi-style-layer.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet.photon.js"></script>
+        <script src="js/leaflet.markercluster.js"></script>
+        <script src="data/RisikoISPAKelurahanQ4_23.js"></script>
+        <script src="data/RisikoISPAKelurahanQ3_24.js"></script>
+        <script src="data/RisikoISPAKelurahanQ2_25.js"></script>
+        <script src="data/RisikoISPAKelurahanQ1_26.js"></script>
+        <script src="data/LineKota_27.js"></script>
+        <script src="data/PolygonKota_28.js"></script>
+        <script src="data/LineKecamatan_29.js"></script>
+        <script src="data/PolygonKecamatan_30.js"></script>
+        <script src="data/LineKelurahan_31.js"></script>
+        <script src="data/PolygonKelurahan_32.js"></script>
+        <script src="data/FasilitasKesehatan_33.js"></script>
+        <script>
+        var map = L.map('map', {
+            zoomControl:false, maxZoom:28, minZoom:1
+        }).fitBounds([[-6.344967173751162,106.59408741559224],[-6.1217079897862945,107.01848153582966]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        // remove popup's row if "visible-with-data"
+        function removeEmptyRowsFromPopupContent(content, feature) {
+         var tempDiv = document.createElement('div');
+         tempDiv.innerHTML = content;
+         var rows = tempDiv.querySelectorAll('tr');
+         for (var i = 0; i < rows.length; i++) {
+             var td = rows[i].querySelector('td.visible-with-data');
+             var key = td ? td.id : '';
+             if (td && td.classList.contains('visible-with-data') && feature.properties[key] == null) {
+                 rows[i].parentNode.removeChild(rows[i]);
+             }
+         }
+         return tempDiv.innerHTML;
+        }
+        // modify popup if contains media
+        function addClassToPopupIfMedia(content, popup) {
+            var tempDiv = document.createElement('div');
+            tempDiv.innerHTML = content;
+            var imgTd = tempDiv.querySelector('td img');
+            if (imgTd) {
+                var src = imgTd.getAttribute('src');
+                if (/\.(jpg|jpeg|png|gif|bmp|webp|avif)$/i.test(src)) {
+                    popup._contentNode.classList.add('media');
+                    setTimeout(function() {
+                        popup.update();
+                    }, 10);
+                } else if (/\.(mp3|wav|ogg|aac)$/i.test(src)) {
+                    var audio = document.createElement('audio');
+                    audio.controls = true;
+                    audio.src = src;
+                    imgTd.parentNode.replaceChild(audio, imgTd);
+                    popup._contentNode.classList.add('media');
+                    setTimeout(function() {
+                        popup.setContent(tempDiv.innerHTML);
+                        popup.update();
+                    }, 10);
+                } else if (/\.(mp4|webm|ogg|mov)$/i.test(src)) {
+                    var video = document.createElement('video');
+                    video.controls = true;
+                    video.src = src;
+                    video.style.width = "400px";
+                    video.style.height = "300px";
+                    video.style.maxHeight = "60vh";
+                    video.style.maxWidth = "60vw";
+                    imgTd.parentNode.replaceChild(video, imgTd);
+                    popup._contentNode.classList.add('media');
+                    // Aggiorna il popup quando il video carica i metadati
+                    video.addEventListener('loadedmetadata', function() {
+                        popup.update();
+                    });
+                    setTimeout(function() {
+                        popup.setContent(tempDiv.innerHTML);
+                        popup.update();
+                    }, 10);
+                } else {
+                    popup._contentNode.classList.remove('media');
+                }
+            } else {
+                popup._contentNode.classList.remove('media');
+            }
+        }
+        var zoomControl = L.control.zoom({
+            position: 'topleft'
+        }).addTo(map);
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        map.createPane('pane_ESRISatelliteArcGISWorld_Imagery_0');
+        map.getPane('pane_ESRISatelliteArcGISWorld_Imagery_0').style.zIndex = 400;
+        var layer_ESRISatelliteArcGISWorld_Imagery_0 = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            pane: 'pane_ESRISatelliteArcGISWorld_Imagery_0',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 19
+        });
+        layer_ESRISatelliteArcGISWorld_Imagery_0;
+        map.addLayer(layer_ESRISatelliteArcGISWorld_Imagery_0);
+        map.createPane('pane_OSMStandard_1');
+        map.getPane('pane_OSMStandard_1').style.zIndex = 401;
+        var layer_OSMStandard_1 = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            pane: 'pane_OSMStandard_1',
+            opacity: 1.0,
+            attribution: '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors, CC-BY-SA</a>',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 19
+        });
+        layer_OSMStandard_1;
+        map.addLayer(layer_OSMStandard_1);
+        map.createPane('pane_ProksiJalanJakarta500m_2');
+        map.getPane('pane_ProksiJalanJakarta500m_2').style.zIndex = 402;
+        var img_ProksiJalanJakarta500m_2 = 'data/ProksiJalanJakarta500m_2.png';
+        var img_bounds_ProksiJalanJakarta500m_2 = [[-6.371534945631136,106.68595561152829],[-6.087356409188034,106.9741640465354]];
+        var layer_ProksiJalanJakarta500m_2 = new L.imageOverlay(img_ProksiJalanJakarta500m_2,
+                                              img_bounds_ProksiJalanJakarta500m_2,
+                                              {pane: 'pane_ProksiJalanJakarta500m_2'});
+        bounds_group.addLayer(layer_ProksiJalanJakarta500m_2);
+        map.addLayer(layer_ProksiJalanJakarta500m_2);
+        map.createPane('pane_LandSurfaceTemperatureQ4_3');
+        map.getPane('pane_LandSurfaceTemperatureQ4_3').style.zIndex = 403;
+        var img_LandSurfaceTemperatureQ4_3 = 'data/LandSurfaceTemperatureQ4_3.png';
+        var img_bounds_LandSurfaceTemperatureQ4_3 = [[-6.371534945631136,106.68595561152829],[-6.087356409188034,106.9741640465354]];
+        var layer_LandSurfaceTemperatureQ4_3 = new L.imageOverlay(img_LandSurfaceTemperatureQ4_3,
+                                              img_bounds_LandSurfaceTemperatureQ4_3,
+                                              {pane: 'pane_LandSurfaceTemperatureQ4_3'});
+        bounds_group.addLayer(layer_LandSurfaceTemperatureQ4_3);
+        map.addLayer(layer_LandSurfaceTemperatureQ4_3);
+        map.createPane('pane_LandSurfaceTemperatureQ3_4');
+        map.getPane('pane_LandSurfaceTemperatureQ3_4').style.zIndex = 404;
+        var img_LandSurfaceTemperatureQ3_4 = 'data/LandSurfaceTemperatureQ3_4.png';
+        var img_bounds_LandSurfaceTemperatureQ3_4 = [[-6.371534945631136,106.68595561152829],[-6.087356409188034,106.9741640465354]];
+        var layer_LandSurfaceTemperatureQ3_4 = new L.imageOverlay(img_LandSurfaceTemperatureQ3_4,
+                                              img_bounds_LandSurfaceTemperatureQ3_4,
+                                              {pane: 'pane_LandSurfaceTemperatureQ3_4'});
+        bounds_group.addLayer(layer_LandSurfaceTemperatureQ3_4);
+        map.addLayer(layer_LandSurfaceTemperatureQ3_4);
+        map.createPane('pane_LandSurfaceTemperatureQ2_5');
+        map.getPane('pane_LandSurfaceTemperatureQ2_5').style.zIndex = 405;
+        var img_LandSurfaceTemperatureQ2_5 = 'data/LandSurfaceTemperatureQ2_5.png';
+        var img_bounds_LandSurfaceTemperatureQ2_5 = [[-6.371534945631136,106.68595561152829],[-6.087356409188034,106.9741640465354]];
+        var layer_LandSurfaceTemperatureQ2_5 = new L.imageOverlay(img_LandSurfaceTemperatureQ2_5,
+                                              img_bounds_LandSurfaceTemperatureQ2_5,
+                                              {pane: 'pane_LandSurfaceTemperatureQ2_5'});
+        bounds_group.addLayer(layer_LandSurfaceTemperatureQ2_5);
+        map.addLayer(layer_LandSurfaceTemperatureQ2_5);
+        map.createPane('pane_LandSurfaceTempeartureQ1_6');
+        map.getPane('pane_LandSurfaceTempeartureQ1_6').style.zIndex = 406;
+        var img_LandSurfaceTempeartureQ1_6 = 'data/LandSurfaceTempeartureQ1_6.png';
+        var img_bounds_LandSurfaceTempeartureQ1_6 = [[-6.371534945631136,106.68595561152829],[-6.087356409188034,106.9741640465354]];
+        var layer_LandSurfaceTempeartureQ1_6 = new L.imageOverlay(img_LandSurfaceTempeartureQ1_6,
+                                              img_bounds_LandSurfaceTempeartureQ1_6,
+                                              {pane: 'pane_LandSurfaceTempeartureQ1_6'});
+        bounds_group.addLayer(layer_LandSurfaceTempeartureQ1_6);
+        map.addLayer(layer_LandSurfaceTempeartureQ1_6);
+        map.createPane('pane_MeanKadarNO2Q4_7');
+        map.getPane('pane_MeanKadarNO2Q4_7').style.zIndex = 407;
+        var img_MeanKadarNO2Q4_7 = 'data/MeanKadarNO2Q4_7.png';
+        var img_bounds_MeanKadarNO2Q4_7 = [[-6.371534945631136,106.68595561152829],[-6.087356409188034,106.9741640465354]];
+        var layer_MeanKadarNO2Q4_7 = new L.imageOverlay(img_MeanKadarNO2Q4_7,
+                                              img_bounds_MeanKadarNO2Q4_7,
+                                              {pane: 'pane_MeanKadarNO2Q4_7'});
+        bounds_group.addLayer(layer_MeanKadarNO2Q4_7);
+        map.addLayer(layer_MeanKadarNO2Q4_7);
+        map.createPane('pane_MeanKadarNO2Q3_8');
+        map.getPane('pane_MeanKadarNO2Q3_8').style.zIndex = 408;
+        var img_MeanKadarNO2Q3_8 = 'data/MeanKadarNO2Q3_8.png';
+        var img_bounds_MeanKadarNO2Q3_8 = [[-6.371534945631136,106.68595561152829],[-6.087356409188034,106.9741640465354]];
+        var layer_MeanKadarNO2Q3_8 = new L.imageOverlay(img_MeanKadarNO2Q3_8,
+                                              img_bounds_MeanKadarNO2Q3_8,
+                                              {pane: 'pane_MeanKadarNO2Q3_8'});
+        bounds_group.addLayer(layer_MeanKadarNO2Q3_8);
+        map.addLayer(layer_MeanKadarNO2Q3_8);
+        map.createPane('pane_MeanKadarNO2Q2_9');
+        map.getPane('pane_MeanKadarNO2Q2_9').style.zIndex = 409;
+        var img_MeanKadarNO2Q2_9 = 'data/MeanKadarNO2Q2_9.png';
+        var img_bounds_MeanKadarNO2Q2_9 = [[-6.371534945631136,106.68595561152829],[-6.087356409188034,106.9741640465354]];
+        var layer_MeanKadarNO2Q2_9 = new L.imageOverlay(img_MeanKadarNO2Q2_9,
+                                              img_bounds_MeanKadarNO2Q2_9,
+                                              {pane: 'pane_MeanKadarNO2Q2_9'});
+        bounds_group.addLayer(layer_MeanKadarNO2Q2_9);
+        map.addLayer(layer_MeanKadarNO2Q2_9);
+        map.createPane('pane_MeanKadarNO2Q1_10');
+        map.getPane('pane_MeanKadarNO2Q1_10').style.zIndex = 410;
+        var img_MeanKadarNO2Q1_10 = 'data/MeanKadarNO2Q1_10.png';
+        var img_bounds_MeanKadarNO2Q1_10 = [[-6.371534945631136,106.68595561152829],[-6.087356409188034,106.9741640465354]];
+        var layer_MeanKadarNO2Q1_10 = new L.imageOverlay(img_MeanKadarNO2Q1_10,
+                                              img_bounds_MeanKadarNO2Q1_10,
+                                              {pane: 'pane_MeanKadarNO2Q1_10'});
+        bounds_group.addLayer(layer_MeanKadarNO2Q1_10);
+        map.addLayer(layer_MeanKadarNO2Q1_10);
+        map.createPane('pane_NDBIQ4_11');
+        map.getPane('pane_NDBIQ4_11').style.zIndex = 411;
+        var img_NDBIQ4_11 = 'data/NDBIQ4_11.png';
+        var img_bounds_NDBIQ4_11 = [[-6.371534945631136,106.68595561152829],[-6.087356409188034,106.9741640465354]];
+        var layer_NDBIQ4_11 = new L.imageOverlay(img_NDBIQ4_11,
+                                              img_bounds_NDBIQ4_11,
+                                              {pane: 'pane_NDBIQ4_11'});
+        bounds_group.addLayer(layer_NDBIQ4_11);
+        map.addLayer(layer_NDBIQ4_11);
+        map.createPane('pane_NDBIQ3_12');
+        map.getPane('pane_NDBIQ3_12').style.zIndex = 412;
+        var img_NDBIQ3_12 = 'data/NDBIQ3_12.png';
+        var img_bounds_NDBIQ3_12 = [[-6.371534945631136,106.68595561152829],[-6.087356409188034,106.9741640465354]];
+        var layer_NDBIQ3_12 = new L.imageOverlay(img_NDBIQ3_12,
+                                              img_bounds_NDBIQ3_12,
+                                              {pane: 'pane_NDBIQ3_12'});
+        bounds_group.addLayer(layer_NDBIQ3_12);
+        map.addLayer(layer_NDBIQ3_12);
+        map.createPane('pane_NDBIQ2_13');
+        map.getPane('pane_NDBIQ2_13').style.zIndex = 413;
+        var img_NDBIQ2_13 = 'data/NDBIQ2_13.png';
+        var img_bounds_NDBIQ2_13 = [[-6.371534945631136,106.68595561152829],[-6.087356409188034,106.9741640465354]];
+        var layer_NDBIQ2_13 = new L.imageOverlay(img_NDBIQ2_13,
+                                              img_bounds_NDBIQ2_13,
+                                              {pane: 'pane_NDBIQ2_13'});
+        bounds_group.addLayer(layer_NDBIQ2_13);
+        map.addLayer(layer_NDBIQ2_13);
+        map.createPane('pane_NDBIQ1_14');
+        map.getPane('pane_NDBIQ1_14').style.zIndex = 414;
+        var img_NDBIQ1_14 = 'data/NDBIQ1_14.png';
+        var img_bounds_NDBIQ1_14 = [[-6.371534945631136,106.68595561152829],[-6.087356409188034,106.9741640465354]];
+        var layer_NDBIQ1_14 = new L.imageOverlay(img_NDBIQ1_14,
+                                              img_bounds_NDBIQ1_14,
+                                              {pane: 'pane_NDBIQ1_14'});
+        bounds_group.addLayer(layer_NDBIQ1_14);
+        map.addLayer(layer_NDBIQ1_14);
+        map.createPane('pane_NDVIQ4_15');
+        map.getPane('pane_NDVIQ4_15').style.zIndex = 415;
+        var img_NDVIQ4_15 = 'data/NDVIQ4_15.png';
+        var img_bounds_NDVIQ4_15 = [[-6.371534945631136,106.68595561152829],[-6.087356409188034,106.9741640465354]];
+        var layer_NDVIQ4_15 = new L.imageOverlay(img_NDVIQ4_15,
+                                              img_bounds_NDVIQ4_15,
+                                              {pane: 'pane_NDVIQ4_15'});
+        bounds_group.addLayer(layer_NDVIQ4_15);
+        map.addLayer(layer_NDVIQ4_15);
+        map.createPane('pane_NDVIQ3_16');
+        map.getPane('pane_NDVIQ3_16').style.zIndex = 416;
+        var img_NDVIQ3_16 = 'data/NDVIQ3_16.png';
+        var img_bounds_NDVIQ3_16 = [[-6.371534945631136,106.68595561152829],[-6.087356409188034,106.9741640465354]];
+        var layer_NDVIQ3_16 = new L.imageOverlay(img_NDVIQ3_16,
+                                              img_bounds_NDVIQ3_16,
+                                              {pane: 'pane_NDVIQ3_16'});
+        bounds_group.addLayer(layer_NDVIQ3_16);
+        map.addLayer(layer_NDVIQ3_16);
+        map.createPane('pane_NDVIQ2_17');
+        map.getPane('pane_NDVIQ2_17').style.zIndex = 417;
+        var img_NDVIQ2_17 = 'data/NDVIQ2_17.png';
+        var img_bounds_NDVIQ2_17 = [[-6.371534945631136,106.68595561152829],[-6.087356409188034,106.9741640465354]];
+        var layer_NDVIQ2_17 = new L.imageOverlay(img_NDVIQ2_17,
+                                              img_bounds_NDVIQ2_17,
+                                              {pane: 'pane_NDVIQ2_17'});
+        bounds_group.addLayer(layer_NDVIQ2_17);
+        map.addLayer(layer_NDVIQ2_17);
+        map.createPane('pane_NDVIQ1_18');
+        map.getPane('pane_NDVIQ1_18').style.zIndex = 418;
+        var img_NDVIQ1_18 = 'data/NDVIQ1_18.png';
+        var img_bounds_NDVIQ1_18 = [[-6.371534945631136,106.68595561152829],[-6.087356409188034,106.9741640465354]];
+        var layer_NDVIQ1_18 = new L.imageOverlay(img_NDVIQ1_18,
+                                              img_bounds_NDVIQ1_18,
+                                              {pane: 'pane_NDVIQ1_18'});
+        bounds_group.addLayer(layer_NDVIQ1_18);
+        map.addLayer(layer_NDVIQ1_18);
+        map.createPane('pane_RisikoISPAQ4_19');
+        map.getPane('pane_RisikoISPAQ4_19').style.zIndex = 419;
+        var img_RisikoISPAQ4_19 = 'data/RisikoISPAQ4_19.png';
+        var img_bounds_RisikoISPAQ4_19 = [[-6.371534945631136,106.68595561152829],[-6.087356409188034,106.9741640465354]];
+        var layer_RisikoISPAQ4_19 = new L.imageOverlay(img_RisikoISPAQ4_19,
+                                              img_bounds_RisikoISPAQ4_19,
+                                              {pane: 'pane_RisikoISPAQ4_19'});
+        bounds_group.addLayer(layer_RisikoISPAQ4_19);
+        map.addLayer(layer_RisikoISPAQ4_19);
+        map.createPane('pane_RisikoISPAQ3_20');
+        map.getPane('pane_RisikoISPAQ3_20').style.zIndex = 420;
+        var img_RisikoISPAQ3_20 = 'data/RisikoISPAQ3_20.png';
+        var img_bounds_RisikoISPAQ3_20 = [[-6.371534945631136,106.68595561152829],[-6.087356409188034,106.9741640465354]];
+        var layer_RisikoISPAQ3_20 = new L.imageOverlay(img_RisikoISPAQ3_20,
+                                              img_bounds_RisikoISPAQ3_20,
+                                              {pane: 'pane_RisikoISPAQ3_20'});
+        bounds_group.addLayer(layer_RisikoISPAQ3_20);
+        map.addLayer(layer_RisikoISPAQ3_20);
+        map.createPane('pane_RisikoISPAQ2_21');
+        map.getPane('pane_RisikoISPAQ2_21').style.zIndex = 421;
+        var img_RisikoISPAQ2_21 = 'data/RisikoISPAQ2_21.png';
+        var img_bounds_RisikoISPAQ2_21 = [[-6.371534945631136,106.68595561152829],[-6.087356409188034,106.9741640465354]];
+        var layer_RisikoISPAQ2_21 = new L.imageOverlay(img_RisikoISPAQ2_21,
+                                              img_bounds_RisikoISPAQ2_21,
+                                              {pane: 'pane_RisikoISPAQ2_21'});
+        bounds_group.addLayer(layer_RisikoISPAQ2_21);
+        map.addLayer(layer_RisikoISPAQ2_21);
+        map.createPane('pane_RisikoISPAQ1_22');
+        map.getPane('pane_RisikoISPAQ1_22').style.zIndex = 422;
+        var img_RisikoISPAQ1_22 = 'data/RisikoISPAQ1_22.png';
+        var img_bounds_RisikoISPAQ1_22 = [[-6.371534945631136,106.68595561152829],[-6.087356409188034,106.9741640465354]];
+        var layer_RisikoISPAQ1_22 = new L.imageOverlay(img_RisikoISPAQ1_22,
+                                              img_bounds_RisikoISPAQ1_22,
+                                              {pane: 'pane_RisikoISPAQ1_22'});
+        bounds_group.addLayer(layer_RisikoISPAQ1_22);
+        map.addLayer(layer_RisikoISPAQ1_22);
+        function pop_RisikoISPAKelurahanQ4_23(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['NAMOBJ'] !== null ? autolinker.link(String(feature.properties['NAMOBJ']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">risiko_ispa_normalisasi</th>\
+                        <td class="visible-with-data" id="risiko_ispa_normalisasi">' + (feature.properties['risiko_ispa_normalisasi'] !== null ? autolinker.link(String(feature.properties['risiko_ispa_normalisasi']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">klasifikasi</th>\
+                        <td class="visible-with-data" id="klasifikasi">' + (feature.properties['klasifikasi'] !== null ? autolinker.link(String(feature.properties['klasifikasi']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_RisikoISPAKelurahanQ4_23_0(feature) {
+            switch(String(feature.properties['klasifikasi'])) {
+                case 'Sangat Rendah':
+                    return {
+                pane: 'pane_RisikoISPAKelurahanQ4_23',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,245,240,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Rendah':
+                    return {
+                pane: 'pane_RisikoISPAKelurahanQ4_23',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(252,190,165,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Sedang':
+                    return {
+                pane: 'pane_RisikoISPAKelurahanQ4_23',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(251,112,80,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Tinggi':
+                    return {
+                pane: 'pane_RisikoISPAKelurahanQ4_23',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(211,32,32,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Sangat Tinggi':
+                    return {
+                pane: 'pane_RisikoISPAKelurahanQ4_23',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(103,0,13,1.0)',
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_RisikoISPAKelurahanQ4_23');
+        map.getPane('pane_RisikoISPAKelurahanQ4_23').style.zIndex = 423;
+        map.getPane('pane_RisikoISPAKelurahanQ4_23').style['mix-blend-mode'] = 'normal';
+        var layer_RisikoISPAKelurahanQ4_23 = new L.geoJson(json_RisikoISPAKelurahanQ4_23, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_RisikoISPAKelurahanQ4_23',
+            layerName: 'layer_RisikoISPAKelurahanQ4_23',
+            pane: 'pane_RisikoISPAKelurahanQ4_23',
+            onEachFeature: pop_RisikoISPAKelurahanQ4_23,
+            style: style_RisikoISPAKelurahanQ4_23_0,
+        });
+        bounds_group.addLayer(layer_RisikoISPAKelurahanQ4_23);
+        map.addLayer(layer_RisikoISPAKelurahanQ4_23);
+        function pop_RisikoISPAKelurahanQ3_24(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['NAMOBJ'] !== null ? autolinker.link(String(feature.properties['NAMOBJ']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">risiko_ispa_normalisasi</th>\
+                        <td class="visible-with-data" id="risiko_ispa_normalisasi">' + (feature.properties['risiko_ispa_normalisasi'] !== null ? autolinker.link(String(feature.properties['risiko_ispa_normalisasi']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">klasifikasi</th>\
+                        <td class="visible-with-data" id="klasifikasi">' + (feature.properties['klasifikasi'] !== null ? autolinker.link(String(feature.properties['klasifikasi']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_RisikoISPAKelurahanQ3_24_0(feature) {
+            switch(String(feature.properties['klasifikasi'])) {
+                default:
+                    return {
+                pane: 'pane_RisikoISPAKelurahanQ3_24',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,245,240,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Rendah':
+                    return {
+                pane: 'pane_RisikoISPAKelurahanQ3_24',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(252,190,165,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Sedang':
+                    return {
+                pane: 'pane_RisikoISPAKelurahanQ3_24',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(251,112,80,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Tinggi':
+                    return {
+                pane: 'pane_RisikoISPAKelurahanQ3_24',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(211,32,32,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Sangat Tinggi':
+                    return {
+                pane: 'pane_RisikoISPAKelurahanQ3_24',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(103,0,13,1.0)',
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_RisikoISPAKelurahanQ3_24');
+        map.getPane('pane_RisikoISPAKelurahanQ3_24').style.zIndex = 424;
+        map.getPane('pane_RisikoISPAKelurahanQ3_24').style['mix-blend-mode'] = 'normal';
+        var layer_RisikoISPAKelurahanQ3_24 = new L.geoJson(json_RisikoISPAKelurahanQ3_24, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_RisikoISPAKelurahanQ3_24',
+            layerName: 'layer_RisikoISPAKelurahanQ3_24',
+            pane: 'pane_RisikoISPAKelurahanQ3_24',
+            onEachFeature: pop_RisikoISPAKelurahanQ3_24,
+            style: style_RisikoISPAKelurahanQ3_24_0,
+        });
+        bounds_group.addLayer(layer_RisikoISPAKelurahanQ3_24);
+        map.addLayer(layer_RisikoISPAKelurahanQ3_24);
+        function pop_RisikoISPAKelurahanQ2_25(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['NAMOBJ'] !== null ? autolinker.link(String(feature.properties['NAMOBJ']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">risiko_ispa_normalisasi</th>\
+                        <td class="visible-with-data" id="risiko_ispa_normalisasi">' + (feature.properties['risiko_ispa_normalisasi'] !== null ? autolinker.link(String(feature.properties['risiko_ispa_normalisasi']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">klasifikasi</th>\
+                        <td class="visible-with-data" id="klasifikasi">' + (feature.properties['klasifikasi'] !== null ? autolinker.link(String(feature.properties['klasifikasi']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_RisikoISPAKelurahanQ2_25_0(feature) {
+            switch(String(feature.properties['klasifikasi'])) {
+                default:
+                    return {
+                pane: 'pane_RisikoISPAKelurahanQ2_25',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,245,240,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Rendah':
+                    return {
+                pane: 'pane_RisikoISPAKelurahanQ2_25',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(252,190,165,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Sedang':
+                    return {
+                pane: 'pane_RisikoISPAKelurahanQ2_25',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(251,112,80,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Tinggi':
+                    return {
+                pane: 'pane_RisikoISPAKelurahanQ2_25',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(211,32,32,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Sangat Tinggi':
+                    return {
+                pane: 'pane_RisikoISPAKelurahanQ2_25',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(103,0,13,1.0)',
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_RisikoISPAKelurahanQ2_25');
+        map.getPane('pane_RisikoISPAKelurahanQ2_25').style.zIndex = 425;
+        map.getPane('pane_RisikoISPAKelurahanQ2_25').style['mix-blend-mode'] = 'normal';
+        var layer_RisikoISPAKelurahanQ2_25 = new L.geoJson(json_RisikoISPAKelurahanQ2_25, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_RisikoISPAKelurahanQ2_25',
+            layerName: 'layer_RisikoISPAKelurahanQ2_25',
+            pane: 'pane_RisikoISPAKelurahanQ2_25',
+            onEachFeature: pop_RisikoISPAKelurahanQ2_25,
+            style: style_RisikoISPAKelurahanQ2_25_0,
+        });
+        bounds_group.addLayer(layer_RisikoISPAKelurahanQ2_25);
+        map.addLayer(layer_RisikoISPAKelurahanQ2_25);
+        function pop_RisikoISPAKelurahanQ1_26(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['NAMOBJ'] !== null ? autolinker.link(String(feature.properties['NAMOBJ']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">risiko_ispa_normalisasi</th>\
+                        <td class="visible-with-data" id="risiko_ispa_normalisasi">' + (feature.properties['risiko_ispa_normalisasi'] !== null ? autolinker.link(String(feature.properties['risiko_ispa_normalisasi']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">klasifikasi</th>\
+                        <td class="visible-with-data" id="klasifikasi">' + (feature.properties['klasifikasi'] !== null ? autolinker.link(String(feature.properties['klasifikasi']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_RisikoISPAKelurahanQ1_26_0(feature) {
+            switch(String(feature.properties['klasifikasi'])) {
+                case 'Sangat Rendah':
+                    return {
+                pane: 'pane_RisikoISPAKelurahanQ1_26',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,245,240,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Rendah':
+                    return {
+                pane: 'pane_RisikoISPAKelurahanQ1_26',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(252,190,165,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Sedang':
+                    return {
+                pane: 'pane_RisikoISPAKelurahanQ1_26',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(251,112,80,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Tinggi':
+                    return {
+                pane: 'pane_RisikoISPAKelurahanQ1_26',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(211,32,32,1.0)',
+                interactive: true,
+            }
+                    break;
+                default:
+                    return {
+                pane: 'pane_RisikoISPAKelurahanQ1_26',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(103,0,13,1.0)',
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_RisikoISPAKelurahanQ1_26');
+        map.getPane('pane_RisikoISPAKelurahanQ1_26').style.zIndex = 426;
+        map.getPane('pane_RisikoISPAKelurahanQ1_26').style['mix-blend-mode'] = 'normal';
+        var layer_RisikoISPAKelurahanQ1_26 = new L.geoJson(json_RisikoISPAKelurahanQ1_26, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_RisikoISPAKelurahanQ1_26',
+            layerName: 'layer_RisikoISPAKelurahanQ1_26',
+            pane: 'pane_RisikoISPAKelurahanQ1_26',
+            onEachFeature: pop_RisikoISPAKelurahanQ1_26,
+            style: style_RisikoISPAKelurahanQ1_26_0,
+        });
+        bounds_group.addLayer(layer_RisikoISPAKelurahanQ1_26);
+        map.addLayer(layer_RisikoISPAKelurahanQ1_26);
+        function pop_LineKota_27(feature, layer) {
+            var popupContent = '<table>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_LineKota_27_0() {
+            return {
+                pane: 'pane_LineKota_27',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'round',
+                weight: 8.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        function style_LineKota_27_1() {
+            return {
+                pane: 'pane_LineKota_27',
+                interactive: true,
+            }
+        }
+        function style_LineKota_27_2() {
+            return {
+                pane: 'pane_LineKota_27',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_LineKota_27');
+        map.getPane('pane_LineKota_27').style.zIndex = 427;
+        map.getPane('pane_LineKota_27').style['mix-blend-mode'] = 'normal';
+        var layer_LineKota_27 = new L.geoJson.multiStyle(json_LineKota_27, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_LineKota_27',
+            layerName: 'layer_LineKota_27',
+            pane: 'pane_LineKota_27',
+            onEachFeature: pop_LineKota_27,
+            styles: [style_LineKota_27_0,style_LineKota_27_1,style_LineKota_27_2,]
+        });
+        bounds_group.addLayer(layer_LineKota_27);
+        map.addLayer(layer_LineKota_27);
+        function pop_PolygonKota_28(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td class="visible-with-data" id="kabkota_statistik_tambahan_kesehatan_2025_persen_keluhan_kesehatan_berobat_jalan_2025" colspan="2"><strong>kabkota_statistik_tambahan_kesehatan_2025_persen_keluhan_kesehatan_berobat_jalan_2025</strong><br />' + (feature.properties['kabkota_statistik_tambahan_kesehatan_2025_persen_keluhan_kesehatan_berobat_jalan_2025'] !== null ? autolinker.link(String(feature.properties['kabkota_statistik_tambahan_kesehatan_2025_persen_keluhan_kesehatan_berobat_jalan_2025']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="kabkota_statistik_tambahan_kesehatan_2025_persen_merokok_15_24_2025" colspan="2"><strong>kabkota_statistik_tambahan_kesehatan_2025_persen_merokok_15_24_2025</strong><br />' + (feature.properties['kabkota_statistik_tambahan_kesehatan_2025_persen_merokok_15_24_2025'] !== null ? autolinker.link(String(feature.properties['kabkota_statistik_tambahan_kesehatan_2025_persen_merokok_15_24_2025']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="kabkota_statistik_tambahan_kesehatan_2025_persen_merokok_25_34_2025" colspan="2"><strong>kabkota_statistik_tambahan_kesehatan_2025_persen_merokok_25_34_2025</strong><br />' + (feature.properties['kabkota_statistik_tambahan_kesehatan_2025_persen_merokok_25_34_2025'] !== null ? autolinker.link(String(feature.properties['kabkota_statistik_tambahan_kesehatan_2025_persen_merokok_25_34_2025']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="kabkota_statistik_tambahan_kesehatan_2025_persen_merokok_35_44_2025" colspan="2"><strong>kabkota_statistik_tambahan_kesehatan_2025_persen_merokok_35_44_2025</strong><br />' + (feature.properties['kabkota_statistik_tambahan_kesehatan_2025_persen_merokok_35_44_2025'] !== null ? autolinker.link(String(feature.properties['kabkota_statistik_tambahan_kesehatan_2025_persen_merokok_35_44_2025']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="kabkota_statistik_tambahan_kesehatan_2025_persen_merokok_45_54_2025" colspan="2"><strong>kabkota_statistik_tambahan_kesehatan_2025_persen_merokok_45_54_2025</strong><br />' + (feature.properties['kabkota_statistik_tambahan_kesehatan_2025_persen_merokok_45_54_2025'] !== null ? autolinker.link(String(feature.properties['kabkota_statistik_tambahan_kesehatan_2025_persen_merokok_45_54_2025']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="kabkota_statistik_tambahan_kesehatan_2025_persen_merokok_55_64_2025" colspan="2"><strong>kabkota_statistik_tambahan_kesehatan_2025_persen_merokok_55_64_2025</strong><br />' + (feature.properties['kabkota_statistik_tambahan_kesehatan_2025_persen_merokok_55_64_2025'] !== null ? autolinker.link(String(feature.properties['kabkota_statistik_tambahan_kesehatan_2025_persen_merokok_55_64_2025']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="kabkota_statistik_tambahan_kesehatan_2025_persen_merokok_65plus_2025" colspan="2"><strong>kabkota_statistik_tambahan_kesehatan_2025_persen_merokok_65plus_2025</strong><br />' + (feature.properties['kabkota_statistik_tambahan_kesehatan_2025_persen_merokok_65plus_2025'] !== null ? autolinker.link(String(feature.properties['kabkota_statistik_tambahan_kesehatan_2025_persen_merokok_65plus_2025']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="kabkota_statistik_tambahan_kesehatan_2025_persen_jaminan_bpjs_pbi_nonpbi_2025" colspan="2"><strong>kabkota_statistik_tambahan_kesehatan_2025_persen_jaminan_bpjs_pbi_nonpbi_2025</strong><br />' + (feature.properties['kabkota_statistik_tambahan_kesehatan_2025_persen_jaminan_bpjs_pbi_nonpbi_2025'] !== null ? autolinker.link(String(feature.properties['kabkota_statistik_tambahan_kesehatan_2025_persen_jaminan_bpjs_pbi_nonpbi_2025']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="kabkota_statistik_tambahan_kesehatan_2025_persen_jaminan_jamkesda_2025" colspan="2"><strong>kabkota_statistik_tambahan_kesehatan_2025_persen_jaminan_jamkesda_2025</strong><br />' + (feature.properties['kabkota_statistik_tambahan_kesehatan_2025_persen_jaminan_jamkesda_2025'] !== null ? autolinker.link(String(feature.properties['kabkota_statistik_tambahan_kesehatan_2025_persen_jaminan_jamkesda_2025']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="kabkota_statistik_tambahan_kesehatan_2025_persen_jaminan_asuransi_swasta_2025" colspan="2"><strong>kabkota_statistik_tambahan_kesehatan_2025_persen_jaminan_asuransi_swasta_2025</strong><br />' + (feature.properties['kabkota_statistik_tambahan_kesehatan_2025_persen_jaminan_asuransi_swasta_2025'] !== null ? autolinker.link(String(feature.properties['kabkota_statistik_tambahan_kesehatan_2025_persen_jaminan_asuransi_swasta_2025']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="kabkota_statistik_tambahan_kesehatan_2025_persen_jaminan_asuransi_kantor_2025" colspan="2"><strong>kabkota_statistik_tambahan_kesehatan_2025_persen_jaminan_asuransi_kantor_2025</strong><br />' + (feature.properties['kabkota_statistik_tambahan_kesehatan_2025_persen_jaminan_asuransi_kantor_2025'] !== null ? autolinker.link(String(feature.properties['kabkota_statistik_tambahan_kesehatan_2025_persen_jaminan_asuransi_kantor_2025']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="kabkota_statistik_tambahan_kesehatan_2025_persen_tidak_berjaminan_2025" colspan="2"><strong>kabkota_statistik_tambahan_kesehatan_2025_persen_tidak_berjaminan_2025</strong><br />' + (feature.properties['kabkota_statistik_tambahan_kesehatan_2025_persen_tidak_berjaminan_2025'] !== null ? autolinker.link(String(feature.properties['kabkota_statistik_tambahan_kesehatan_2025_persen_tidak_berjaminan_2025']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="kabkota_statistik_tambahan_kesehatan_2025_bblr_2025" colspan="2"><strong>kabkota_statistik_tambahan_kesehatan_2025_bblr_2025</strong><br />' + (feature.properties['kabkota_statistik_tambahan_kesehatan_2025_bblr_2025'] !== null ? autolinker.link(String(feature.properties['kabkota_statistik_tambahan_kesehatan_2025_bblr_2025']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="kabkota_statistik_tambahan_kesehatan_2025_gizi_kurang_2025" colspan="2"><strong>kabkota_statistik_tambahan_kesehatan_2025_gizi_kurang_2025</strong><br />' + (feature.properties['kabkota_statistik_tambahan_kesehatan_2025_gizi_kurang_2025'] !== null ? autolinker.link(String(feature.properties['kabkota_statistik_tambahan_kesehatan_2025_gizi_kurang_2025']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="kabkota_statistik_tambahan_kesehatan_2025_rs_umum_2025" colspan="2"><strong>kabkota_statistik_tambahan_kesehatan_2025_rs_umum_2025</strong><br />' + (feature.properties['kabkota_statistik_tambahan_kesehatan_2025_rs_umum_2025'] !== null ? autolinker.link(String(feature.properties['kabkota_statistik_tambahan_kesehatan_2025_rs_umum_2025']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="kabkota_statistik_tambahan_kesehatan_2025_tempat_tidur_umum_2025" colspan="2"><strong>kabkota_statistik_tambahan_kesehatan_2025_tempat_tidur_umum_2025</strong><br />' + (feature.properties['kabkota_statistik_tambahan_kesehatan_2025_tempat_tidur_umum_2025'] !== null ? autolinker.link(String(feature.properties['kabkota_statistik_tambahan_kesehatan_2025_tempat_tidur_umum_2025']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="kabkota_statistik_tambahan_kesehatan_2025_rs_khusus_2025" colspan="2"><strong>kabkota_statistik_tambahan_kesehatan_2025_rs_khusus_2025</strong><br />' + (feature.properties['kabkota_statistik_tambahan_kesehatan_2025_rs_khusus_2025'] !== null ? autolinker.link(String(feature.properties['kabkota_statistik_tambahan_kesehatan_2025_rs_khusus_2025']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="kabkota_statistik_tambahan_kesehatan_2025_tempat_tidur_khusus_2025" colspan="2"><strong>kabkota_statistik_tambahan_kesehatan_2025_tempat_tidur_khusus_2025</strong><br />' + (feature.properties['kabkota_statistik_tambahan_kesehatan_2025_tempat_tidur_khusus_2025'] !== null ? autolinker.link(String(feature.properties['kabkota_statistik_tambahan_kesehatan_2025_tempat_tidur_khusus_2025']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="kabkota_statistik_tambahan_kesehatan_2025_rs_total_2025" colspan="2"><strong>kabkota_statistik_tambahan_kesehatan_2025_rs_total_2025</strong><br />' + (feature.properties['kabkota_statistik_tambahan_kesehatan_2025_rs_total_2025'] !== null ? autolinker.link(String(feature.properties['kabkota_statistik_tambahan_kesehatan_2025_rs_total_2025']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td class="visible-with-data" id="kabkota_statistik_tambahan_kesehatan_2025_tempat_tidur_total_2025" colspan="2"><strong>kabkota_statistik_tambahan_kesehatan_2025_tempat_tidur_total_2025</strong><br />' + (feature.properties['kabkota_statistik_tambahan_kesehatan_2025_tempat_tidur_total_2025'] !== null ? autolinker.link(String(feature.properties['kabkota_statistik_tambahan_kesehatan_2025_tempat_tidur_total_2025']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_PolygonKota_28_0(feature) {
+            switch(String(feature.properties['WADMKK'])) {
+                case 'Kota Jakarta Barat':
+                    return {
+                pane: 'pane_PolygonKota_28',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(215,25,28,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Kota Jakarta Pusat':
+                    return {
+                pane: 'pane_PolygonKota_28',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(253,174,97,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Kota Jakarta Selatan':
+                    return {
+                pane: 'pane_PolygonKota_28',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,255,191,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Kota Jakarta Timur':
+                    return {
+                pane: 'pane_PolygonKota_28',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(171,221,164,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Kota Jakarta Utara':
+                    return {
+                pane: 'pane_PolygonKota_28',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(43,131,186,1.0)',
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_PolygonKota_28');
+        map.getPane('pane_PolygonKota_28').style.zIndex = 428;
+        map.getPane('pane_PolygonKota_28').style['mix-blend-mode'] = 'normal';
+        var layer_PolygonKota_28 = new L.geoJson(json_PolygonKota_28, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_PolygonKota_28',
+            layerName: 'layer_PolygonKota_28',
+            pane: 'pane_PolygonKota_28',
+            onEachFeature: pop_PolygonKota_28,
+            style: style_PolygonKota_28_0,
+        });
+        bounds_group.addLayer(layer_PolygonKota_28);
+        map.addLayer(layer_PolygonKota_28);
+        function pop_LineKecamatan_29(feature, layer) {
+            var popupContent = '<table>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_LineKecamatan_29_0() {
+            return {
+                pane: 'pane_LineKecamatan_29',
+                opacity: 1,
+                color: 'rgba(255,212,127,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 13.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        function style_LineKecamatan_29_1() {
+            return {
+                pane: 'pane_LineKecamatan_29',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'round',
+                lineJoin: 'miter',
+                weight: 6.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_LineKecamatan_29');
+        map.getPane('pane_LineKecamatan_29').style.zIndex = 429;
+        map.getPane('pane_LineKecamatan_29').style['mix-blend-mode'] = 'normal';
+        var layer_LineKecamatan_29 = new L.geoJson.multiStyle(json_LineKecamatan_29, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_LineKecamatan_29',
+            layerName: 'layer_LineKecamatan_29',
+            pane: 'pane_LineKecamatan_29',
+            onEachFeature: pop_LineKecamatan_29,
+            styles: [style_LineKecamatan_29_0,style_LineKecamatan_29_1,]
+        });
+        bounds_group.addLayer(layer_LineKecamatan_29);
+        map.addLayer(layer_LineKecamatan_29);
+        function pop_PolygonKecamatan_30(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['KDPPUM'] !== null ? autolinker.link(String(feature.properties['KDPPUM']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['NAMOBJ'] !== null ? autolinker.link(String(feature.properties['NAMOBJ']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['REMARK'] !== null ? autolinker.link(String(feature.properties['REMARK']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['KDPBPS'] !== null ? autolinker.link(String(feature.properties['KDPBPS']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['FCODE'] !== null ? autolinker.link(String(feature.properties['FCODE']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['LUASWH'] !== null ? autolinker.link(String(feature.properties['LUASWH']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['UUPP'] !== null ? autolinker.link(String(feature.properties['UUPP']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['SRS_ID'] !== null ? autolinker.link(String(feature.properties['SRS_ID']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['LCODE'] !== null ? autolinker.link(String(feature.properties['LCODE']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['METADATA'] !== null ? autolinker.link(String(feature.properties['METADATA']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['KDEBPS'] !== null ? autolinker.link(String(feature.properties['KDEBPS']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['KDEPUM'] !== null ? autolinker.link(String(feature.properties['KDEPUM']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['KDCBPS'] !== null ? autolinker.link(String(feature.properties['KDCBPS']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['KDCPUM'] !== null ? autolinker.link(String(feature.properties['KDCPUM']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['KDBBPS'] !== null ? autolinker.link(String(feature.properties['KDBBPS']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['KDBPUM'] !== null ? autolinker.link(String(feature.properties['KDBPUM']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['WADMKD'] !== null ? autolinker.link(String(feature.properties['WADMKD']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['WIADKD'] !== null ? autolinker.link(String(feature.properties['WIADKD']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['WADMKC'] !== null ? autolinker.link(String(feature.properties['WADMKC']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['WIADKC'] !== null ? autolinker.link(String(feature.properties['WIADKC']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['WADMKK'] !== null ? autolinker.link(String(feature.properties['WADMKK']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['WIADKK'] !== null ? autolinker.link(String(feature.properties['WIADKK']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['WADMPR'] !== null ? autolinker.link(String(feature.properties['WADMPR']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['WIADPR'] !== null ? autolinker.link(String(feature.properties['WIADPR']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['TIPADM'] !== null ? autolinker.link(String(feature.properties['TIPADM']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['SHAPE_Leng'] !== null ? autolinker.link(String(feature.properties['SHAPE_Leng']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['SHAPE_Area'] !== null ? autolinker.link(String(feature.properties['SHAPE_Area']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['layer'] !== null ? autolinker.link(String(feature.properties['layer']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['path'] !== null ? autolinker.link(String(feature.properties['path']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_PolygonKecamatan_30_0() {
+            return {
+                pane: 'pane_PolygonKecamatan_30',
+                stroke: false, 
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_PolygonKecamatan_30');
+        map.getPane('pane_PolygonKecamatan_30').style.zIndex = 430;
+        map.getPane('pane_PolygonKecamatan_30').style['mix-blend-mode'] = 'normal';
+        var layer_PolygonKecamatan_30 = new L.geoJson(json_PolygonKecamatan_30, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_PolygonKecamatan_30',
+            layerName: 'layer_PolygonKecamatan_30',
+            pane: 'pane_PolygonKecamatan_30',
+            onEachFeature: pop_PolygonKecamatan_30,
+            style: style_PolygonKecamatan_30_0,
+        });
+        bounds_group.addLayer(layer_PolygonKecamatan_30);
+        map.addLayer(layer_PolygonKecamatan_30);
+        function pop_LineKelurahan_31(feature, layer) {
+            var popupContent = '<table>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_LineKelurahan_31_0() {
+            return {
+                pane: 'pane_LineKelurahan_31',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 4.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        function style_LineKelurahan_31_1() {
+            return {
+                pane: 'pane_LineKelurahan_31',
+                interactive: true,
+            }
+        }
+        function style_LineKelurahan_31_2() {
+            return {
+                pane: 'pane_LineKelurahan_31',
+                interactive: true,
+            }
+        }
+        function style_LineKelurahan_31_3() {
+            return {
+                pane: 'pane_LineKelurahan_31',
+                interactive: true,
+            }
+        }
+        function style_LineKelurahan_31_4() {
+            return {
+                pane: 'pane_LineKelurahan_31',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_LineKelurahan_31');
+        map.getPane('pane_LineKelurahan_31').style.zIndex = 431;
+        map.getPane('pane_LineKelurahan_31').style['mix-blend-mode'] = 'normal';
+        var layer_LineKelurahan_31 = new L.geoJson.multiStyle(json_LineKelurahan_31, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_LineKelurahan_31',
+            layerName: 'layer_LineKelurahan_31',
+            pane: 'pane_LineKelurahan_31',
+            onEachFeature: pop_LineKelurahan_31,
+            styles: [style_LineKelurahan_31_0,style_LineKelurahan_31_1,style_LineKelurahan_31_2,style_LineKelurahan_31_3,style_LineKelurahan_31_4,]
+        });
+        bounds_group.addLayer(layer_LineKelurahan_31);
+        map.addLayer(layer_LineKelurahan_31);
+        function pop_PolygonKelurahan_32(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['KDPPUM'] !== null ? autolinker.link(String(feature.properties['KDPPUM']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['NAMOBJ'] !== null ? autolinker.link(String(feature.properties['NAMOBJ']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['REMARK'] !== null ? autolinker.link(String(feature.properties['REMARK']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['KDPBPS'] !== null ? autolinker.link(String(feature.properties['KDPBPS']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['FCODE'] !== null ? autolinker.link(String(feature.properties['FCODE']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['LUASWH'] !== null ? autolinker.link(String(feature.properties['LUASWH']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['UUPP'] !== null ? autolinker.link(String(feature.properties['UUPP']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['SRS_ID'] !== null ? autolinker.link(String(feature.properties['SRS_ID']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['LCODE'] !== null ? autolinker.link(String(feature.properties['LCODE']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['METADATA'] !== null ? autolinker.link(String(feature.properties['METADATA']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['KDEBPS'] !== null ? autolinker.link(String(feature.properties['KDEBPS']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['KDEPUM'] !== null ? autolinker.link(String(feature.properties['KDEPUM']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['KDCBPS'] !== null ? autolinker.link(String(feature.properties['KDCBPS']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['KDCPUM'] !== null ? autolinker.link(String(feature.properties['KDCPUM']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['KDBBPS'] !== null ? autolinker.link(String(feature.properties['KDBBPS']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['KDBPUM'] !== null ? autolinker.link(String(feature.properties['KDBPUM']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['WADMKD'] !== null ? autolinker.link(String(feature.properties['WADMKD']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['WIADKD'] !== null ? autolinker.link(String(feature.properties['WIADKD']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['WADMKC'] !== null ? autolinker.link(String(feature.properties['WADMKC']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['WIADKC'] !== null ? autolinker.link(String(feature.properties['WIADKC']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['WADMKK'] !== null ? autolinker.link(String(feature.properties['WADMKK']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['WIADKK'] !== null ? autolinker.link(String(feature.properties['WIADKK']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['WADMPR'] !== null ? autolinker.link(String(feature.properties['WADMPR']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['WIADPR'] !== null ? autolinker.link(String(feature.properties['WIADPR']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['TIPADM'] !== null ? autolinker.link(String(feature.properties['TIPADM']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['SHAPE_Leng'] !== null ? autolinker.link(String(feature.properties['SHAPE_Leng']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['SHAPE_Area'] !== null ? autolinker.link(String(feature.properties['SHAPE_Area']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['layer'] !== null ? autolinker.link(String(feature.properties['layer']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['path'] !== null ? autolinker.link(String(feature.properties['path']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_PolygonKelurahan_32_0() {
+            return {
+                pane: 'pane_PolygonKelurahan_32',
+                stroke: false, 
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_PolygonKelurahan_32');
+        map.getPane('pane_PolygonKelurahan_32').style.zIndex = 432;
+        map.getPane('pane_PolygonKelurahan_32').style['mix-blend-mode'] = 'normal';
+        var layer_PolygonKelurahan_32 = new L.geoJson(json_PolygonKelurahan_32, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_PolygonKelurahan_32',
+            layerName: 'layer_PolygonKelurahan_32',
+            pane: 'pane_PolygonKelurahan_32',
+            onEachFeature: pop_PolygonKelurahan_32,
+            style: style_PolygonKelurahan_32_0,
+        });
+        bounds_group.addLayer(layer_PolygonKelurahan_32);
+        map.addLayer(layer_PolygonKelurahan_32);
+        function pop_FasilitasKesehatan_33(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['healthcare'] !== null ? autolinker.link(String(feature.properties['healthcare']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['name'] !== null ? autolinker.link(String(feature.properties['name']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_FasilitasKesehatan_33_0() {
+            return {
+                pane: 'pane_FasilitasKesehatan_33',
+                radius: 10.4,
+                opacity: 1,
+                color: 'rgba(227,26,28,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,255,255,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_FasilitasKesehatan_33');
+        map.getPane('pane_FasilitasKesehatan_33').style.zIndex = 433;
+        map.getPane('pane_FasilitasKesehatan_33').style['mix-blend-mode'] = 'normal';
+        var layer_FasilitasKesehatan_33 = new L.geoJson(json_FasilitasKesehatan_33, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_FasilitasKesehatan_33',
+            layerName: 'layer_FasilitasKesehatan_33',
+            pane: 'pane_FasilitasKesehatan_33',
+            onEachFeature: pop_FasilitasKesehatan_33,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_FasilitasKesehatan_33_0(feature));
+            },
+        });
+        var cluster_FasilitasKesehatan_33 = new L.MarkerClusterGroup({showCoverageOnHover: false,
+            spiderfyDistanceMultiplier: 2});
+        cluster_FasilitasKesehatan_33.addLayer(layer_FasilitasKesehatan_33);
+
+        bounds_group.addLayer(layer_FasilitasKesehatan_33);
+        cluster_FasilitasKesehatan_33.addTo(map);
+        setBounds();
+        var i = 0;
+        layer_PolygonKota_28.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['WADMKK'] !== null?String('<div style="color: #ffffff; font-size: 10pt; font-weight: bold; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['WADMKK']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_PolygonKota_28'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_PolygonKecamatan_30.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['NAMOBJ'] !== null?String('<div style="color: #323232; font-size: 10pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['NAMOBJ']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_PolygonKecamatan_30'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_PolygonKelurahan_32.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['NAMOBJ'] !== null?String('<div style="color: #323232; font-size: 10pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['NAMOBJ']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_PolygonKelurahan_32'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        L.ImageOverlay.include({
+            getBounds: function () {
+                return this._bounds;
+            }
+        });
+        resetLabels([layer_LineKota_27,layer_PolygonKota_28,layer_PolygonKecamatan_30,layer_LineKelurahan_31,layer_PolygonKelurahan_32]);
+        map.on("zoomend", function(){
+            resetLabels([layer_LineKota_27,layer_PolygonKota_28,layer_PolygonKecamatan_30,layer_LineKelurahan_31,layer_PolygonKelurahan_32]);
+        });
+        map.on("layeradd", function(){
+            resetLabels([layer_LineKota_27,layer_PolygonKota_28,layer_PolygonKecamatan_30,layer_LineKelurahan_31,layer_PolygonKelurahan_32]);
+        });
+        map.on("layerremove", function(){
+            resetLabels([layer_LineKota_27,layer_PolygonKota_28,layer_PolygonKecamatan_30,layer_LineKelurahan_31,layer_PolygonKelurahan_32]);
+        });
+        </script>        
+<style>
+#webgis-header{position:absolute;top:16px;left:50%;transform:translateX(-50%);z-index:1001;background:#fff;padding:10px 28px;border-radius:14px;box-shadow:0 4px 16px rgba(0,0,0,.12);text-align:center;font-family:'Segoe UI',Arial,sans-serif;max-width:560px}#webgis-header h1{margin:0;font-size:18px;font-weight:700;color:#1f2937}#webgis-header p{margin:2px 0 0;font-size:11px;color:#6b7280}
+.wgis-card{background:#fff;border-radius:12px;box-shadow:0 4px 14px rgba(0,0,0,.14);font-family:'Segoe UI',Arial,sans-serif;font-size:13px;color:#1f2937}
+#layer-panel{position:absolute;top:16px;left:16px;z-index:1000;width:250px;padding:14px;max-height:calc(100% - 32px);overflow-y:auto}#layer-panel h3{margin:0 0 10px;font-size:13px;color:#111827}#layer-panel .group-title{display:block;font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin:12px 0 4px}#layer-panel .group-title:first-of-type{margin-top:0}#layer-panel label{display:flex;align-items:center;gap:6px;margin:4px 0;cursor:pointer}#layer-panel .opacity-row{display:flex;align-items:center;gap:6px;margin:0 0 4px 22px}#layer-panel .opacity-row input[type=range]{flex:1}#layer-panel .opacity-row span{font-size:10px;color:#9ca3af;width:26px;text-align:right}#layer-panel hr{border:none;border-top:1px solid #e5e7eb;margin:12px 0}
+#time-control{margin:4px 0}#time-control input[type=range]{width:100%}#time-control .time-ticks{display:flex;justify-content:space-between;padding:0 2px;margin-top:2px}#time-control .time-ticks span{font-size:9px;color:#9ca3af}#time-control .time-ticks span.active{color:#1f2937;font-weight:700}#time-control .time-note{font-size:9px;color:#9ca3af;margin-top:4px}
+.legend-row{display:none;margin:0 0 10px 22px}.legend-bar{height:10px;border-radius:3px}.legend-labels{display:flex;justify-content:space-between;font-size:9px;color:#9ca3af;margin-top:2px}.legend-swatches{display:none;flex-direction:column;gap:2px;margin:0 0 10px 22px}.legend-swatches .sw-row{display:flex;align-items:center;gap:6px;font-size:10px;color:#4b5563}.legend-swatches .sw-color{width:14px;height:10px;border-radius:2px;flex-shrink:0}
+#topright-stack{position:absolute;top:16px;right:16px;z-index:1000;display:flex;flex-direction:column;gap:10px;align-items:flex-end}.round-btn{width:42px;height:42px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px}#btn-locate{background:#1f2937;color:#fff}#btn-locate.tracking{background:#16a34a}#buffer-control{display:none;padding:10px 12px;width:160px}#buffer-control label{display:block;font-size:10px;color:#6b7280;margin-bottom:4px}#buffer-control select{width:100%;font-size:12px;padding:4px;border-radius:6px;border:1px solid #e5e7eb}
+#nearby-faskes-panel{display:none;position:absolute;top:140px;right:16px;bottom:auto;left:auto;z-index:1000;width:230px;padding:12px 16px;max-height:240px;overflow-y:auto}#nearby-faskes-panel h4,#attribute-panel h4{margin:0 0 6px;font-size:12px;color:#111827}.nearby-row{font-size:11px;color:#374151;padding:4px 0;border-bottom:1px solid #f3f4f6;cursor:pointer}.nearby-row:last-child{border-bottom:none}.nearby-row:hover{color:#1f2937;font-weight:600}.nearby-empty{font-size:11px;color:#9ca3af}
+#bottomright-stack{position:absolute;bottom:16px;right:16px;z-index:1000;display:flex;flex-direction:column;gap:10px;align-items:flex-end}#attribute-panel{width:230px;padding:12px 16px;display:none}#attribute-panel .risk-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-weight:600;font-size:12px}#attribute-panel table{font-size:11px;color:#4b5563;margin-top:6px;border-collapse:collapse}#attribute-panel td{padding:1px 6px 1px 0}#credit-panel{width:200px;padding:14px 16px;text-align:center}#credit-panel .credit-title{font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:10px;letter-spacing:.03em}#credit-panel .credit-logos{display:flex;align-items:center;justify-content:center;gap:20px}#credit-panel .credit-logos img{max-height:40px;width:auto}#credit-panel hr{border:none;border-top:1px solid #e5e7eb;margin:12px 0}#credit-panel .credit-people{display:flex;justify-content:center;gap:20px}#credit-panel .credit-person{display:flex;flex-direction:column;align-items:center;gap:6px}#credit-panel .credit-person img{width:48px;height:48px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 1px #e5e7eb}#credit-panel .credit-person span{font-size:10px;color:#374151;line-height:1.3}
+#coord-display{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);z-index:1000;padding:6px 16px;font-family:'Courier New',monospace;font-size:12px;color:#374151}
+</style>
+<div id="webgis-header"><h1>WebGIS Risiko ISPA DKI Jakarta</h1><p>Integrasi LST, NO₂, NDVI, NDBI, Proksi Jalan, dan Risiko ISPA - Multitemporal Kuartal 2025</p></div>
+<div id="layer-panel" class="wgis-card"><h3>Layer Peta</h3><span class="group-title">Peta Dasar</span><label><input type="radio" name="basemap" id="basemap-osm" checked> OSM Standard</label><label><input type="radio" name="basemap" id="basemap-esri"> ESRI Satellite</label><span class="group-title">Waktu</span><div id="time-control"><input type="range" id="time-slider" min="0" max="3" step="1" value="0"><div class="time-ticks"><span data-q="0">Q1</span><span data-q="1">Q2</span><span data-q="2">Q3</span><span data-q="3">Q4</span></div><div class="time-note">Berlaku untuk layer bertitik dua di bawah yang sedang dicentang</div></div>
+<span class="group-title">Risiko ISPA</span><label><input type="checkbox" id="ly-risiko-kelurahan" checked> Per Kelurahan</label><div class="opacity-row"><input type="range" id="op-risiko-kelurahan" min="0" max="1" step="0.1" value="1"><span id="op-risiko-kelurahan-val">100%</span></div><div class="legend-swatches" id="legend-risiko-kelurahan"><div class="sw-row"><span class="sw-color" style="background:#FFF5F0"></span>Sangat Rendah</div><div class="sw-row"><span class="sw-color" style="background:#FCBEA5"></span>Rendah</div><div class="sw-row"><span class="sw-color" style="background:#FB7050"></span>Sedang</div><div class="sw-row"><span class="sw-color" style="background:#D32020"></span>Tinggi</div><div class="sw-row"><span class="sw-color" style="background:#67000D"></span>Sangat Tinggi</div></div>
+<label><input type="checkbox" id="ly-risiko-raster"> Komposit (Raster)</label><div class="opacity-row"><input type="range" id="op-risiko-raster" min="0" max="1" step="0.1" value="1" disabled><span id="op-risiko-raster-val">100%</span></div><div class="legend-row" id="legend-risiko-raster"><div class="legend-bar" style="background:linear-gradient(to right,#2c0a52,#1f4fd8,#00b4d8,#4caf50,#ffeb3b,#ff9800,#b71c1c)"></div><div class="legend-labels"><span>Rendah</span><span>Tinggi</span></div></div>
+<span class="group-title">Variabel Lingkungan</span><label><input type="checkbox" id="ly-lst"> LST (Suhu Permukaan)</label><div class="opacity-row"><input type="range" id="op-lst" min="0" max="1" step="0.1" value="1" disabled><span id="op-lst-val">100%</span></div><div class="legend-row" id="legend-lst"><div class="legend-bar" style="background:linear-gradient(to right,#000,#fff)"></div><div class="legend-labels"><span>Rendah</span><span>Tinggi</span></div></div><label><input type="checkbox" id="ly-no2"> NO₂</label><div class="opacity-row"><input type="range" id="op-no2" min="0" max="1" step="0.1" value="1" disabled><span id="op-no2-val">100%</span></div><div class="legend-row" id="legend-no2"><div class="legend-bar" style="background:linear-gradient(to right,#000,#fff)"></div><div class="legend-labels"><span>Rendah</span><span>Tinggi</span></div></div><label><input type="checkbox" id="ly-ndvi"> NDVI</label><div class="opacity-row"><input type="range" id="op-ndvi" min="0" max="1" step="0.1" value="1" disabled><span id="op-ndvi-val">100%</span></div><div class="legend-row" id="legend-ndvi"><div class="legend-bar" style="background:linear-gradient(to right,#000,#fff)"></div><div class="legend-labels"><span>Rendah</span><span>Tinggi</span></div></div><label><input type="checkbox" id="ly-ndbi"> NDBI</label><div class="opacity-row"><input type="range" id="op-ndbi" min="0" max="1" step="0.1" value="1" disabled><span id="op-ndbi-val">100%</span></div><div class="legend-row" id="legend-ndbi"><div class="legend-bar" style="background:linear-gradient(to right,#000,#fff)"></div><div class="legend-labels"><span>Rendah</span><span>Tinggi</span></div></div><label><input type="checkbox" id="ly-proksi"> Proksi Jalan (Raster)</label><div class="opacity-row"><input type="range" id="op-proksi" min="0" max="1" step="0.1" value="1" disabled><span id="op-proksi-val">100%</span></div><hr><span class="group-title">Batas Wilayah</span><label><input type="checkbox" id="ly-batas-kota" checked> Batas Kota</label><div class="opacity-row"><input type="range" id="op-batas-kota" min="0" max="1" step="0.1" value="1"><span id="op-batas-kota-val">100%</span></div><label><input type="checkbox" id="ly-batas-kecamatan"> Batas Kecamatan</label><div class="opacity-row"><input type="range" id="op-batas-kecamatan" min="0" max="1" step="0.1" value="1" disabled><span id="op-batas-kecamatan-val">100%</span></div><label><input type="checkbox" id="ly-batas-kelurahan"> Batas Kelurahan</label><div class="opacity-row"><input type="range" id="op-batas-kelurahan" min="0" max="1" step="0.1" value="1" disabled><span id="op-batas-kelurahan-val">100%</span></div><hr><span class="group-title">Fasilitas Kesehatan</span><label><input type="checkbox" id="ly-faskes" checked> Tampilkan Titik Faskes</label></div>
+<div id="topright-stack"><button id="btn-locate" class="round-btn" title="Lokasi Saya"><i class="fas fa-location-arrow"></i></button><div id="buffer-control" class="wgis-card"><label>Radius pencarian faskes</label><select id="buffer-radius"><option value="500">500 m</option><option value="1000" selected>1 km</option><option value="2000">2 km</option><option value="5000">5 km</option></select></div></div><div id="nearby-faskes-panel" class="wgis-card"><h4>Faskes Terdekat</h4><div id="nearby-faskes-list"></div></div><div id="bottomright-stack"><div id="attribute-panel" class="wgis-card"></div><div id="credit-panel" class="wgis-card"><div class="credit-title">Dibuat oleh</div><div class="credit-logos"><img src="images/UGMlogo.png" alt="Logo UGM"><img src="images/WaindoLogo.png" alt="Logo Waindo SpecTerra"></div><hr><div class="credit-people"><div class="credit-person"><img src="images/andhi.png" alt="Andhika Bayu Darmawan"><span>Andhika Bayu<br>Darmawan</span></div><div class="credit-person"><img src="images/arda.png" alt="Ardra Adhyatma"><span>Ardra<br>Adhyatma</span></div></div></div></div><div id="coord-display" class="wgis-card">Lat: -, Lng: -</div>
+<script>
+(function(){
+var riskInfo={'Sangat Rendah':{color:'#FFF5F0',text:'#000'},Rendah:{color:'#FCBEA5',text:'#000'},Sedang:{color:'#FB7050',text:'#000'},Tinggi:{color:'#D32020',text:'#fff'},'Sangat Tinggi':{color:'#67000D',text:'#fff'}};
+function riskFor(value){return riskInfo[value]||{color:'#e0e0e0',text:'#000'}}function safe(value){return value===undefined||value===null||value===''?'-':Number(value).toFixed(3)}function setVisible(layer,visible){if(visible){if(!map.hasLayer(layer))map.addLayer(layer)}else if(map.hasLayer(layer))map.removeLayer(layer)}function setOpacity(layer,value){if(typeof layer.setOpacity==='function')layer.setOpacity(value);else if(typeof layer.eachLayer==='function')layer.eachLayer(function(item){item.setStyle({opacity:value,fillOpacity:value})})}
+var currentTimeIndex=0,quarterlyLayers={risikoKelurahan:[layer_RisikoISPAKelurahanQ1_26,layer_RisikoISPAKelurahanQ2_25,layer_RisikoISPAKelurahanQ3_24,layer_RisikoISPAKelurahanQ4_23],risikoRaster:[layer_RisikoISPAQ1_22,layer_RisikoISPAQ2_21,layer_RisikoISPAQ3_20,layer_RisikoISPAQ4_19],lst:[layer_LandSurfaceTempeartureQ1_6,layer_LandSurfaceTemperatureQ2_5,layer_LandSurfaceTemperatureQ3_4,layer_LandSurfaceTemperatureQ4_3],no2:[layer_MeanKadarNO2Q1_10,layer_MeanKadarNO2Q2_9,layer_MeanKadarNO2Q3_8,layer_MeanKadarNO2Q4_7],ndvi:[layer_NDVIQ1_18,layer_NDVIQ2_17,layer_NDVIQ3_16,layer_NDVIQ4_15],ndbi:[layer_NDBIQ1_14,layer_NDBIQ2_13,layer_NDBIQ3_12,layer_NDBIQ4_11]},quarterlyState={};Object.keys(quarterlyLayers).forEach(function(type){quarterlyState[type]={checked:false,opacity:1};quarterlyLayers[type].forEach(function(layer){setVisible(layer,false)})});
+function wireQuarterlyRow(checkId,opacityId,legendId,type,defaultChecked){var checkbox=document.getElementById(checkId),opacity=document.getElementById(opacityId),value=document.getElementById(opacityId+'-val'),legend=legendId&&document.getElementById(legendId);quarterlyState[type].checked=defaultChecked;opacity.disabled=!defaultChecked;if(legend)legend.style.display=defaultChecked?(legend.classList.contains('legend-swatches')?'flex':'block'):'none';setVisible(quarterlyLayers[type][0],defaultChecked);checkbox.addEventListener('change',function(){quarterlyState[type].checked=this.checked;setVisible(quarterlyLayers[type][currentTimeIndex],this.checked);opacity.disabled=!this.checked;if(legend)legend.style.display=this.checked?(legend.classList.contains('legend-swatches')?'flex':'block'):'none'});opacity.addEventListener('input',function(){var amount=parseFloat(this.value);quarterlyState[type].opacity=amount;setOpacity(quarterlyLayers[type][currentTimeIndex],amount);value.textContent=Math.round(amount*100)+'%'})}
+wireQuarterlyRow('ly-risiko-kelurahan','op-risiko-kelurahan','legend-risiko-kelurahan','risikoKelurahan',true);wireQuarterlyRow('ly-risiko-raster','op-risiko-raster','legend-risiko-raster','risikoRaster',false);wireQuarterlyRow('ly-lst','op-lst','legend-lst','lst',false);wireQuarterlyRow('ly-no2','op-no2','legend-no2','no2',false);wireQuarterlyRow('ly-ndvi','op-ndvi','legend-ndvi','ndvi',false);wireQuarterlyRow('ly-ndbi','op-ndbi','legend-ndbi','ndbi',false);
+function updateTimeTicks(index){document.querySelectorAll('#time-control .time-ticks span').forEach(function(item){item.classList.toggle('active',parseInt(item.getAttribute('data-q'),10)===index)})}updateTimeTicks(0);document.getElementById('time-slider').addEventListener('input',function(){var next=parseInt(this.value,10);Object.keys(quarterlyLayers).forEach(function(type){if(quarterlyState[type].checked){setVisible(quarterlyLayers[type][currentTimeIndex],false);setVisible(quarterlyLayers[type][next],true);setOpacity(quarterlyLayers[type][next],quarterlyState[type].opacity)}});currentTimeIndex=next;updateTimeTicks(next)});
+setVisible(layer_ESRISatelliteArcGISWorld_Imagery_0,false);setVisible(layer_ProksiJalanJakarta500m_2,false);document.getElementById('basemap-osm').addEventListener('change',function(){setVisible(layer_OSMStandard_1,this.checked);setVisible(layer_ESRISatelliteArcGISWorld_Imagery_0,!this.checked)});document.getElementById('basemap-esri').addEventListener('change',function(){setVisible(layer_ESRISatelliteArcGISWorld_Imagery_0,this.checked);setVisible(layer_OSMStandard_1,!this.checked)});document.getElementById('ly-proksi').addEventListener('change',function(){setVisible(layer_ProksiJalanJakarta500m_2,this.checked);document.getElementById('op-proksi').disabled=!this.checked});document.getElementById('op-proksi').addEventListener('input',function(){var amount=parseFloat(this.value);setOpacity(layer_ProksiJalanJakarta500m_2,amount);document.getElementById('op-proksi-val').textContent=Math.round(amount*100)+'%'});
+function wireBoundaryPair(checkId,opacityId,line,polygon,checked){var checkbox=document.getElementById(checkId),opacity=document.getElementById(opacityId),value=document.getElementById(opacityId+'-val');setVisible(line,checked);setVisible(polygon,checked);opacity.disabled=!checked;checkbox.addEventListener('change',function(){setVisible(line,this.checked);setVisible(polygon,this.checked);opacity.disabled=!this.checked});opacity.addEventListener('input',function(){var amount=parseFloat(this.value);setOpacity(line,amount);setOpacity(polygon,amount);value.textContent=Math.round(amount*100)+'%'})}wireBoundaryPair('ly-batas-kota','op-batas-kota',layer_LineKota_27,layer_PolygonKota_28,true);wireBoundaryPair('ly-batas-kecamatan','op-batas-kecamatan',layer_LineKecamatan_29,layer_PolygonKecamatan_30,false);wireBoundaryPair('ly-batas-kelurahan','op-batas-kelurahan',layer_LineKelurahan_31,layer_PolygonKelurahan_32,false);document.getElementById('ly-faskes').addEventListener('change',function(){setVisible(cluster_FasilitasKesehatan_33,this.checked)});
+var attributePanel=document.getElementById('attribute-panel');function showKelurahanInfo(properties){var risk=riskFor(properties.klasifikasi);attributePanel.style.display='block';attributePanel.innerHTML='<h4>'+(properties.WADMKD||'-')+', '+(properties.WADMKC||'-')+'</h4><span class="risk-badge" style="background:'+risk.color+';color:'+risk.text+'">'+(properties.klasifikasi||'-')+'</span> ('+safe(properties.risiko_ispa_normalisasi)+')<table><tr><td>Min</td><td>'+safe(properties.min)+'</td><td>Max</td><td>'+safe(properties.max)+'</td></tr><tr><td>Mean</td><td>'+safe(properties.mean)+'</td><td>Std</td><td>'+safe(properties.std)+'</td></tr><tr><td>Luas</td><td colspan="3">'+safe(properties.LUASWH)+' m²</td></tr></table>'}quarterlyLayers.risikoKelurahan.forEach(function(layer){layer.on('click',function(event){showKelurahanInfo(event.layer.feature.properties)})});var coordinates=document.getElementById('coord-display');map.on('mousemove',function(event){coordinates.textContent='Lat: '+event.latlng.lat.toFixed(6)+', Lng: '+event.latlng.lng.toFixed(6)});map.on('mouseout',function(){coordinates.textContent='Lat: -, Lng: -'});
+var locateButton=document.getElementById('btn-locate'),bufferControl=document.getElementById('buffer-control'),radiusSelect=document.getElementById('buffer-radius'),nearbyPanel=document.getElementById('nearby-faskes-panel'),nearbyList=document.getElementById('nearby-faskes-list'),watchId=null,meMarker=null,bufferCircle=null,lastLatLng=null;
+function updateBufferAndNearby(latlng){var radius=parseInt(radiusSelect.value,10);if(bufferCircle)map.removeLayer(bufferCircle);bufferCircle=L.circle(latlng,{radius:radius,color:'#1f2937',weight:1,fillColor:'#1f2937',fillOpacity:.08}).addTo(map);var nearby=[];layer_FasilitasKesehatan_33.eachLayer(function(marker){var distance=map.distance(latlng,marker.getLatLng());if(distance<=radius){var properties=marker.feature.properties;nearby.push({name:properties.name||properties.healthcare||'Fasilitas Kesehatan',dist:distance,marker:marker})}});nearby.sort(function(first,second){return first.dist-second.dist});nearbyList.innerHTML='';if(!nearby.length)nearbyList.innerHTML='<div class="nearby-empty">Tidak ada faskes dalam radius ini.</div>';nearby.forEach(function(facility){var distanceText=facility.dist>=1000?(facility.dist/1000).toFixed(2)+' km':Math.round(facility.dist)+' m',row=document.createElement('div');row.className='nearby-row';row.textContent=facility.name+' - '+distanceText;row.addEventListener('click',function(){cluster_FasilitasKesehatan_33.zoomToShowLayer(facility.marker,function(){facility.marker.openPopup()})});nearbyList.appendChild(row)});nearbyPanel.style.display='block'}radiusSelect.addEventListener('change',function(){if(lastLatLng)updateBufferAndNearby(lastLatLng)});
+locateButton.addEventListener('click',function(){if(watchId!==null){navigator.geolocation.clearWatch(watchId);watchId=null;locateButton.classList.remove('tracking');if(meMarker){map.removeLayer(meMarker);meMarker=null}if(bufferCircle){map.removeLayer(bufferCircle);bufferCircle=null}bufferControl.style.display='none';nearbyPanel.style.display='none';lastLatLng=null;return}if(!navigator.geolocation){alert('Browser tidak mendukung geolocation.');return}locateButton.classList.add('tracking');watchId=navigator.geolocation.watchPosition(function(position){var latlng=[position.coords.latitude,position.coords.longitude];lastLatLng=latlng;if(!meMarker){meMarker=L.circleMarker(latlng,{radius:8,color:'#fff',weight:2,fillColor:'#16a34a',fillOpacity:1}).addTo(map);map.setView(latlng,16);bufferControl.style.display='block'}else meMarker.setLatLng(latlng);updateBufferAndNearby(latlng)},function(error){alert('Tidak dapat mengambil lokasi: '+error.message);locateButton.classList.remove('tracking');watchId=null},{enableHighAccuracy:true})})
+})();
+</script>
+    </body>
+</html>
