@@ -1391,19 +1391,24 @@
         map.createPane('pane_FasilitasKesehatan_33');
         map.getPane('pane_FasilitasKesehatan_33').style.zIndex = 433;
         map.getPane('pane_FasilitasKesehatan_33').style['mix-blend-mode'] = 'normal';
-        var layer_FasilitasKesehatan_33 = new L.geoJson(json_FasilitasKesehatan_33, {
+        var icon_FasilitasKesehatan_33 = L.icon({
+            iconUrl: 'markers/FasilitasKesehatan_0.svg',
+            iconSize: [28, 28],
+            iconAnchor: [14, 14],
+            popupAnchor: [0, -14]
+        });
+        var layer_FasilitasKesehatan_33 = new L.geoJson(json_FasilitasKesehatan_0, {
             attribution: '',
             interactive: true,
-            dataVar: 'json_FasilitasKesehatan_33',
+            dataVar: 'json_FasilitasKesehatan_0',
             layerName: 'layer_FasilitasKesehatan_33',
             pane: 'pane_FasilitasKesehatan_33',
             onEachFeature: pop_FasilitasKesehatan_33,
             pointToLayer: function (feature, latlng) {
-                var context = {
-                    feature: feature,
-                    variables: {}
-                };
-                return L.circleMarker(latlng, style_FasilitasKesehatan_33_0(feature));
+                return L.marker(latlng, {
+                    icon: icon_FasilitasKesehatan_33,
+                    pane: 'pane_FasilitasKesehatan_33'
+                });
             },
         });
         var cluster_FasilitasKesehatan_33 = new L.MarkerClusterGroup({showCoverageOnHover: false,
