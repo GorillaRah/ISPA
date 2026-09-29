@@ -1535,38 +1535,59 @@ locateButton.addEventListener('click',function(){if(watchId!==null){navigator.ge
 
 <script>
 (function () {
-    // ---- layer groups, listed TOP -> BOTTOM (this is the default stacking order) ----
-    // Inside a group, layers are listed bottom -> top (polygon under line).
+    var layerGroups = {
+        risiko_ispa: [
+            'pane_RisikoISPAQ1_22',
+            'pane_RisikoISPAQ2_21',
+            'pane_RisikoISPAQ3_20',
+            'pane_RisikoISPAQ4_19',
+            'pane_RisikoISPAKelurahanQ1_26',
+            'pane_RisikoISPAKelurahanQ2_25',
+            'pane_RisikoISPAKelurahanQ3_24',
+            'pane_RisikoISPAKelurahanQ4_23'
+        ],
+        variabel_lingkungan: [
+            'pane_ProksiJalanJakarta500m_2',
+            'pane_LandSurfaceTempeartureQ1_6',
+            'pane_LandSurfaceTemperatureQ2_5',
+            'pane_LandSurfaceTemperatureQ3_4',
+            'pane_LandSurfaceTemperatureQ4_3',
+            'pane_MeanKadarNO2Q1_10',
+            'pane_MeanKadarNO2Q2_9',
+            'pane_MeanKadarNO2Q3_8',
+            'pane_MeanKadarNO2Q4_7',
+            'pane_NDBIQ1_14',
+            'pane_NDBIQ2_13',
+            'pane_NDBIQ3_12',
+            'pane_NDBIQ4_11',
+            'pane_NDVIQ1_18',
+            'pane_NDVIQ2_17',
+            'pane_NDVIQ3_16',
+            'pane_NDVIQ4_15'
+        ],
+        batas_wilayah: [
+            'pane_LineKota_27',
+            'pane_PolygonKota_28',
+            'pane_LineKecamatan_29',
+            'pane_PolygonKecamatan_30',
+            'pane_LineKelurahan_31',
+            'pane_PolygonKelurahan_32'
+        ]
+    };
     var groups = [
-        { id: 'batas-kecamatan', label: 'Batas Kecamatan',
-            layers: [layer_PolygonKecamatan_30] },
-        { id: 'batas-kota', label: 'Batas Kota',
-            layers: [layer_PolygonKota_28] },
-        { id: 'risiko-kelurahan', label: 'Risiko ISPA per Kelurahan',
-            layers: [layer_RisikoISPAKelurahanQ1_26, layer_RisikoISPAKelurahanQ2_25, layer_RisikoISPAKelurahanQ3_24, layer_RisikoISPAKelurahanQ4_23] },
-        { id: 'risiko-raster', label: 'Risiko ISPA Komposit (Raster)',
-            layers: [layer_RisikoISPAQ1_22, layer_RisikoISPAQ2_21, layer_RisikoISPAQ3_20, layer_RisikoISPAQ4_19] },
-        { id: 'lst', label: 'LST (Suhu Permukaan)',
-            layers: [layer_LandSurfaceTempeartureQ1_6, layer_LandSurfaceTemperatureQ2_5, layer_LandSurfaceTemperatureQ3_4, layer_LandSurfaceTemperatureQ4_3] },
-        { id: 'no2', label: 'NO2',
-            layers: [layer_MeanKadarNO2Q1_10, layer_MeanKadarNO2Q2_9, layer_MeanKadarNO2Q3_8, layer_MeanKadarNO2Q4_7] },
-        { id: 'ndvi', label: 'NDVI',
-            layers: [layer_NDVIQ1_18, layer_NDVIQ2_17, layer_NDVIQ3_16, layer_NDVIQ4_15] },
-        { id: 'ndbi', label: 'NDBI',
-            layers: [layer_NDBIQ1_14, layer_NDBIQ2_13, layer_NDBIQ3_12, layer_NDBIQ4_11] },
-        { id: 'proksi', label: 'Proksi Jalan',
-            layers: [layer_ProksiJalanJakarta500m_2] }
+        { id: 'risiko_ispa', label: 'Risiko ISPA' },
+        { id: 'variabel_lingkungan', label: 'Variabel Lingkungan' },
+        { id: 'batas_wilayah', label: 'Batas Wilayah' }
     ];
 
     // ---- apply an order to the map panes (index 0 = top) ----
-    var BASE = 410, STEP = 10; // basemaps are 400/401, marker pane is 600
+    var BASE_ZINDEX = 410, ZINDEX_STEP = 20;
     function applyOrder(order) {
         var n = order.length;
         order.forEach(function (g, i) {
-            var base = BASE + (n - 1 - i) * STEP;
-            g.layers.forEach(function (lyr, k) {
-                var name = lyr.options && lyr.options.pane;
-                var pane = name && map.getPane(name);
+            var base = BASE_ZINDEX + (n - 1 - i) * ZINDEX_STEP;
+            layerGroups[g.id].forEach(function (paneName, k) {
+                var pane = map.getPane(paneName);
                 if (pane) pane.style.zIndex = base + k;
             });
         });
@@ -1624,8 +1645,9 @@ locateButton.addEventListener('click',function(){if(watchId!==null){navigator.ge
     var order = groups.slice();
     order.forEach(function (g) {
         var li = document.createElement('li');
-        li.setAttribute('data-id', g.id);
-        li.innerHTML = '<span class="grip" title="Seret untuk mengubah urutan">&#8942;&#8942;</span><span>' + g.label + '</span>';
+        li.className = 'draggable-item';
+        li.setAttribute('data-group', g.id);
+        li.innerHTML = '<span class="grip" title="Seret untuk mengubah urutan">&#9776;</span><span>' + g.label + '</span>';
         list.appendChild(li);
     });
 
@@ -1634,7 +1656,7 @@ locateButton.addEventListener('click',function(){if(watchId!==null){navigator.ge
     list.addEventListener('pointerdown', function (e) {
         var grip = e.target.closest('.grip');
         if (!grip) return;
-        dragEl = grip.closest('li');
+        dragEl = grip.closest('.draggable-item');
         dragEl.classList.add('dragging');
         list.setPointerCapture(e.pointerId); // capture on the list, which never moves
         e.preventDefault();
@@ -1653,7 +1675,7 @@ locateButton.addEventListener('click',function(){if(watchId!==null){navigator.ge
         if (!dragEl) return;
         dragEl.classList.remove('dragging');
         dragEl = null;
-        var ids = Array.prototype.map.call(list.children, function (li) { return li.getAttribute('data-id'); });
+        var ids = Array.prototype.map.call(list.children, function (li) { return li.getAttribute('data-group'); });
         order = ids.map(function (id) { return groups.filter(function (g) { return g.id === id; })[0]; });
         applyOrder(order);
     }
@@ -1685,6 +1707,19 @@ locateButton.addEventListener('click',function(){if(watchId!==null){navigator.ge
             kelurahanOpacity.remove();
         }
     }
+})();
+</script>
+<script>
+(function () {
+    function restoreBoundaryLabels() {
+        document.querySelectorAll('.css_PolygonKota_28, .white-buffer-label').forEach(function (label) {
+            label.style.opacity = label.dataset.labelCollisionHidden === 'true' ? 0 : 1;
+        });
+    }
+
+    ['op-batas-kota', 'op-batas-kecamatan'].forEach(function (id) {
+        document.getElementById(id).addEventListener('input', restoreBoundaryLabels);
+    });
 })();
 </script>
         </body>
