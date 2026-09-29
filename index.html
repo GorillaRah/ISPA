@@ -28,7 +28,6 @@
         </div>
         <script src="js/qgis2web_expressions.js"></script>
         <script src="js/leaflet.js"></script>
-        <script src="js/L.Control.Layers.Tree.min.js"></script>
         <script src="js/multi-style-layer.js"></script>
         <script src="js/leaflet.rotatedMarker.js"></script>
         <script src="js/leaflet.pattern.js"></script>
@@ -43,12 +42,8 @@
         <script src="data/RisikoISPAKelurahanQ3_24.js"></script>
         <script src="data/RisikoISPAKelurahanQ2_25.js"></script>
         <script src="data/RisikoISPAKelurahanQ1_26.js"></script>
-        <script src="data/LineKota_27.js"></script>
         <script src="data/PolygonKota_28.js"></script>
-        <script src="data/LineKecamatan_29.js"></script>
         <script src="data/PolygonKecamatan_30.js"></script>
-        <script src="data/LineKelurahan_31.js"></script>
-        <script src="data/PolygonKelurahan_32.js"></script>
         <script src="data/FasilitasKesehatan_33.js"></script>
         <script>
         var map = L.map('map', {
@@ -795,6 +790,8 @@
         });
         bounds_group.addLayer(layer_RisikoISPAKelurahanQ1_26);
         map.addLayer(layer_RisikoISPAKelurahanQ1_26);
+        var json_LineKota_27 = {type: 'FeatureCollection', features: []};
+        var json_LineKecamatan_29 = {type: 'FeatureCollection', features: []};
         function pop_LineKota_27(feature, layer) {
             var popupContent = '<table>\
                 </table>';
@@ -1157,7 +1154,9 @@
         function style_PolygonKecamatan_30_0() {
             return {
                 pane: 'pane_PolygonKecamatan_30',
-                stroke: false, 
+                stroke: true,
+                color: 'rgba(0,0,0,1.0)',
+                weight: 1.0,
                 fillOpacity: 0,
                 interactive: true,
             }
@@ -1176,6 +1175,8 @@
         });
         bounds_group.addLayer(layer_PolygonKecamatan_30);
         map.addLayer(layer_PolygonKecamatan_30);
+        var json_LineKelurahan_31 = {type: 'FeatureCollection', features: []};
+        var json_PolygonKelurahan_32 = {type: 'FeatureCollection', features: []};
         function pop_LineKelurahan_31(feature, layer) {
             var popupContent = '<table>\
                 </table>';
@@ -1445,32 +1446,20 @@
               i++;
         });
         var i = 0;
-        layer_PolygonKelurahan_32.eachLayer(function(layer) {
-            var context = {
-                feature: layer.feature,
-                variables: {}
-            };
-            layer.bindTooltip((layer.feature.properties['NAMOBJ'] !== null?String('<div style="color: #323232; font-size: 10pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['NAMOBJ']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_PolygonKelurahan_32'});
-            labels.push(layer);
-            totalMarkers += 1;
-              layer.added = true;
-              addLabel(layer, i);
-              i++;
-        });
         L.ImageOverlay.include({
             getBounds: function () {
                 return this._bounds;
             }
         });
-        resetLabels([layer_LineKota_27,layer_PolygonKota_28,layer_PolygonKecamatan_30,layer_LineKelurahan_31,layer_PolygonKelurahan_32]);
+        resetLabels([layer_PolygonKota_28,layer_PolygonKecamatan_30]);
         map.on("zoomend", function(){
-            resetLabels([layer_LineKota_27,layer_PolygonKota_28,layer_PolygonKecamatan_30,layer_LineKelurahan_31,layer_PolygonKelurahan_32]);
+            resetLabels([layer_PolygonKota_28,layer_PolygonKecamatan_30]);
         });
         map.on("layeradd", function(){
-            resetLabels([layer_LineKota_27,layer_PolygonKota_28,layer_PolygonKecamatan_30,layer_LineKelurahan_31,layer_PolygonKelurahan_32]);
+            resetLabels([layer_PolygonKota_28,layer_PolygonKecamatan_30]);
         });
         map.on("layerremove", function(){
-            resetLabels([layer_LineKota_27,layer_PolygonKota_28,layer_PolygonKecamatan_30,layer_LineKelurahan_31,layer_PolygonKelurahan_32]);
+            resetLabels([layer_PolygonKota_28,layer_PolygonKecamatan_30]);
         });
         </script>        
 <style>
@@ -1508,7 +1497,13 @@ locateButton.addEventListener('click',function(){if(watchId!==null){navigator.ge
 </script>
         <style>
     #order-details { margin-top: 12px; }
-    #order-details summary { font-size: 10px; font-weight: 700; text-transform: uppercase; color: #9ca3af; cursor: pointer; }
+        #topright-actions { display: flex; gap: 10px; }
+            #topright-stack { z-index: 1101; }
+        #btn-order { background: #fff; color: #1f2937; box-shadow: 0 4px 14px rgba(0,0,0,.14); }
+        #order-details { display: none; position: absolute; top: 52px; right: 0; z-index: 1001; width: 250px; max-height: calc(100vh - 90px); overflow-y: auto; margin: 0; padding: 12px; }
+    #order-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; color: #111827; font-size: 12px; font-weight: 700; }
+    #order-close { border: 0; background: transparent; color: #6b7280; cursor: pointer; font-size: 20px; line-height: 1; padding: 0 2px; }
+    #order-close:hover { color: #111827; }
     #order-hint { font-size: 9px; color: #9ca3af; margin: 4px 0 6px; }
     #order-list { list-style: none; margin: 0; padding: 0; }
     #order-list li {
@@ -1525,12 +1520,10 @@ locateButton.addEventListener('click',function(){if(watchId!==null){navigator.ge
     // ---- layer groups, listed TOP -> BOTTOM (this is the default stacking order) ----
     // Inside a group, layers are listed bottom -> top (polygon under line).
     var groups = [
-        { id: 'batas-kelurahan', label: 'Batas Kelurahan',
-            layers: [layer_PolygonKelurahan_32, layer_LineKelurahan_31] },
         { id: 'batas-kecamatan', label: 'Batas Kecamatan',
-            layers: [layer_PolygonKecamatan_30, layer_LineKecamatan_29] },
+            layers: [layer_PolygonKecamatan_30] },
         { id: 'batas-kota', label: 'Batas Kota',
-            layers: [layer_PolygonKota_28, layer_LineKota_27] },
+            layers: [layer_PolygonKota_28] },
         { id: 'risiko-kelurahan', label: 'Risiko ISPA per Kelurahan',
             layers: [layer_RisikoISPAKelurahanQ1_26, layer_RisikoISPAKelurahanQ2_25, layer_RisikoISPAKelurahanQ3_24, layer_RisikoISPAKelurahanQ4_23] },
         { id: 'risiko-raster', label: 'Risiko ISPA Komposit (Raster)',
@@ -1563,14 +1556,52 @@ locateButton.addEventListener('click',function(){if(watchId!==null){navigator.ge
     }
 
     // ---- UI: collapsible list at the bottom of the layer panel ----
-    var panel = document.getElementById('layer-panel');
-    var details = document.createElement('details');
+    var topRightStack = document.getElementById('topright-stack');
+    var locateButton = document.getElementById('btn-locate');
+    var actionButtons = document.createElement('div');
+    actionButtons.id = 'topright-actions';
+    topRightStack.insertBefore(actionButtons, locateButton);
+    var orderButton = document.createElement('button');
+    orderButton.type = 'button';
+    orderButton.id = 'btn-order';
+    orderButton.className = 'round-btn';
+    orderButton.title = 'Urutan Layer';
+    orderButton.setAttribute('aria-label', 'Urutan Layer');
+    orderButton.setAttribute('aria-expanded', 'false');
+    orderButton.innerHTML = '<i class="fas fa-clone"></i>';
+    actionButtons.appendChild(orderButton);
+    actionButtons.appendChild(locateButton);
+
+    var details = document.createElement('div');
     details.id = 'order-details';
+    details.className = 'wgis-card';
     details.innerHTML =
-        '<summary>Urutan Layer</summary>' +
+    details.innerHTML =
+        '<div id="order-header"><span>Urutan Layer</span><button type="button" id="order-close" aria-label="Tutup urutan layer">&times;</button></div>' +
         '<div id="order-hint">Paling atas = tampil paling depan. Seret gagang untuk mengubah urutan.</div>' +
         '<ul id="order-list"></ul>';
-    panel.appendChild(details);
+    topRightStack.appendChild(details);
+    details.querySelector('#order-close').addEventListener('click', function () {
+        details.style.display = 'none';
+        orderButton.setAttribute('aria-expanded', 'false');
+    });
+    orderButton.addEventListener('click', function () {
+        var isOpen = details.style.display === 'block';
+        details.style.display = isOpen ? 'none' : 'block';
+        orderButton.setAttribute('aria-expanded', String(!isOpen));
+    });
+    document.addEventListener('click', function (event) {
+        if (!details.contains(event.target) && !orderButton.contains(event.target)) {
+            details.style.display = 'none';
+            orderButton.setAttribute('aria-expanded', 'false');
+        }
+    });
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+            details.style.display = 'none';
+            orderButton.setAttribute('aria-expanded', 'false');
+        }
+    });
     var list = details.querySelector('#order-list');
 
     var order = groups.slice();
@@ -1616,7 +1647,7 @@ locateButton.addEventListener('click',function(){if(watchId!==null){navigator.ge
     applyOrder(order);
 
     // label-only polygons: no fill/stroke so they never cover or intercept clicks
-    [layer_PolygonKota_28, layer_PolygonKecamatan_30, layer_PolygonKelurahan_32].forEach(function (lyr) {
+    [layer_PolygonKota_28, layer_PolygonKecamatan_30].forEach(function (lyr) {
         lyr.setStyle({ stroke: false, fill: false });
     });
 
@@ -1625,6 +1656,10 @@ locateButton.addEventListener('click',function(){if(watchId!==null){navigator.ge
     if (kota && kota.checked) {
         kota.checked = false;
         kota.dispatchEvent(new Event('change'));
+    }
+    var kelurahanBoundary = document.getElementById('ly-batas-kelurahan');
+    if (kelurahanBoundary && kelurahanBoundary.parentNode) {
+        kelurahanBoundary.parentNode.remove();
     }
 })();
 </script>
