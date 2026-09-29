@@ -1653,11 +1653,6 @@ locateButton.addEventListener('click',function(){if(watchId!==null){navigator.ge
         map.removeLayer(cluster_FasilitasKesehatan_33);
     }
 
-    // label-only polygons: no fill/stroke so they never cover or intercept clicks
-    [layer_PolygonKota_28, layer_PolygonKecamatan_30].forEach(function (lyr) {
-        lyr.setStyle({ stroke: false, fill: false });
-    });
-
     // uncheck "Batas Kota" through the existing handler so line + polygon hide together
     var kota = document.getElementById('ly-batas-kota');
     if (kota && kota.checked) {
@@ -1666,8 +1661,44 @@ locateButton.addEventListener('click',function(){if(watchId!==null){navigator.ge
     }
     var kelurahanBoundary = document.getElementById('ly-batas-kelurahan');
     if (kelurahanBoundary && kelurahanBoundary.parentNode) {
+        var kelurahanOpacity = kelurahanBoundary.parentNode.nextElementSibling;
         kelurahanBoundary.parentNode.remove();
+        if (kelurahanOpacity && kelurahanOpacity.classList.contains('opacity-row')) {
+            kelurahanOpacity.remove();
+        }
     }
+})();
+</script>
+<script>
+(function () {
+    [
+        { id: 'op-batas-kota', layer: layer_PolygonKota_28 },
+        { id: 'op-batas-kecamatan', layer: layer_PolygonKecamatan_30 }
+    ].forEach(function (boundary) {
+        var opacityInput = document.getElementById(boundary.id);
+        var opacityValue = document.getElementById(boundary.id + '-val');
+        var shapes = [];
+
+        boundary.layer.eachLayer(function (shape) {
+            shapes.push({
+                layer: shape,
+                fillOpacity: shape.options.fillOpacity || 0
+            });
+        });
+
+        var replacement = opacityInput.cloneNode(true);
+        opacityInput.replaceWith(replacement);
+        replacement.addEventListener('input', function () {
+            var amount = parseFloat(this.value);
+            shapes.forEach(function (shape) {
+                shape.layer.setStyle({
+                    opacity: amount,
+                    fillOpacity: shape.fillOpacity * amount
+                });
+            });
+            opacityValue.textContent = Math.round(amount * 100) + '%';
+        });
+    });
 })();
 </script>
         </body>
