@@ -221,3 +221,64 @@
                 0 -2px 0 #ffffff,
                 -2px 0 0 #ffffff;
             }
+            #risk-search-control {
+                display: none;
+                position: fixed;
+                top: 68px;
+                right: 16px;
+                z-index: 1002;
+                box-sizing: border-box;
+                width: min(270px, calc(100vw - 32px));
+                padding: 12px;
+            }
+            #risk-search-control.open {
+                display: block;
+            }
+            #risk-search-control > label {
+                display: block;
+                margin: 0 0 4px;
+                color: #374151;
+                font-size: 11px;
+                font-weight: 600;
+            }
+            #risk-search-input {
+                box-sizing: border-box;
+                width: 100%;
+                padding: 7px 9px;
+                border: 1px solid #d1d5db;
+                border-radius: 4px;
+                font: inherit;
+            }
+            #risk-search-results {
+                display: none;
+                max-height: 180px;
+                overflow-y: auto;
+                margin-top: 4px;
+                border: 1px solid #d1d5db;
+                border-radius: 4px;
+                background: #ffffff;
+            }
+            #risk-search-results.open {
+                display: block;
+            }
+            .risk-search-result {
+                display: block;
+                width: 100%;
+                padding: 7px 9px;
+                border: 0;
+                background: #ffffff;
+                color: #374151;
+                font: inherit;
+                text-align: left;
+                cursor: pointer;
+            }
+            .risk-search-result:hover,
+            .risk-search-result:focus {
+                background: #f3f4f6;
+                outline: none;
+            }
+            .risk-search-empty {
+                padding: 7px 9px;
+                color: #6b7280;
+                font-size: 11px;
+            }
