@@ -1155,23 +1155,38 @@
             return {
                 pane: 'pane_PolygonKecamatan_30',
                 stroke: true,
-                color: 'rgba(0,0,0,1.0)',
-                weight: 1.0,
-                fillOpacity: 0,
+                color: '#ffffff',
+                weight: 6,
+                fill: false,
+                interactive: false,
+            }
+        }
+        function style_PolygonKecamatan_30_1() {
+            return {
+                pane: 'pane_PolygonKecamatan_30',
+                stroke: true,
+                color: '#333333',
+                weight: 2,
+                dashArray: '2, 6',
+                fill: false,
                 interactive: true,
             }
         }
         map.createPane('pane_PolygonKecamatan_30');
         map.getPane('pane_PolygonKecamatan_30').style.zIndex = 430;
         map.getPane('pane_PolygonKecamatan_30').style['mix-blend-mode'] = 'normal';
-        var layer_PolygonKecamatan_30 = new L.geoJson(json_AdministrasiJKTKecamatan_1, {
+        var layer_PolygonKecamatan_30 = new L.geoJson.multiStyle(json_AdministrasiJKTKecamatan_1, {
             attribution: '',
             interactive: true,
             dataVar: 'json_PolygonKecamatan_30',
             layerName: 'layer_PolygonKecamatan_30',
             pane: 'pane_PolygonKecamatan_30',
-            onEachFeature: pop_PolygonKecamatan_30,
-            style: style_PolygonKecamatan_30_0,
+            onEachFeature: function(feature, layer) {
+                if (layer.options.weight === 2) {
+                    pop_PolygonKecamatan_30(feature, layer);
+                }
+            },
+            styles: [style_PolygonKecamatan_30_0, style_PolygonKecamatan_30_1],
         });
         bounds_group.addLayer(layer_PolygonKecamatan_30);
         map.addLayer(layer_PolygonKecamatan_30);
@@ -1434,11 +1449,14 @@
         });
         var i = 0;
         layer_PolygonKecamatan_30.eachLayer(function(layer) {
+            if (layer.options.weight !== 2) {
+                return;
+            }
             var context = {
                 feature: layer.feature,
                 variables: {}
             };
-            layer.bindTooltip((layer.feature.properties['NAMOBJ'] !== null?String('<div style="color: #323232; font-size: 10pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['NAMOBJ']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_PolygonKecamatan_30'});
+            layer.bindTooltip((layer.feature.properties['NAMOBJ'] !== null?String(layer.feature.properties['NAMOBJ']):''), {permanent: true, direction: 'center', className: 'white-buffer-label'});
             labels.push(layer);
             totalMarkers += 1;
               layer.added = true;
@@ -1488,7 +1506,7 @@ function wireQuarterlyRow(checkId,opacityId,legendId,type,defaultChecked){var ch
 wireQuarterlyRow('ly-risiko-kelurahan','op-risiko-kelurahan','legend-risiko-kelurahan','risikoKelurahan',true);wireQuarterlyRow('ly-risiko-raster','op-risiko-raster','legend-risiko-raster','risikoRaster',false);wireQuarterlyRow('ly-lst','op-lst','legend-lst','lst',false);wireQuarterlyRow('ly-no2','op-no2','legend-no2','no2',false);wireQuarterlyRow('ly-ndvi','op-ndvi','legend-ndvi','ndvi',false);wireQuarterlyRow('ly-ndbi','op-ndbi','legend-ndbi','ndbi',false);
 function updateTimeTicks(index){document.querySelectorAll('#time-control .time-ticks span').forEach(function(item){item.classList.toggle('active',parseInt(item.getAttribute('data-q'),10)===index)})}updateTimeTicks(0);document.getElementById('time-slider').addEventListener('input',function(){var next=parseInt(this.value,10);Object.keys(quarterlyLayers).forEach(function(type){if(quarterlyState[type].checked){setVisible(quarterlyLayers[type][currentTimeIndex],false);setVisible(quarterlyLayers[type][next],true);setOpacity(quarterlyLayers[type][next],quarterlyState[type].opacity)}});currentTimeIndex=next;updateTimeTicks(next)});
 setVisible(layer_ESRISatelliteArcGISWorld_Imagery_0,false);setVisible(layer_ProksiJalanJakarta500m_2,false);document.getElementById('basemap-osm').addEventListener('change',function(){setVisible(layer_OSMStandard_1,this.checked);setVisible(layer_ESRISatelliteArcGISWorld_Imagery_0,!this.checked)});document.getElementById('basemap-esri').addEventListener('change',function(){setVisible(layer_ESRISatelliteArcGISWorld_Imagery_0,this.checked);setVisible(layer_OSMStandard_1,!this.checked)});document.getElementById('ly-proksi').addEventListener('change',function(){setVisible(layer_ProksiJalanJakarta500m_2,this.checked);document.getElementById('op-proksi').disabled=!this.checked});document.getElementById('op-proksi').addEventListener('input',function(){var amount=parseFloat(this.value);setOpacity(layer_ProksiJalanJakarta500m_2,amount);document.getElementById('op-proksi-val').textContent=Math.round(amount*100)+'%'});
-function wireBoundaryPair(checkId,opacityId,line,polygon,checked){var checkbox=document.getElementById(checkId),opacity=document.getElementById(opacityId),value=document.getElementById(opacityId+'-val');setVisible(line,checked);setVisible(polygon,checked);opacity.disabled=!checked;checkbox.addEventListener('change',function(){setVisible(line,this.checked);setVisible(polygon,this.checked);opacity.disabled=!this.checked});opacity.addEventListener('input',function(){var amount=parseFloat(this.value);setOpacity(line,amount);value.textContent=Math.round(amount*100)+'%'})}wireBoundaryPair('ly-batas-kota','op-batas-kota',layer_LineKota_27,layer_PolygonKota_28,true);wireBoundaryPair('ly-batas-kecamatan','op-batas-kecamatan',layer_LineKecamatan_29,layer_PolygonKecamatan_30,false);wireBoundaryPair('ly-batas-kelurahan','op-batas-kelurahan',layer_LineKelurahan_31,layer_PolygonKelurahan_32,false);document.getElementById('ly-faskes').addEventListener('change',function(){setVisible(cluster_FasilitasKesehatan_33,this.checked)});
+function wireBoundaryPair(checkId,opacityId,line,polygon,checked){var checkbox=document.getElementById(checkId),opacity=document.getElementById(opacityId),value=document.getElementById(opacityId+'-val'),shapes=[];polygon.eachLayer(function(shape){shapes.push({layer:shape,fillOpacity:shape.options.fillOpacity||0})});setVisible(line,checked);setVisible(polygon,checked);opacity.disabled=!checked;checkbox.addEventListener('change',function(){setVisible(line,this.checked);setVisible(polygon,this.checked);opacity.disabled=!this.checked});opacity.addEventListener('input',function(){var amount=parseFloat(this.value);shapes.forEach(function(shape){shape.layer.setStyle({opacity:amount,fillOpacity:shape.fillOpacity*amount});var tooltip=shape.layer.getTooltip();if(tooltip&&tooltip._container){tooltip._container.dataset.layerOpacity=amount;tooltip._container.style.opacity=amount}});value.textContent=Math.round(amount*100)+'%'})}wireBoundaryPair('ly-batas-kota','op-batas-kota',layer_LineKota_27,layer_PolygonKota_28,true);wireBoundaryPair('ly-batas-kecamatan','op-batas-kecamatan',layer_LineKecamatan_29,layer_PolygonKecamatan_30,false);wireBoundaryPair('ly-batas-kelurahan','op-batas-kelurahan',layer_LineKelurahan_31,layer_PolygonKelurahan_32,false);document.getElementById('ly-faskes').addEventListener('change',function(){setVisible(cluster_FasilitasKesehatan_33,this.checked)});
 var attributePanel=document.getElementById('attribute-panel');function showKelurahanInfo(properties){var risk=riskFor(properties.klasifikasi);attributePanel.style.display='block';attributePanel.innerHTML='<h4>'+(properties.WADMKD||'-')+', '+(properties.WADMKC||'-')+'</h4><span class="risk-badge" style="background:'+risk.color+';color:'+risk.text+'">'+(properties.klasifikasi||'-')+'</span> ('+safe(properties.risiko_ispa_normalisasi)+')<table><tr><td>Min</td><td>'+safe(properties.min)+'</td><td>Max</td><td>'+safe(properties.max)+'</td></tr><tr><td>Mean</td><td>'+safe(properties.mean)+'</td><td>Std</td><td>'+safe(properties.std)+'</td></tr><tr><td>Luas</td><td colspan="3">'+safe(properties.LUASWH)+' m²</td></tr></table>'}quarterlyLayers.risikoKelurahan.forEach(function(layer){layer.on('click',function(event){showKelurahanInfo(event.layer.feature.properties)})});var coordinates=document.getElementById('coord-display');map.on('mousemove',function(event){coordinates.textContent='Lat: '+event.latlng.lat.toFixed(6)+', Lng: '+event.latlng.lng.toFixed(6)});map.on('mouseout',function(){coordinates.textContent='Lat: -, Lng: -'});
 var locateButton=document.getElementById('btn-locate'),bufferControl=document.getElementById('buffer-control'),radiusSelect=document.getElementById('buffer-radius'),nearbyPanel=document.getElementById('nearby-faskes-panel'),nearbyList=document.getElementById('nearby-faskes-list'),watchId=null,meMarker=null,bufferCircle=null,lastLatLng=null;
 function updateBufferAndNearby(latlng){var radius=parseInt(radiusSelect.value,10);if(bufferCircle)map.removeLayer(bufferCircle);bufferCircle=L.circle(latlng,{radius:radius,color:'#1f2937',weight:1,fillColor:'#1f2937',fillOpacity:.08}).addTo(map);var nearby=[];layer_FasilitasKesehatan_33.eachLayer(function(marker){var distance=map.distance(latlng,marker.getLatLng());if(distance<=radius){var properties=marker.feature.properties;nearby.push({name:properties.name||properties.healthcare||'Fasilitas Kesehatan',dist:distance,marker:marker})}});nearby.sort(function(first,second){return first.dist-second.dist});nearbyList.innerHTML='';if(!nearby.length)nearbyList.innerHTML='<div class="nearby-empty">Tidak ada faskes dalam radius ini.</div>';nearby.forEach(function(facility){var distanceText=facility.dist>=1000?(facility.dist/1000).toFixed(2)+' km':Math.round(facility.dist)+' m',row=document.createElement('div');row.className='nearby-row';row.textContent=facility.name+' - '+distanceText;row.addEventListener('click',function(){cluster_FasilitasKesehatan_33.zoomToShowLayer(facility.marker,function(){facility.marker.openPopup()})});nearbyList.appendChild(row)});nearbyPanel.style.display='block'}radiusSelect.addEventListener('change',function(){if(lastLatLng)updateBufferAndNearby(lastLatLng)});
@@ -1667,38 +1685,6 @@ locateButton.addEventListener('click',function(){if(watchId!==null){navigator.ge
             kelurahanOpacity.remove();
         }
     }
-})();
-</script>
-<script>
-(function () {
-    [
-        { id: 'op-batas-kota', layer: layer_PolygonKota_28 },
-        { id: 'op-batas-kecamatan', layer: layer_PolygonKecamatan_30 }
-    ].forEach(function (boundary) {
-        var opacityInput = document.getElementById(boundary.id);
-        var opacityValue = document.getElementById(boundary.id + '-val');
-        var shapes = [];
-
-        boundary.layer.eachLayer(function (shape) {
-            shapes.push({
-                layer: shape,
-                fillOpacity: shape.options.fillOpacity || 0
-            });
-        });
-
-        var replacement = opacityInput.cloneNode(true);
-        opacityInput.replaceWith(replacement);
-        replacement.addEventListener('input', function () {
-            var amount = parseFloat(this.value);
-            shapes.forEach(function (shape) {
-                shape.layer.setStyle({
-                    opacity: amount,
-                    fillOpacity: shape.fillOpacity * amount
-                });
-            });
-            opacityValue.textContent = Math.round(amount * 100) + '%';
-        });
-    });
 })();
 </script>
         </body>

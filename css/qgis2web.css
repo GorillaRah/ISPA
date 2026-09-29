@@ -205,3 +205,19 @@
                 1px 0px 0 #000000,
                 1px 1px 0 #000000;
         }
+            .white-buffer-label {
+                background: transparent !important;
+                border: none !important;
+                box-shadow: none !important;
+                color: #333333;
+                font-weight: bold;
+                font-size: 14px;
+                text-shadow: -2px -2px 0 #ffffff,
+                2px -2px 0 #ffffff,
+                -2px 2px 0 #ffffff,
+                2px 2px 0 #ffffff,
+                0 2px 0 #ffffff,
+                2px 0 0 #ffffff,
+                0 -2px 0 #ffffff,
+                -2px 0 0 #ffffff;
+            }

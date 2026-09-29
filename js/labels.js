@@ -3,7 +3,7 @@ var hideLabel = function(label) {
     label.labelObject.style.transition = 'opacity 0s';
 };
 var showLabel = function(label) {
-    label.labelObject.style.opacity = 1;
+  label.labelObject.style.opacity = label.labelObject.dataset.layerOpacity || 1;
     label.labelObject.style.transition = 'opacity 1s';
 };
 labelEngine = new labelgun.default(hideLabel, showLabel);
