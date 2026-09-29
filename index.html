@@ -993,7 +993,7 @@
         map.createPane('pane_PolygonKota_28');
         map.getPane('pane_PolygonKota_28').style.zIndex = 428;
         map.getPane('pane_PolygonKota_28').style['mix-blend-mode'] = 'normal';
-        var layer_PolygonKota_28 = new L.geoJson(json_PolygonKota_28, {
+        var layer_PolygonKota_28 = new L.geoJson(json_PolyKotaJKT_0, {
             attribution: '',
             interactive: true,
             dataVar: 'json_PolygonKota_28',
@@ -1164,7 +1164,7 @@
         map.createPane('pane_PolygonKecamatan_30');
         map.getPane('pane_PolygonKecamatan_30').style.zIndex = 430;
         map.getPane('pane_PolygonKecamatan_30').style['mix-blend-mode'] = 'normal';
-        var layer_PolygonKecamatan_30 = new L.geoJson(json_PolygonKecamatan_30, {
+        var layer_PolygonKecamatan_30 = new L.geoJson(json_AdministrasiJKTKecamatan_1, {
             attribution: '',
             interactive: true,
             dataVar: 'json_PolygonKecamatan_30',
@@ -1389,7 +1389,7 @@
                 interactive: true,
             }
         }
-        map.createPane('pane_FasilitasKesehatan_33');
+        map.createPane('pane_FasilitasKesehatan_33', map.getPane('markerPane'));
         map.getPane('pane_FasilitasKesehatan_33').style.zIndex = 433;
         map.getPane('pane_FasilitasKesehatan_33').style['mix-blend-mode'] = 'normal';
         var icon_FasilitasKesehatan_33 = L.icon({
@@ -1576,7 +1576,6 @@ locateButton.addEventListener('click',function(){if(watchId!==null){navigator.ge
     details.id = 'order-details';
     details.className = 'wgis-card';
     details.innerHTML =
-    details.innerHTML =
         '<div id="order-header"><span>Urutan Layer</span><button type="button" id="order-close" aria-label="Tutup urutan layer">&times;</button></div>' +
         '<div id="order-hint">Paling atas = tampil paling depan. Seret gagang untuk mengubah urutan.</div>' +
         '<ul id="order-list"></ul>';
@@ -1645,6 +1644,14 @@ locateButton.addEventListener('click',function(){if(watchId!==null){navigator.ge
 
     // ---- first load: risk polygon is the first (and only) overlay shown ----
     applyOrder(order);
+    var facilityToggle = document.getElementById('ly-faskes');
+    if (facilityToggle && facilityToggle.checked) {
+        if (!map.hasLayer(cluster_FasilitasKesehatan_33)) {
+            cluster_FasilitasKesehatan_33.addTo(map);
+        }
+    } else if (map.hasLayer(cluster_FasilitasKesehatan_33)) {
+        map.removeLayer(cluster_FasilitasKesehatan_33);
+    }
 
     // label-only polygons: no fill/stroke so they never cover or intercept clicks
     [layer_PolygonKota_28, layer_PolygonKecamatan_30].forEach(function (lyr) {
