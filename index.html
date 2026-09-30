@@ -1772,29 +1772,34 @@ locateButton.addEventListener('click',function(){if(watchId!==null){navigator.ge
         var feature = event.popup._source && event.popup._source.feature;
         if (!feature || !feature.properties || feature.properties.klasifikasi === undefined) return;
 
-        var properties = feature.properties;
-        var badge = attributePanel.querySelector('.risk-badge');
-        var table = attributePanel.querySelector('table');
-        var heading = document.createElement('h4');
-        heading.textContent = (properties.NAMOBJ || properties.WADMKD || '-') +
-            (properties.WADMKC ? ', ' + properties.WADMKC : '');
-        var classification = document.createElement('div');
-        classification.className = 'attribute-detail';
-        classification.textContent = 'Keterangan Klasifikasi: ';
-        classification.appendChild(badge);
-        var riskValue = properties.risiko_ispa_normalisasi;
-        var riskDetail = document.createElement('div');
-        riskDetail.className = 'attribute-detail';
-        riskDetail.textContent = 'Nilai Risiko ISPA: ' +
-            (riskValue === undefined || riskValue === null || riskValue === '' ? '-' : Number(riskValue).toFixed(3));
-        attributePanel.replaceChildren(heading, classification, riskDetail, table);
-
         var popupElement = event.popup.getElement();
         var wrapper = popupElement && popupElement.querySelector('.leaflet-popup-content-wrapper');
         if (!wrapper) return;
 
-        wrapper.appendChild(attributePanel);
-        event.popup.update();
+        var popupContent = wrapper.querySelector('.leaflet-popup-content');
+        if (popupContent) popupContent.remove();
+        window.setTimeout(function () {
+            var properties = feature.properties;
+            var badge = attributePanel.querySelector('.risk-badge');
+            var table = attributePanel.querySelector('table');
+            if (!badge || !table) return;
+
+            var heading = document.createElement('h4');
+            heading.textContent = (properties.NAMOBJ || properties.WADMKD || '-') +
+                (properties.WADMKC ? ', ' + properties.WADMKC : '');
+            var classification = document.createElement('div');
+            classification.className = 'attribute-detail';
+            classification.textContent = 'Keterangan Klasifikasi: ';
+            classification.appendChild(badge);
+            var riskValue = properties.risiko_ispa_normalisasi;
+            var riskDetail = document.createElement('div');
+            riskDetail.className = 'attribute-detail';
+            riskDetail.textContent = 'Nilai Risiko ISPA: ' +
+                (riskValue === undefined || riskValue === null || riskValue === '' ? '-' : Number(riskValue).toFixed(3));
+            attributePanel.replaceChildren(heading, classification, riskDetail, table);
+            wrapper.appendChild(attributePanel);
+            event.popup.update();
+        }, 0);
     });
 })();
 </script>
