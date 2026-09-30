@@ -1485,6 +1485,9 @@
 .wgis-card{background:#fff;border-radius:12px;box-shadow:0 4px 14px rgba(0,0,0,.14);font-family:'Segoe UI',Arial,sans-serif;font-size:13px;color:#1f2937}
 #layer-panel{position:absolute;top:16px;left:16px;z-index:1000;width:250px;padding:14px;max-height:calc(100% - 32px);overflow-y:auto}#layer-panel h3{margin:0 0 10px;font-size:13px;color:#111827}#layer-panel .group-title{display:block;font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin:12px 0 4px}#layer-panel .group-title:first-of-type{margin-top:0}#layer-panel label{display:flex;align-items:center;gap:6px;margin:4px 0;cursor:pointer}#layer-panel .opacity-row{display:flex;align-items:center;gap:6px;margin:0 0 4px 22px}#layer-panel .opacity-row input[type=range]{flex:1}#layer-panel .opacity-row span{font-size:10px;color:#9ca3af;width:26px;text-align:right}#layer-panel hr{border:none;border-top:1px solid #e5e7eb;margin:12px 0}
 #time-control{margin:4px 0}#time-control input[type=range]{width:100%}#time-control .time-ticks{display:flex;justify-content:space-between;padding:0 2px;margin-top:2px}#time-control .time-ticks span{font-size:9px;color:#9ca3af}#time-control .time-ticks span.active{color:#1f2937;font-weight:700}#time-control .time-note{font-size:9px;color:#9ca3af;margin-top:4px}
+#time-range-label{font-size:11px;font-weight:600;color:#374151;margin-bottom:4px}
+#attribute-panel{box-sizing:border-box;width:230px;max-width:calc(90vw - 40px);margin:8px 0 0;padding:8px 0 0;display:none;border-top:1px solid #e5e7eb;background:transparent;border-radius:0;box-shadow:none}
+#attribute-panel .attribute-detail{margin:4px 0;font-size:12px;color:#4b5563}
 .legend-row{display:none;margin:0 0 10px 22px}.legend-bar{height:10px;border-radius:3px}.legend-labels{display:flex;justify-content:space-between;font-size:9px;color:#9ca3af;margin-top:2px}.legend-swatches{display:none;flex-direction:column;gap:2px;margin:0 0 10px 22px}.legend-swatches .sw-row{display:flex;align-items:center;gap:6px;font-size:10px;color:#4b5563}.legend-swatches .sw-color{width:14px;height:10px;border-radius:2px;flex-shrink:0}
 #topright-stack{position:absolute;top:16px;right:16px;z-index:1000;display:flex;flex-direction:column;gap:10px;align-items:flex-end}.round-btn{width:42px;height:42px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px}#btn-locate{background:#1f2937;color:#fff}#btn-locate.tracking{background:#16a34a}#buffer-control{display:none;padding:10px 12px;width:160px}#buffer-control label{display:block;font-size:10px;color:#6b7280;margin-bottom:4px}#buffer-control select{width:100%;font-size:12px;padding:4px;border-radius:6px;border:1px solid #e5e7eb}
 #nearby-faskes-panel{display:none;position:absolute;top:140px;right:16px;bottom:auto;left:auto;z-index:1000;width:230px;padding:12px 16px;max-height:240px;overflow-y:auto}#nearby-faskes-panel h4,#attribute-panel h4{margin:0 0 6px;font-size:12px;color:#111827}.nearby-row{font-size:11px;color:#374151;padding:4px 0;border-bottom:1px solid #f3f4f6;cursor:pointer}.nearby-row:last-child{border-bottom:none}.nearby-row:hover{color:#1f2937;font-weight:600}.nearby-empty{font-size:11px;color:#9ca3af}
@@ -1736,6 +1739,62 @@ locateButton.addEventListener('click',function(){if(watchId!==null){navigator.ge
 
     ['op-batas-kota', 'op-batas-kecamatan'].forEach(function (id) {
         document.getElementById(id).addEventListener('input', restoreBoundaryLabels);
+    });
+})();
+</script>
+<script>
+(function () {
+    var dateRanges = [
+        ['2025-01-01', '2025-04-01'],
+        ['2025-04-01', '2025-07-01'],
+        ['2025-07-01', '2025-10-01'],
+        ['2025-10-01', '2026-01-01']
+    ];
+    var slider = document.getElementById('time-slider');
+    var label = document.createElement('div');
+    label.id = 'time-range-label';
+    label.setAttribute('aria-live', 'polite');
+    slider.parentNode.insertBefore(label, slider);
+
+    function updateDateRange() {
+        var index = Math.max(0, Math.min(dateRanges.length - 1, parseInt(slider.value, 10)));
+        label.textContent = 'Periode Q' + (index + 1) + ': ' + dateRanges[index][0] + ' hingga ' + dateRanges[index][1];
+    }
+
+    slider.addEventListener('input', updateDateRange);
+    updateDateRange();
+})();
+</script>
+<script>
+(function () {
+    var attributePanel = document.getElementById('attribute-panel');
+    map.on('popupopen', function (event) {
+        var feature = event.popup._source && event.popup._source.feature;
+        if (!feature || !feature.properties || feature.properties.klasifikasi === undefined) return;
+
+        var properties = feature.properties;
+        var badge = attributePanel.querySelector('.risk-badge');
+        var table = attributePanel.querySelector('table');
+        var heading = document.createElement('h4');
+        heading.textContent = (properties.NAMOBJ || properties.WADMKD || '-') +
+            (properties.WADMKC ? ', ' + properties.WADMKC : '');
+        var classification = document.createElement('div');
+        classification.className = 'attribute-detail';
+        classification.textContent = 'Keterangan Klasifikasi: ';
+        classification.appendChild(badge);
+        var riskValue = properties.risiko_ispa_normalisasi;
+        var riskDetail = document.createElement('div');
+        riskDetail.className = 'attribute-detail';
+        riskDetail.textContent = 'Nilai Risiko ISPA: ' +
+            (riskValue === undefined || riskValue === null || riskValue === '' ? '-' : Number(riskValue).toFixed(3));
+        attributePanel.replaceChildren(heading, classification, riskDetail, table);
+
+        var popupElement = event.popup.getElement();
+        var wrapper = popupElement && popupElement.querySelector('.leaflet-popup-content-wrapper');
+        if (!wrapper) return;
+
+        wrapper.appendChild(attributePanel);
+        event.popup.update();
     });
 })();
 </script>
