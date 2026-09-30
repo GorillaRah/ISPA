@@ -806,13 +806,14 @@
             return {
                 pane: 'pane_LineKota_27',
                 opacity: 1,
-                color: 'rgba(0,0,0,1.0)',
+                color: '#e75480',
                 dashArray: '',
-                lineCap: 'butt',
+                lineCap: 'round',
                 lineJoin: 'round',
                 weight: 8.0,
+                fill: false,
                 fillOpacity: 0,
-                interactive: true,
+                interactive: false,
             }
         }
         function style_LineKota_27_1() {
@@ -830,14 +831,13 @@
         map.createPane('pane_LineKota_27');
         map.getPane('pane_LineKota_27').style.zIndex = 427;
         map.getPane('pane_LineKota_27').style['mix-blend-mode'] = 'normal';
-        var layer_LineKota_27 = new L.geoJson.multiStyle(json_LineKota_27, {
+        var layer_LineKota_27 = new L.geoJson(json_PolyKotaJKT_0, {
             attribution: '',
-            interactive: true,
-            dataVar: 'json_LineKota_27',
+            interactive: false,
+            dataVar: 'json_PolyKotaJKT_0',
             layerName: 'layer_LineKota_27',
             pane: 'pane_LineKota_27',
-            onEachFeature: pop_LineKota_27,
-            styles: [style_LineKota_27_0,style_LineKota_27_1,style_LineKota_27_2,]
+            style: style_LineKota_27_0,
         });
         bounds_group.addLayer(layer_LineKota_27);
         map.addLayer(layer_LineKota_27);
@@ -912,82 +912,18 @@
         }
 
         function style_PolygonKota_28_0(feature) {
-            switch(String(feature.properties['WADMKK'])) {
-                case 'Kota Jakarta Barat':
-                    return {
+            return {
                 pane: 'pane_PolygonKota_28',
                 opacity: 1,
-                color: 'rgba(35,35,35,1.0)',
+                color: '#1f2937',
                 dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1.0, 
+                lineCap: 'round',
+                lineJoin: 'round',
+                weight: 2.5,
                 fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(215,25,28,1.0)',
+                fillOpacity: 0,
+                fillColor: '#ffffff',
                 interactive: true,
-            }
-                    break;
-                case 'Kota Jakarta Pusat':
-                    return {
-                pane: 'pane_PolygonKota_28',
-                opacity: 1,
-                color: 'rgba(35,35,35,1.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1.0, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(253,174,97,1.0)',
-                interactive: true,
-            }
-                    break;
-                case 'Kota Jakarta Selatan':
-                    return {
-                pane: 'pane_PolygonKota_28',
-                opacity: 1,
-                color: 'rgba(35,35,35,1.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1.0, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(255,255,191,1.0)',
-                interactive: true,
-            }
-                    break;
-                case 'Kota Jakarta Timur':
-                    return {
-                pane: 'pane_PolygonKota_28',
-                opacity: 1,
-                color: 'rgba(35,35,35,1.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1.0, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(171,221,164,1.0)',
-                interactive: true,
-            }
-                    break;
-                case 'Kota Jakarta Utara':
-                    return {
-                pane: 'pane_PolygonKota_28',
-                opacity: 1,
-                color: 'rgba(35,35,35,1.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1.0, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(43,131,186,1.0)',
-                interactive: true,
-            }
-                    break;
             }
         }
         map.createPane('pane_PolygonKota_28');
@@ -1577,18 +1513,18 @@ locateButton.addEventListener('click',function(){if(watchId!==null){navigator.ge
             'pane_NDVIQ4_15'
         ],
         batas_wilayah: [
-            'pane_LineKota_27',
-            'pane_PolygonKota_28',
             'pane_LineKecamatan_29',
             'pane_PolygonKecamatan_30',
             'pane_LineKelurahan_31',
-            'pane_PolygonKelurahan_32'
+            'pane_PolygonKelurahan_32',
+            'pane_LineKota_27',
+            'pane_PolygonKota_28'
         ]
     };
     var groups = [
+        { id: 'batas_wilayah', label: 'Batas Wilayah' },
         { id: 'risiko_ispa', label: 'Risiko ISPA' },
-        { id: 'variabel_lingkungan', label: 'Variabel Lingkungan' },
-        { id: 'batas_wilayah', label: 'Batas Wilayah' }
+        { id: 'variabel_lingkungan', label: 'Variabel Lingkungan' }
     ];
 
     // ---- apply an order to the map panes (index 0 = top) ----
@@ -1715,9 +1651,14 @@ locateButton.addEventListener('click',function(){if(watchId!==null){navigator.ge
 
     // uncheck "Batas Kota" through the existing handler so line + polygon hide together
     var kota = document.getElementById('ly-batas-kota');
-    if (kota && kota.checked) {
+    if (kota) {
         kota.checked = false;
         kota.dispatchEvent(new Event('change'));
+    }
+    var kecamatan = document.getElementById('ly-batas-kecamatan');
+    if (kecamatan) {
+        kecamatan.checked = false;
+        kecamatan.dispatchEvent(new Event('change'));
     }
     var kelurahanBoundary = document.getElementById('ly-batas-kelurahan');
     if (kelurahanBoundary && kelurahanBoundary.parentNode) {
@@ -1731,9 +1672,23 @@ locateButton.addEventListener('click',function(){if(watchId!==null){navigator.ge
 </script>
 <script>
 (function () {
-    function restoreBoundaryLabels() {
+    function restoreBoundaryLabels(event) {
+        if (event && event.target) {
+            var strokeLayers = {
+                'op-batas-kota': window.layer_LineKota_27,
+                'op-batas-kecamatan': window.layer_LineKecamatan_29
+            };
+            var strokeLayer = strokeLayers[event.target.id];
+            if (strokeLayer) {
+                var opacity = parseFloat(event.target.value);
+                strokeLayer.eachLayer(function (shape) {
+                    shape.setStyle({ opacity: opacity });
+                });
+            }
+        }
         document.querySelectorAll('.css_PolygonKota_28, .white-buffer-label').forEach(function (label) {
-            label.style.opacity = label.dataset.labelCollisionHidden === 'true' ? 0 : 1;
+            var opacity = parseFloat(label.dataset.layerOpacity);
+            label.style.opacity = label.dataset.labelCollisionHidden === 'true' ? 0 : (isNaN(opacity) ? 1 : opacity);
         });
     }
 
