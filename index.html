@@ -1977,6 +1977,8 @@ locateButton.addEventListener('click',function(){if(watchId!==null){clearNearbyF
 (function(){
     var nearbyPanel=document.getElementById('nearby-faskes-panel');
     var heading=nearbyPanel.querySelector('h4');
+    var locateIcon=document.querySelector('#btn-locate i');
+    if(locateIcon)locateIcon.classList.replace('fa-location-arrow','fa-crosshairs');
     var closeButton=document.createElement('button');
     closeButton.type='button';
     closeButton.id='nearby-faskes-close';
