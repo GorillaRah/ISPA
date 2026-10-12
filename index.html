@@ -1452,13 +1452,13 @@
 #topright-stack{position:absolute;top:16px;right:16px;z-index:1000;display:flex;flex-direction:column;gap:10px;align-items:flex-end}.round-btn{width:42px;height:42px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px}#btn-locate{background:#1f2937;color:#fff}#btn-locate.tracking{background:#16a34a}#buffer-control{display:none;padding:10px 12px;width:160px}#buffer-control label{display:block;font-size:10px;color:#6b7280;margin-bottom:4px}#buffer-control select{width:100%;font-size:12px;padding:4px;border-radius:6px;border:1px solid #e5e7eb}
 #nearby-faskes-panel{display:none;position:absolute;top:140px;right:16px;bottom:auto;left:auto;z-index:1000;width:230px;padding:12px 16px;max-height:240px;overflow-y:auto}#nearby-faskes-panel h4,#attribute-panel h4{margin:0 0 6px;font-size:12px;color:#111827}.nearby-row{font-size:11px;color:#374151;padding:4px 0;border-bottom:1px solid #f3f4f6;cursor:pointer}.nearby-row:last-child{border-bottom:none}.nearby-row:hover{color:#1f2937;font-weight:600}.nearby-empty{font-size:11px;color:#9ca3af}
 #bottomright-stack{position:absolute;bottom:16px;right:16px;z-index:1000;display:flex;flex-direction:column;gap:10px;align-items:flex-end}#attribute-panel{width:230px;padding:12px 16px;display:none}#attribute-panel .risk-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-weight:600;font-size:12px}#attribute-panel table{font-size:11px;color:#4b5563;margin-top:6px;border-collapse:collapse}#attribute-panel td{padding:1px 6px 1px 0}#credit-panel{width:200px;padding:14px 16px;text-align:center}#credit-panel .credit-title{font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:10px;letter-spacing:.03em}#credit-panel .credit-logos{display:flex;align-items:center;justify-content:center;gap:20px}#credit-panel .credit-logos img{max-height:40px;width:auto}#credit-panel hr{border:none;border-top:1px solid #e5e7eb;margin:12px 0}#credit-panel .credit-people{display:flex;justify-content:center;gap:20px}#credit-panel .credit-person{display:flex;flex-direction:column;align-items:center;gap:6px}#credit-panel .credit-person img{width:48px;height:48px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 1px #e5e7eb}#credit-panel .credit-person span{font-size:10px;color:#374151;line-height:1.3}
-#seasonal-info-panel{display:none;box-sizing:border-box;width:232px;max-width:90vw;padding:10px 12px;text-align:left;overflow:hidden}
+#seasonal-info-panel{display:none;box-sizing:border-box;width:100%;max-width:100%;max-height:40vh;margin:10px 0;padding:10px 12px;text-align:left;overflow:hidden}
 #seasonal-info-panel .seasonal-info-header{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:6px}
 #seasonal-info-panel h3{margin:0;font-size:10px;color:#111827}
 #seasonal-info-panel .seasonal-collapse-button{flex-shrink:0;padding:4px 7px;border:0;border-radius:6px;background:#dc2626;color:#fff;font:600 9px 'Segoe UI',Arial,sans-serif;cursor:pointer}
 #seasonal-info-panel .seasonal-collapse-button:hover{background:#b91c1c}
 #seasonal-info-panel .seasonal-collapse-button:focus-visible{outline:2px solid #991b1b;outline-offset:2px}
-#seasonal-info-content{overflow-y:auto;padding-right:4px;font-size:9px;line-height:1.4;color:#4b5563}
+#seasonal-info-content{max-height:calc(40vh - 56px);overflow-y:auto;padding-right:4px;font-size:9px;line-height:1.4;color:#4b5563}
 #seasonal-info-content[hidden]{display:none}
 #seasonal-info-content h4{margin:2px 0 5px;font-size:10px;line-height:1.35;color:#374151}
 #seasonal-info-content p{margin:5px 0}
@@ -1818,9 +1818,9 @@ locateButton.addEventListener('click',function(){if(watchId!==null){navigator.ge
 <script>
 (function () {
     var slider = document.getElementById('time-slider');
-    var bottomRightStack = document.getElementById('bottomright-stack');
-    var creditPanel = document.getElementById('credit-panel');
-    if (!slider || !bottomRightStack || !creditPanel) return;
+    var layerPanel = document.getElementById('layer-panel');
+    var methodology = document.getElementById('index-methodology');
+    if (!slider || !layerPanel || !methodology) return;
 
     var panel = document.createElement('section');
     panel.id = 'seasonal-info-panel';
@@ -1831,7 +1831,7 @@ locateButton.addEventListener('click',function(){if(watchId!==null){navigator.ge
             '<h3 id="seasonal-info-title" aria-live="polite">Konteks Musiman</h3>' +
             '<button type="button" class="seasonal-collapse-button" aria-expanded="true" aria-controls="seasonal-info-content">Tutup</button>' +
         '</div><div id="seasonal-info-content"></div>';
-    bottomRightStack.insertBefore(panel, creditPanel);
+    layerPanel.insertBefore(panel, methodology);
 
     var title = panel.querySelector('#seasonal-info-title');
     var content = panel.querySelector('#seasonal-info-content');
@@ -1872,15 +1872,6 @@ locateButton.addEventListener('click',function(){if(watchId!==null){navigator.ge
         content.appendChild(paragraph);
     }
 
-    function updatePanelSize() {
-        var creditBounds = creditPanel.getBoundingClientRect();
-        var panelWidth = Math.min(creditBounds.width, window.innerWidth * 0.9);
-        var panelHeight = Math.min(creditBounds.height, window.innerHeight - 32);
-        panel.style.width = panelWidth + 'px';
-        panel.style.maxHeight = panelHeight + 'px';
-        content.style.maxHeight = Math.max(0, panelHeight - 52) + 'px';
-    }
-
     function renderQuarter(index) {
         var details = quarterDetails[index];
         title.textContent = 'Konteks Musiman: Q' + (index + 1);
@@ -1911,28 +1902,27 @@ locateButton.addEventListener('click',function(){if(watchId!==null){navigator.ge
         content.appendChild(caveat);
     }
 
-    updatePanelSize();
-    window.addEventListener('resize', updatePanelSize);
-    Array.prototype.forEach.call(creditPanel.querySelectorAll('img'), function (image) {
-        image.addEventListener('load', updatePanelSize);
-    });
-
     collapseButton.addEventListener('click', function () {
         var isExpanded = collapseButton.getAttribute('aria-expanded') === 'true';
         content.hidden = isExpanded;
         collapseButton.setAttribute('aria-expanded', String(!isExpanded));
-        collapseButton.textContent = isExpanded ? 'Buka penjelasan' : 'Ringkas';
+        collapseButton.textContent = isExpanded ? 'Buka penjelasan' : 'Tutup';
     });
+
+    var initialIndex = Math.max(0, Math.min(quarterDetails.length - 1, parseInt(slider.value, 10)));
+    renderQuarter(initialIndex);
+    panel.style.display = 'block';
+    content.hidden = true;
+    collapseButton.setAttribute('aria-expanded', 'false');
+    collapseButton.textContent = 'Buka penjelasan';
 
     slider.addEventListener('input', function () {
         var index = Math.max(0, Math.min(quarterDetails.length - 1, parseInt(slider.value, 10)));
+        var isExpanded = collapseButton.getAttribute('aria-expanded') === 'true';
         renderQuarter(index);
         panel.style.display = 'block';
-        content.hidden = false;
+        content.hidden = !isExpanded;
         content.scrollTop = 0;
-        updatePanelSize();
-        collapseButton.setAttribute('aria-expanded', 'true');
-        collapseButton.textContent = 'Tutup';
     });
 })();
 </script>
