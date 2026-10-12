@@ -1431,7 +1431,7 @@
 #index-methodology summary:focus-visible{outline:2px solid #2563eb;outline-offset:2px}
 #index-methodology .methodology-summary-copy{display:flex;flex-direction:column;gap:2px}
 #index-methodology .methodology-summary-hint{font-size:9px;font-weight:400;color:#6b7280}
-#index-methodology .methodology-toggle{flex-shrink:0;display:flex;align-items:center;gap:5px;padding:3px 7px;border-radius:12px;background:#e5e7eb;color:#4b5563;font-size:9px;font-weight:600}
+#index-methodology .methodology-toggle{flex-shrink:0;display:flex;align-items:center;gap:5px;padding:3px 7px;border-radius:12px;background:#dc2626;color:#fff;font-size:9px;font-weight:600}
 #index-methodology .methodology-toggle::before{content:"";width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-2px)}
 #index-methodology[open] .methodology-toggle::before{transform:rotate(225deg) translateY(-1px)}
 #index-methodology .methodology-toggle .open-label{display:none}
@@ -1451,6 +1451,20 @@
 #topright-stack{position:absolute;top:16px;right:16px;z-index:1000;display:flex;flex-direction:column;gap:10px;align-items:flex-end}.round-btn{width:42px;height:42px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px}#btn-locate{background:#1f2937;color:#fff}#btn-locate.tracking{background:#16a34a}#buffer-control{display:none;padding:10px 12px;width:160px}#buffer-control label{display:block;font-size:10px;color:#6b7280;margin-bottom:4px}#buffer-control select{width:100%;font-size:12px;padding:4px;border-radius:6px;border:1px solid #e5e7eb}
 #nearby-faskes-panel{display:none;position:absolute;top:140px;right:16px;bottom:auto;left:auto;z-index:1000;width:230px;padding:12px 16px;max-height:240px;overflow-y:auto}#nearby-faskes-panel h4,#attribute-panel h4{margin:0 0 6px;font-size:12px;color:#111827}.nearby-row{font-size:11px;color:#374151;padding:4px 0;border-bottom:1px solid #f3f4f6;cursor:pointer}.nearby-row:last-child{border-bottom:none}.nearby-row:hover{color:#1f2937;font-weight:600}.nearby-empty{font-size:11px;color:#9ca3af}
 #bottomright-stack{position:absolute;bottom:16px;right:16px;z-index:1000;display:flex;flex-direction:column;gap:10px;align-items:flex-end}#attribute-panel{width:230px;padding:12px 16px;display:none}#attribute-panel .risk-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-weight:600;font-size:12px}#attribute-panel table{font-size:11px;color:#4b5563;margin-top:6px;border-collapse:collapse}#attribute-panel td{padding:1px 6px 1px 0}#credit-panel{width:200px;padding:14px 16px;text-align:center}#credit-panel .credit-title{font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:10px;letter-spacing:.03em}#credit-panel .credit-logos{display:flex;align-items:center;justify-content:center;gap:20px}#credit-panel .credit-logos img{max-height:40px;width:auto}#credit-panel hr{border:none;border-top:1px solid #e5e7eb;margin:12px 0}#credit-panel .credit-people{display:flex;justify-content:center;gap:20px}#credit-panel .credit-person{display:flex;flex-direction:column;align-items:center;gap:6px}#credit-panel .credit-person img{width:48px;height:48px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 1px #e5e7eb}#credit-panel .credit-person span{font-size:10px;color:#374151;line-height:1.3}
+#seasonal-info-panel{display:none;box-sizing:border-box;width:232px;max-width:90vw;padding:10px 12px;text-align:left;overflow:hidden}
+#seasonal-info-panel .seasonal-info-header{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:6px}
+#seasonal-info-panel h3{margin:0;font-size:10px;color:#111827}
+#seasonal-info-panel .seasonal-collapse-button{flex-shrink:0;padding:4px 7px;border:0;border-radius:6px;background:#dc2626;color:#fff;font:600 9px 'Segoe UI',Arial,sans-serif;cursor:pointer}
+#seasonal-info-panel .seasonal-collapse-button:hover{background:#b91c1c}
+#seasonal-info-panel .seasonal-collapse-button:focus-visible{outline:2px solid #991b1b;outline-offset:2px}
+#seasonal-info-content{overflow-y:auto;padding-right:4px;font-size:9px;line-height:1.4;color:#4b5563}
+#seasonal-info-content[hidden]{display:none}
+#seasonal-info-content h4{margin:2px 0 5px;font-size:10px;line-height:1.35;color:#374151}
+#seasonal-info-content p{margin:5px 0}
+#seasonal-info-content p strong{color:#374151}
+#seasonal-info-content ul{margin:4px 0;padding-left:16px}
+#seasonal-info-content li{margin:3px 0}
+#seasonal-info-content .seasonal-caveat{margin-top:7px;padding:6px 7px;border-left:3px solid #f59e0b;border-radius:4px;background:#fffbeb}
 #coord-display{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);z-index:1000;padding:6px 16px;font-family:'Courier New',monospace;font-size:12px;color:#374151}
 </style>
 <div id="webgis-header"><h1>WebGIS Risiko ISPA DKI Jakarta</h1><p>Integrasi LST, NO₂, NDVI, NDBI, Proksi Jalan, dan Risiko ISPA - Multitemporal Kuartal 2025</p></div>
@@ -1796,6 +1810,122 @@ locateButton.addEventListener('click',function(){if(watchId!==null){navigator.ge
             wrapper.appendChild(attributePanel);
             event.popup.update();
         }, 0);
+    });
+})();
+</script>
+<script>
+(function () {
+    var slider = document.getElementById('time-slider');
+    var bottomRightStack = document.getElementById('bottomright-stack');
+    var creditPanel = document.getElementById('credit-panel');
+    if (!slider || !bottomRightStack || !creditPanel) return;
+
+    var panel = document.createElement('section');
+    panel.id = 'seasonal-info-panel';
+    panel.className = 'wgis-card';
+    panel.setAttribute('aria-label', 'Penjelasan pola musiman dan data');
+    panel.innerHTML =
+        '<div class="seasonal-info-header">' +
+            '<h3 id="seasonal-info-title" aria-live="polite">Konteks Musiman</h3>' +
+            '<button type="button" class="seasonal-collapse-button" aria-expanded="true" aria-controls="seasonal-info-content">Tutup</button>' +
+        '</div><div id="seasonal-info-content"></div>';
+    bottomRightStack.insertBefore(panel, creditPanel);
+
+    var title = panel.querySelector('#seasonal-info-title');
+    var content = panel.querySelector('#seasonal-info-content');
+    var collapseButton = panel.querySelector('.seasonal-collapse-button');
+    var quarterDetails = [
+        {
+            heading: 'Q1 (Januari–Maret): Puncak Musim Hujan (Muson Barat)',
+            climate: 'Hujan lebat dan tutupan awan tebal.',
+            variables: 'LST rendah (tertekan hujan), NO₂ rendah (terbilas deposisi basah), NDVI tinggi (vegetasi subur), NDBI rendah (permukaan basah).',
+            score: 'Mengelompok di area paling kiri (nilai negatif/risiko paling rendah).'
+        },
+        {
+            heading: 'Q2 (April–Juni): Transisi ke Musim Kemarau (Awal Muson Timur)',
+            climate: 'Hujan berkurang dan intensitas sinar matahari meningkat.',
+            variables: 'LST naik drastis, NO₂ meningkat (mulai terakumulasi), NDVI mulai turun (stres air awal), NDBI naik (permukaan mengering).',
+            score: 'Bergeser ke kanan dengan skor rata-rata tertinggi.'
+        },
+        {
+            heading: 'Q3 (Juli–September): Puncak Musim Kemarau (Muson Timur)',
+            climate: 'Udara kering dan langit cerah dengan sedikit awan.',
+            variables: 'LST sangat tinggi, NO₂ tinggi (inversi suhu dan tanpa pembilasan hujan), NDVI paling rendah (vegetasi mengering), NDBI sangat tinggi (pantulan SWIR dapat menguat pada lahan terbangun).',
+            score: 'Memuncak dan mengelompok di area kanan bersama Q2.'
+        },
+        {
+            heading: 'Q4 (Oktober–Desember): Transisi ke Musim Hujan (Pancaroba / Awal Muson Barat)',
+            climate: 'Hujan mulai kembali turun secara bertahap.',
+            variables: 'LST dan NO₂ menurun, NDVI kembali naik (vegetasi pulih), NDBI menurun (kelembapan tanah meningkat).',
+            score: 'Berada di posisi tengah (mendekati rata-rata netral).'
+        }
+    ];
+
+    function appendDetail(label, value) {
+        var paragraph = document.createElement('p');
+        var strong = document.createElement('strong');
+        strong.textContent = label + ': ';
+        paragraph.appendChild(strong);
+        paragraph.appendChild(document.createTextNode(value));
+        content.appendChild(paragraph);
+    }
+
+    function updatePanelSize() {
+        var creditBounds = creditPanel.getBoundingClientRect();
+        var panelWidth = Math.min(creditBounds.width, window.innerWidth * 0.9);
+        var panelHeight = Math.min(creditBounds.height, window.innerHeight - 32);
+        panel.style.width = panelWidth + 'px';
+        panel.style.maxHeight = panelHeight + 'px';
+        content.style.maxHeight = Math.max(0, panelHeight - 52) + 'px';
+    }
+
+    function renderQuarter(index) {
+        var details = quarterDetails[index];
+        title.textContent = 'Konteks Musiman: Q' + (index + 1);
+        content.replaceChildren();
+
+        var heading = document.createElement('h4');
+        heading.textContent = details.heading;
+        content.appendChild(heading);
+        appendDetail('Kondisi iklim', details.climate);
+        appendDetail('Respons variabel', details.variables);
+        appendDetail('Skor risiko (PCA)', details.score);
+
+        var gapFillHeading = document.createElement('h4');
+        gapFillHeading.textContent = 'Data Sentinel-2';
+        content.appendChild(gapFillHeading);
+        var gapFillNote = document.createElement('p');
+        gapFillNote.textContent = 'Jika data pada periode target tidak tersedia (misalnya tertutup awan), celah diisi dari data valid pada waktu yang berdekatan. Nilai pengganti ini tidak selalu mewakili kondisi tepat pada tanggal target.';
+        content.appendChild(gapFillNote);
+
+        var caveat = document.createElement('p');
+        caveat.className = 'seasonal-caveat';
+        caveat.textContent = 'Interpretasi musiman ini adalah konteks, bukan bukti sebab-akibat atau validasi meteorologis untuk tiap lokasi.';
+        content.appendChild(caveat);
+    }
+
+    updatePanelSize();
+    window.addEventListener('resize', updatePanelSize);
+    Array.prototype.forEach.call(creditPanel.querySelectorAll('img'), function (image) {
+        image.addEventListener('load', updatePanelSize);
+    });
+
+    collapseButton.addEventListener('click', function () {
+        var isExpanded = collapseButton.getAttribute('aria-expanded') === 'true';
+        content.hidden = isExpanded;
+        collapseButton.setAttribute('aria-expanded', String(!isExpanded));
+        collapseButton.textContent = isExpanded ? 'Buka penjelasan' : 'Ringkas';
+    });
+
+    slider.addEventListener('input', function () {
+        var index = Math.max(0, Math.min(quarterDetails.length - 1, parseInt(slider.value, 10)));
+        renderQuarter(index);
+        panel.style.display = 'block';
+        content.hidden = false;
+        content.scrollTop = 0;
+        updatePanelSize();
+        collapseButton.setAttribute('aria-expanded', 'true');
+        collapseButton.textContent = 'Tutup';
     });
 })();
 </script>
