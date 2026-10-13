@@ -1502,7 +1502,7 @@
 <label><input type="checkbox" id="ly-risiko-raster"> Komposit (Raster)</label><div class="opacity-row"><input type="range" id="op-risiko-raster" min="0" max="1" step="0.1" value="1" disabled><span id="op-risiko-raster-val">100%</span></div><div class="legend-row" id="legend-risiko-raster"><div class="legend-bar" style="background:linear-gradient(to right,#2c0a52,#1f4fd8,#00b4d8,#4caf50,#ffeb3b,#ff9800,#b71c1c)"></div><div class="legend-labels"><span>Rendah</span><span>Tinggi</span></div></div>
 <details id="index-methodology"><summary><span class="methodology-summary-copy"><span>Tentang Indeks Paparan ISPA</span><span class="methodology-summary-hint">Klik untuk metode, variabel &amp; batasan</span></span><span class="methodology-toggle"><span class="closed-label">Buka</span><span class="open-label">Tutup</span></span></summary><div class="methodology-content">
 <p>Indeks ini memakai <strong>Principal Component Analysis (PCA) gabungan</strong> pada empat dataset kuartalan. Satu set bobot, normalisasi, dan batas kelas diterapkan ke seluruh periode agar skor dapat dibandingkan antar-kuartal.</p>
-<p><strong>PC2</strong> dipilih sebagai indeks: menjelaskan 29,6% variasi dan hanya 17,5% variasinya merupakan pergeseran musiman. PC1 menjelaskan 31,0%, tetapi 75% variasinya bersifat musiman (terutama LST dan NO₂), sementara arah loading NDBI dan proksi jalan tidak sesuai untuk indeks paparan.</p>
+<p><strong>PC1</strong> dipilih sebagai indeks: menjelaskan 31,0% variasi total. Sekitar 75% variasi PC1 berkaitan dengan pergeseran musiman, terutama LST dan NO₂.</p>
 <h4>Kontribusi variabel (loading PC2)</h4>
 <table><thead><tr><th>Variabel</th><th>Makna</th><th>Loading</th></tr></thead><tbody>
 <tr><td>NDBI</td><td>Kawasan terbangun</td><td>+0,59</td></tr>
@@ -1515,7 +1515,7 @@
 <p class="methodology-caveat"><strong>Perhatian pada badan air:</strong> masking air mungkin tidak mencakup semua piksel. Jika piksel air terlewat dan tetap mendapat kelas tinggi, nilai tersebut dapat mencerminkan karakteristik permukaan air atau data yang tersisa bukan paparan tinggi. Periksa layer dan mask badan air sebelum menafsirkan area tersebut.</p>
 <h4>Batasan</h4>
 <ul><li>Ini adalah <strong>indeks paparan lingkungan</strong>, bukan prediksi penyakit. Indeks belum divalidasi dengan jumlah kasus ISPA per kelurahan.</li>
-<li>PC2 menjelaskan sekitar 30% variasi total; sekitar 70% variasi lainnya tidak tergambarkan oleh indeks.</li>
+<li>PC1 menjelaskan 31,0% variasi total; sekitar 69% variasi lainnya tidak tergambarkan oleh indeks.</li>
 <li>Kelas merupakan kuintil data gabungan: “Sangat Tinggi” berarti 20% nilai tertinggi di Jakarta pada periode gabungan, bukan ambang batas kesehatan.</li></ul>
 <p class="methodology-caveat"><strong>Langkah berikutnya:</strong> validasi dengan data kasus Puskesmas atau Kemenkes, lalu evaluasi kembali bobot indeks.</p>
 </div></details>
