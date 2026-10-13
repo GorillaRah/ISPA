@@ -1308,8 +1308,18 @@
         });
         bounds_group.addLayer(layer_PolygonKelurahan_32);
         map.addLayer(layer_PolygonKelurahan_32);
+        function isHospitalFacility(properties) {
+            if (!properties) return false;
+            var typeValues = [properties.amenity, properties.healthcare];
+            return typeValues.some(function (value) {
+                return typeof value === 'string' && value.split(/[;,]/).some(function (type) {
+                    return type.trim().toLowerCase() === 'hospital';
+                });
+            }) || /rumah\s+sakit/i.test(String(properties.name || ''));
+        }
         function pop_FasilitasKesehatan_33(feature, layer) {
-            var popupContent = '<table>\
+            var hospitalBadge = isHospitalFacility(feature.properties) ? '<span class="hospital-popup-badge">RUMAH SAKIT</span><br>' : '';
+            var popupContent = hospitalBadge + '<table>\
                     <tr>\
                         <td colspan="2">' + (feature.properties['healthcare'] !== null ? autolinker.link(String(feature.properties['healthcare']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
@@ -1345,9 +1355,16 @@
         map.getPane('pane_FasilitasKesehatan_33').style['mix-blend-mode'] = 'normal';
         var icon_FasilitasKesehatan_33 = L.icon({
             iconUrl: 'markers/FasilitasKesehatan_0.svg',
-            iconSize: [28, 28],
-            iconAnchor: [14, 14],
-            popupAnchor: [0, -14]
+            iconSize: [22, 22],
+            iconAnchor: [11, 11],
+            popupAnchor: [0, -11]
+        });
+        var hospitalIcon_FasilitasKesehatan_33 = L.divIcon({
+            className: 'hospital-marker-icon',
+            html: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="34" height="34" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="#dc2626" stroke="#fff" stroke-width="2"/><path d="M13 8h6v5h5v6h-5v5h-6v-5H8v-6h5z" fill="#fff"/></svg>',
+            iconSize: [34, 34],
+            iconAnchor: [17, 17],
+            popupAnchor: [0, -17]
         });
         var layer_FasilitasKesehatan_33 = new L.geoJson(json_FasilitasKesehatan_0, {
             attribution: '',
@@ -1358,7 +1375,7 @@
             onEachFeature: pop_FasilitasKesehatan_33,
             pointToLayer: function (feature, latlng) {
                 return L.marker(latlng, {
-                    icon: icon_FasilitasKesehatan_33,
+                    icon: isHospitalFacility(feature.properties) ? hospitalIcon_FasilitasKesehatan_33 : icon_FasilitasKesehatan_33,
                     pane: 'pane_FasilitasKesehatan_33'
                 });
             },
@@ -1451,6 +1468,9 @@
 #layer-panel .legend-gradient{display:block;width:100%;height:12px;object-fit:fill;border-radius:3px}
 #topright-stack{position:absolute;top:16px;right:16px;z-index:1000;display:flex;flex-direction:column;gap:10px;align-items:flex-end}.round-btn{width:42px;height:42px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px}#btn-locate{background:#1f2937;color:#fff}#btn-locate.tracking{background:#16a34a}#buffer-control{display:none;padding:10px 12px;width:160px}#buffer-control label{display:block;font-size:10px;color:#6b7280;margin-bottom:4px}#buffer-control select{width:100%;font-size:12px;padding:4px;border-radius:6px;border:1px solid #e5e7eb}
 #nearby-faskes-panel{display:none;position:absolute;top:140px;right:16px;bottom:auto;left:auto;z-index:1000;width:230px;padding:12px 16px;max-height:240px;overflow-y:auto}#nearby-faskes-panel h4,#attribute-panel h4{margin:0 0 6px;font-size:12px;color:#111827}.nearby-row{font-size:11px;color:#374151;padding:4px 0;border-bottom:1px solid #f3f4f6;cursor:pointer}.nearby-row:last-child{border-bottom:none}.nearby-row:hover{color:#1f2937;font-weight:600}.nearby-empty{font-size:11px;color:#9ca3af}
+.nearby-row.hospital-nearby-row{padding-left:7px;border-left:3px solid #dc2626;background:#fef2f2;color:#b91c1c;font-weight:700}
+.hospital-popup-badge{display:inline-block;margin-bottom:4px;padding:2px 6px;border-radius:4px;background:#dc2626;color:#fff;font-size:10px;font-weight:700}
+.hospital-marker-icon{background:transparent;border:0}
 #bottomright-stack{position:absolute;bottom:16px;right:16px;z-index:1000;display:flex;flex-direction:column;gap:10px;align-items:flex-end}#attribute-panel{width:230px;padding:12px 16px;display:none}#attribute-panel .risk-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-weight:600;font-size:12px}#attribute-panel table{font-size:11px;color:#4b5563;margin-top:6px;border-collapse:collapse}#attribute-panel td{padding:1px 6px 1px 0}#credit-panel{width:200px;padding:14px 16px;text-align:center}#credit-panel .credit-title{font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:10px;letter-spacing:.03em}#credit-panel .credit-logos{display:flex;align-items:center;justify-content:center;gap:20px}#credit-panel .credit-logos img{max-height:40px;width:auto}#credit-panel hr{border:none;border-top:1px solid #e5e7eb;margin:12px 0}#credit-panel .credit-people{display:flex;justify-content:center;gap:20px}#credit-panel .credit-person{display:flex;flex-direction:column;align-items:center;gap:6px}#credit-panel .credit-person img{width:48px;height:48px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 1px #e5e7eb}#credit-panel .credit-person span{font-size:10px;color:#374151;line-height:1.3}
 #seasonal-info-panel{display:none;box-sizing:border-box;width:100%;max-width:100%;max-height:40vh;margin:10px 0;padding:10px 12px;text-align:left;overflow:hidden}
 #seasonal-info-panel .seasonal-info-header{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:6px}
@@ -1611,7 +1631,39 @@ setVisible(layer_ESRISatelliteArcGISWorld_Imagery_0,false);setVisible(layer_Prok
 function wireBoundaryPair(checkId,opacityId,line,polygon,checked){var checkbox=document.getElementById(checkId),opacity=document.getElementById(opacityId),value=document.getElementById(opacityId+'-val'),shapes=[];polygon.eachLayer(function(shape){shapes.push({layer:shape,fillOpacity:shape.options.fillOpacity||0})});setVisible(line,checked);setVisible(polygon,checked);opacity.disabled=!checked;checkbox.addEventListener('change',function(){setVisible(line,this.checked);setVisible(polygon,this.checked);opacity.disabled=!this.checked});opacity.addEventListener('input',function(){var amount=parseFloat(this.value);shapes.forEach(function(shape){shape.layer.setStyle({opacity:amount,fillOpacity:shape.fillOpacity*amount});var tooltip=shape.layer.getTooltip();if(tooltip&&tooltip._container){tooltip._container.dataset.layerOpacity=amount;tooltip._container.style.opacity=amount}});value.textContent=Math.round(amount*100)+'%'})}wireBoundaryPair('ly-batas-kota','op-batas-kota',layer_LineKota_27,layer_PolygonKota_28,true);wireBoundaryPair('ly-batas-kecamatan','op-batas-kecamatan',layer_LineKecamatan_29,layer_PolygonKecamatan_30,false);wireBoundaryPair('ly-batas-kelurahan','op-batas-kelurahan',layer_LineKelurahan_31,layer_PolygonKelurahan_32,false);document.getElementById('ly-faskes').addEventListener('change',function(){setVisible(cluster_FasilitasKesehatan_33,this.checked)});
 var attributePanel=document.getElementById('attribute-panel');function showKelurahanInfo(properties){var risk=riskFor(properties.klasifikasi);attributePanel.style.display='block';attributePanel.innerHTML='<h4>'+(properties.WADMKD||'-')+', '+(properties.WADMKC||'-')+'</h4><span class="risk-badge" style="background:'+risk.color+';color:'+risk.text+'">'+(properties.klasifikasi||'-')+'</span> ('+safe(properties.risiko_ispa_normalisasi)+')<table><tr><td>Min</td><td>'+safe(properties.min)+'</td><td>Max</td><td>'+safe(properties.max)+'</td></tr><tr><td>Mean</td><td>'+safe(properties.mean)+'</td><td>Std</td><td>'+safe(properties.std)+'</td></tr><tr><td>Luas</td><td colspan="3">'+safe(properties.LUASWH)+' m²</td></tr></table>'}quarterlyLayers.risikoKelurahan.forEach(function(layer){layer.on('click',function(event){showKelurahanInfo(event.layer.feature.properties)})});var coordinates=document.getElementById('coord-display');map.on('mousemove',function(event){coordinates.textContent='Lat: '+event.latlng.lat.toFixed(6)+', Lng: '+event.latlng.lng.toFixed(6)});map.on('mouseout',function(){coordinates.textContent='Lat: -, Lng: -'});
 var locateButton=document.getElementById('btn-locate'),bufferControl=document.getElementById('buffer-control'),radiusSelect=document.getElementById('buffer-radius'),nearbyPanel=document.getElementById('nearby-faskes-panel'),nearbyList=document.getElementById('nearby-faskes-list'),watchId=null,meMarker=null,bufferCircle=null,lastLatLng=null;
-function updateBufferAndNearby(latlng){var radius=parseInt(radiusSelect.value,10);if(bufferCircle)map.removeLayer(bufferCircle);bufferCircle=L.circle(latlng,{radius:radius,color:'#1f2937',weight:1,fillColor:'#1f2937',fillOpacity:.08}).addTo(map);window.nearbyFaskesBuffer=bufferCircle;var nearby=[];layer_FasilitasKesehatan_33.eachLayer(function(marker){var distance=map.distance(latlng,marker.getLatLng());if(distance<=radius){var properties=marker.feature.properties;nearby.push({name:properties.name||properties.healthcare||'Fasilitas Kesehatan',dist:distance,marker:marker})}});nearby.sort(function(first,second){return first.dist-second.dist});nearbyList.innerHTML='';if(!nearby.length)nearbyList.innerHTML='<div class="nearby-empty">Tidak ada faskes dalam radius ini.</div>';nearby.forEach(function(facility){var distanceText=facility.dist>=1000?(facility.dist/1000).toFixed(2)+' km':Math.round(facility.dist)+' m',row=document.createElement('div');row.className='nearby-row';row.textContent=facility.name+' - '+distanceText;row.addEventListener('click',function(){cluster_FasilitasKesehatan_33.zoomToShowLayer(facility.marker,function(){facility.marker.openPopup()})});nearbyList.appendChild(row)});nearbyPanel.style.display='block'}
+function updateBufferAndNearby(latlng){
+    var radius=parseInt(radiusSelect.value,10);
+    if(bufferCircle)map.removeLayer(bufferCircle);
+    bufferCircle=L.circle(latlng,{radius:radius,color:'#1f2937',weight:1,fillColor:'#1f2937',fillOpacity:.08}).addTo(map);
+    window.nearbyFaskesBuffer=bufferCircle;
+    var nearby=[];
+    layer_FasilitasKesehatan_33.eachLayer(function(marker){
+        var distance=map.distance(latlng,marker.getLatLng());
+        if(distance<=radius){
+            var properties=marker.feature.properties;
+            nearby.push({
+                name:properties.name||properties.healthcare||'Fasilitas Kesehatan',
+                dist:distance,
+                marker:marker,
+                isHospital:isHospitalFacility(properties)
+            });
+        }
+    });
+    nearby.sort(function(first,second){return first.dist-second.dist});
+    nearbyList.innerHTML='';
+    if(!nearby.length)nearbyList.innerHTML='<div class="nearby-empty">Tidak ada faskes dalam radius ini.</div>';
+    nearby.forEach(function(facility){
+        var distanceText=facility.dist>=1000?(facility.dist/1000).toFixed(2)+' km':Math.round(facility.dist)+' m';
+        var row=document.createElement('div');
+        row.className='nearby-row'+(facility.isHospital?' hospital-nearby-row':'');
+        row.textContent=facility.name+' - '+distanceText;
+        row.addEventListener('click',function(){
+            cluster_FasilitasKesehatan_33.zoomToShowLayer(facility.marker,function(){facility.marker.openPopup()});
+        });
+        nearbyList.appendChild(row);
+    });
+    nearbyPanel.style.display='block';
+}
 function clearNearbyFaskes(){if(watchId!==null){navigator.geolocation.clearWatch(watchId);watchId=null}locateButton.classList.remove('tracking');if(meMarker){map.removeLayer(meMarker);meMarker=null}if(bufferCircle){map.removeLayer(bufferCircle);bufferCircle=null}window.nearbyFaskesBuffer=null;bufferControl.style.display='none';nearbyPanel.style.display='none';nearbyList.innerHTML='';lastLatLng=null}
 window.closeNearbyFaskes=clearNearbyFaskes;
 radiusSelect.addEventListener('change',function(){if(lastLatLng)updateBufferAndNearby(lastLatLng)});
