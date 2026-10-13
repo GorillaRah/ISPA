@@ -1466,6 +1466,14 @@
 #seasonal-info-content ul{margin:4px 0;padding-left:16px}
 #seasonal-info-content li{margin:3px 0}
 #seasonal-info-content .seasonal-caveat{margin-top:7px;padding:6px 7px;border-left:3px solid #f59e0b;border-radius:4px;background:#fffbeb}
+.env-help{display:inline-flex;align-items:center;justify-content:center;flex:0 0 12px;width:12px;height:12px;margin-left:2px;border:1px solid #93c5fd;border-radius:50%;color:#3b82f6;font-size:8px;font-weight:700;line-height:1;cursor:help}
+.env-help:hover{border-color:#3b82f6;color:#2563eb}
+.env-tooltip{display:none;position:fixed;z-index:1200;box-sizing:border-box;width:max-content;max-width:min(280px,calc(100vw - 24px));padding:10px 12px;border-radius:6px;font-size:11px;line-height:1.5;color:#4b5563;pointer-events:none}
+.env-tooltip h4{margin:0 0 6px;font-size:12px;color:#111827}
+.env-tooltip p{margin:4px 0}
+.env-tooltip .env-warning{margin-top:8px;padding:7px 8px;border-left:3px solid #f59e0b;border-radius:4px;background:#fffbeb;color:#78350f}
+.env-tooltip .env-warning h4{margin:0 0 4px;color:#92400e}
+.env-tooltip .env-warning p{margin:4px 0 0}
 #coord-display{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);z-index:1000;padding:6px 16px;font-family:'Courier New',monospace;font-size:12px;color:#374151}
 </style>
 <div id="webgis-header"><h1>WebGIS Risiko ISPA DKI Jakarta</h1><p>Integrasi LST, NO₂, NDVI, NDBI, Proksi Jalan, dan Risiko ISPA - Multitemporal Kuartal 2025</p></div>
@@ -1495,7 +1503,97 @@
 <div id="topright-stack"><button id="btn-locate" class="round-btn" title="Lokasi Saya"><i class="fas fa-location-arrow"></i></button><div id="buffer-control" class="wgis-card"><label>Radius pencarian faskes</label><select id="buffer-radius"><option value="500">500 m</option><option value="1000" selected>1 km</option><option value="2000">2 km</option><option value="5000">5 km</option></select></div></div><div id="nearby-faskes-panel" class="wgis-card"><h4>Faskes Terdekat</h4><div id="nearby-faskes-list"></div></div><div id="bottomright-stack"><div id="attribute-panel" class="wgis-card"></div><div id="credit-panel" class="wgis-card"><div class="credit-title">Dibuat oleh</div><div class="credit-logos"><img src="images/UGMlogo.png" alt="Logo UGM"><img src="images/WaindoLogo.png" alt="Logo Waindo SpecTerra"></div><hr><div class="credit-people"><div class="credit-person"><img src="images/andhi.png" alt="Andhika Bayu Darmawan"><span>Andhika Bayu<br>Darmawan</span></div><div class="credit-person"><img src="images/arda.png" alt="Ardra Adhyatma"><span>Ardra<br>Adhyatma</span></div></div></div></div><div id="coord-display" class="wgis-card">Lat: -, Lng: -</div>
 <script>
 (function(){
-var riskInfo={'Sangat Rendah':{color:'#FFF5F0',text:'#000'},Rendah:{color:'#FCBEA5',text:'#000'},Sedang:{color:'#FB7050',text:'#000'},Tinggi:{color:'#D32020',text:'#fff'},'Sangat Tinggi':{color:'#67000D',text:'#fff'}};
+var environmentalDataInfo={
+    'ly-lst':{
+        title:'LST (Land Surface Temperature)',
+        source:'Landsat 8 (ST_B10, awan < 20%, QA masked).',
+        process:'Komposit median kuartalan, resampling dari 30 m ke 10 m dengan interpolasi bikubik untuk memperhalus tampilan dan memperjelas tren musiman.'
+    },
+    'ly-no2':{
+        title:'NO₂ (Kualitas Udara)',
+        source:'Sentinel-5P TROPOMI (QA ≥ 0,75).',
+        process:'Rata-rata kuartalan, resampling dari resolusi asli (±1 km) ke 10 m dengan interpolasi bikubik tanpa menambah detail data, guna mempermudah visualisasi tren musiman.'
+    },
+    'ly-ndvi':{
+        title:'NDVI (Kerapatan Vegetasi)',
+        source:'Sentinel-2 (10 m, masking awan s2cloudless).',
+        process:'Komposit median kuartalan. Area kosong akibat awan diisi menggunakan data dari kuartal terdekat (gap-filled from adjacent quarters).',
+        clarification:[
+            'Jika data periode target tertutup awan atau tidak tersedia, celah diisi dari data valid pada waktu berdekatan. Nilai pengganti mungkin tidak mewakili kondisi tepat pada tanggal target.',
+            'Masking air belum sempurna. Periksa mask air sebelum menafsirkan.'
+        ]
+    },
+    'ly-ndbi':{
+        title:'NDBI (Kerapatan Bangunan)',
+        source:'Sentinel-2 (10 m, masking awan s2cloudless).',
+        process:'Sama seperti NDVI, dengan penambalan piksel berawan dari kuartal terdekat (gap-filled from adjacent quarters), serta mengecualikan badan air.',
+        clarification:[
+            'Jika data periode target tertutup awan atau tidak tersedia, celah diisi dari data valid pada waktu berdekatan. Nilai pengganti mungkin tidak mewakili kondisi tepat pada tanggal target.',
+            'Masking air belum sempurna. Piksel air yang lolos bisa tampak nilai NDBI yang tinggi, periksa mask air sebelum menafsirkan.'
+        ]
+    },
+    'ly-proksi':{
+        title:'Proksi Jalan',
+        source:'InaGeoportal.',
+        process:'Tipe jalan digunakan sebagai proksi untuk volume lalu lintas dan potensi emisi kendaraan. Nilai numerik ditetapkan secara bertingkat berdasarkan hirarki fungsi jalan. Bobot berfungsi sebagai variabel pembobot saat konversi vektor ke raster ($10\text{ m}$), sebelum dihaluskan melalui Gaussian Kernel Density ($500\text{ m}$).'
+    }
+};
+var environmentalTooltip=document.createElement('div');
+environmentalTooltip.className='wgis-card env-tooltip';
+environmentalTooltip.setAttribute('role','tooltip');
+document.body.appendChild(environmentalTooltip);
+Object.keys(environmentalDataInfo).forEach(function(id){
+    var checkbox=document.getElementById(id);
+    if(!checkbox)return;
+    var help=document.createElement('span');
+    help.className='env-help';
+    help.textContent='?';
+    help.setAttribute('role','img');
+    var info=environmentalDataInfo[id];
+    help.setAttribute('aria-label',info.title+': Sumber: '+info.source+' Proses: '+info.process+(info.clarification?' Data Sentinel-2: '+info.clarification.join(' '):''));
+    help.addEventListener('mouseenter',function(){
+        environmentalTooltip.replaceChildren();
+        var title=document.createElement('h4');
+        title.textContent=info.title;
+        environmentalTooltip.appendChild(title);
+        [['Sumber',info.source],['Proses',info.process]].forEach(function(detail){
+            var paragraph=document.createElement('p');
+            var label=document.createElement('strong');
+            label.textContent=detail[0]+': ';
+            paragraph.appendChild(label);
+            paragraph.appendChild(document.createTextNode(detail[1]));
+            environmentalTooltip.appendChild(paragraph);
+        });
+        if(info.clarification){
+                var warning=document.createElement('div');
+                warning.className='env-warning';
+                var clarificationHeading=document.createElement('h4');
+                clarificationHeading.textContent='Data Sentinel-2';
+                warning.appendChild(clarificationHeading);
+                info.clarification.forEach(function(note){
+                    var clarification=document.createElement('p');
+                    clarification.textContent=note;
+                    warning.appendChild(clarification);
+                });
+                environmentalTooltip.appendChild(warning);
+            }
+        environmentalTooltip.style.display='block';
+        var iconBounds=help.getBoundingClientRect();
+        var tooltipBounds=environmentalTooltip.getBoundingClientRect();
+        var left=Math.max(12,Math.min(iconBounds.left,window.innerWidth-tooltipBounds.width-12));
+        var top=iconBounds.bottom+8;
+        if(top+tooltipBounds.height>window.innerHeight-12){
+            top=iconBounds.top-tooltipBounds.height-8;
+        }
+        environmentalTooltip.style.left=left+'px';
+        environmentalTooltip.style.top=Math.max(12,top)+'px';
+    });
+    help.addEventListener('mouseleave',function(){
+        environmentalTooltip.style.display='none';
+    });
+    checkbox.parentNode.appendChild(help);
+});
+var riskInfo={'Sangat Rendah':{color:'#FFF5F0',text:'#000'},Rendah:{color:'#FCBEA5',text:'#000'},Sedang:{color:'#FB7050',text:'#000'},Tinggi:{color:'#D32020',text:'#fff'},'Sangat Tinggi':{color:'#67000D',text:'#fff'}}; 
 function riskFor(value){return riskInfo[value]||{color:'#e0e0e0',text:'#000'}}function safe(value){return value===undefined||value===null||value===''?'-':Number(value).toFixed(3)}function setVisible(layer,visible){if(visible){if(!map.hasLayer(layer))map.addLayer(layer)}else if(map.hasLayer(layer))map.removeLayer(layer)}function setOpacity(layer,value){if(typeof layer.setOpacity==='function')layer.setOpacity(value);else if(typeof layer.eachLayer==='function')layer.eachLayer(function(item){item.setStyle({opacity:value,fillOpacity:value})})}
 var currentTimeIndex=0,quarterlyLayers={risikoKelurahan:[layer_RisikoISPAKelurahanQ1_26,layer_RisikoISPAKelurahanQ2_25,layer_RisikoISPAKelurahanQ3_24,layer_RisikoISPAKelurahanQ4_23],risikoRaster:[layer_RisikoISPAQ1_22,layer_RisikoISPAQ2_21,layer_RisikoISPAQ3_20,layer_RisikoISPAQ4_19],lst:[layer_LandSurfaceTempeartureQ1_6,layer_LandSurfaceTemperatureQ2_5,layer_LandSurfaceTemperatureQ3_4,layer_LandSurfaceTemperatureQ4_3],no2:[layer_MeanKadarNO2Q1_10,layer_MeanKadarNO2Q2_9,layer_MeanKadarNO2Q3_8,layer_MeanKadarNO2Q4_7],ndvi:[layer_NDVIQ1_18,layer_NDVIQ2_17,layer_NDVIQ3_16,layer_NDVIQ4_15],ndbi:[layer_NDBIQ1_14,layer_NDBIQ2_13,layer_NDBIQ3_12,layer_NDBIQ4_11]},quarterlyState={};Object.keys(quarterlyLayers).forEach(function(type){quarterlyState[type]={checked:false,opacity:1};quarterlyLayers[type].forEach(function(layer){setVisible(layer,false)})});
 function wireQuarterlyRow(checkId,opacityId,legendId,type,defaultChecked){var checkbox=document.getElementById(checkId),opacity=document.getElementById(opacityId),value=document.getElementById(opacityId+'-val'),legend=legendId&&document.getElementById(legendId);quarterlyState[type].checked=defaultChecked;opacity.disabled=!defaultChecked;if(legend)legend.style.display=defaultChecked?(legend.classList.contains('legend-swatches')?'flex':'block'):'none';setVisible(quarterlyLayers[type][0],defaultChecked);checkbox.addEventListener('change',function(){quarterlyState[type].checked=this.checked;setVisible(quarterlyLayers[type][currentTimeIndex],this.checked);opacity.disabled=!this.checked;if(legend)legend.style.display=this.checked?(legend.classList.contains('legend-swatches')?'flex':'block'):'none'});opacity.addEventListener('input',function(){var amount=parseFloat(this.value);quarterlyState[type].opacity=amount;setOpacity(quarterlyLayers[type][currentTimeIndex],amount);value.textContent=Math.round(amount*100)+'%'})}
@@ -1555,14 +1653,6 @@ locateButton.addEventListener('click',function(){if(watchId!==null){clearNearbyF
         ],
         variabel_lingkungan: [
             'pane_ProksiJalanJakarta500m_2',
-            'pane_LandSurfaceTempeartureQ1_6',
-            'pane_LandSurfaceTemperatureQ2_5',
-            'pane_LandSurfaceTemperatureQ3_4',
-            'pane_LandSurfaceTemperatureQ4_3',
-            'pane_MeanKadarNO2Q1_10',
-            'pane_MeanKadarNO2Q2_9',
-            'pane_MeanKadarNO2Q3_8',
-            'pane_MeanKadarNO2Q4_7',
             'pane_NDBIQ1_14',
             'pane_NDBIQ2_13',
             'pane_NDBIQ3_12',
@@ -1570,7 +1660,15 @@ locateButton.addEventListener('click',function(){if(watchId!==null){clearNearbyF
             'pane_NDVIQ1_18',
             'pane_NDVIQ2_17',
             'pane_NDVIQ3_16',
-            'pane_NDVIQ4_15'
+            'pane_NDVIQ4_15',
+            'pane_MeanKadarNO2Q1_10',
+            'pane_MeanKadarNO2Q2_9',
+            'pane_MeanKadarNO2Q3_8',
+            'pane_MeanKadarNO2Q4_7',
+            'pane_LandSurfaceTempeartureQ1_6',
+            'pane_LandSurfaceTemperatureQ2_5',
+            'pane_LandSurfaceTemperatureQ3_4',
+            'pane_LandSurfaceTemperatureQ4_3'
         ],
         batas_wilayah: [
             'pane_LineKota_27',
