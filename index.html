@@ -1380,8 +1380,25 @@
                 });
             },
         });
-        var cluster_FasilitasKesehatan_33 = new L.MarkerClusterGroup({showCoverageOnHover: false,
-            spiderfyDistanceMultiplier: 2});
+        var cluster_FasilitasKesehatan_33 = new L.MarkerClusterGroup({
+            showCoverageOnHover: false,
+            spiderfyDistanceMultiplier: 2,
+            iconCreateFunction: function (cluster) {
+                var childMarkers = cluster.getAllChildMarkers();
+                var containsHospital = childMarkers.some(function (marker) {
+                    return isHospitalFacility(marker.feature && marker.feature.properties);
+                });
+                var count = cluster.getChildCount();
+                var size = count < 10 ? 'small' : count < 100 ? 'medium' : 'large';
+                var className = 'marker-cluster marker-cluster-' + size;
+                if (containsHospital) className += ' marker-cluster-hospital';
+                return L.divIcon({
+                    html: '<div title="' + (containsHospital ? count + ' fasilitas, termasuk rumah sakit' : count + ' fasilitas') + '"><span>' + count + '</span></div>',
+                    className: className,
+                    iconSize: new L.Point(40, 40)
+                });
+            }
+        });
         cluster_FasilitasKesehatan_33.addLayer(layer_FasilitasKesehatan_33);
 
         bounds_group.addLayer(layer_FasilitasKesehatan_33);
@@ -1471,6 +1488,10 @@
 .nearby-row.hospital-nearby-row{padding-left:7px;border-left:3px solid #dc2626;background:#fef2f2;color:#b91c1c;font-weight:700}
 .hospital-popup-badge{display:inline-block;margin-bottom:4px;padding:2px 6px;border-radius:4px;background:#dc2626;color:#fff;font-size:10px;font-weight:700}
 .hospital-marker-icon{background:transparent;border:0}
+.marker-cluster-hospital{background-color:rgba(220,38,38,.35)}
+.marker-cluster-hospital div{background-color:rgba(220,38,38,.8);color:#fff;font-weight:700}
+#map .marker-cluster-hospital:hover{background-color:rgba(185,28,28,.45)}
+#map .marker-cluster-hospital:hover div{background-color:rgba(185,28,28,.9)}
 #bottomright-stack{position:absolute;bottom:16px;right:16px;z-index:1000;display:flex;flex-direction:column;gap:10px;align-items:flex-end}#attribute-panel{width:230px;padding:12px 16px;display:none}#attribute-panel .risk-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-weight:600;font-size:12px}#attribute-panel table{font-size:11px;color:#4b5563;margin-top:6px;border-collapse:collapse}#attribute-panel td{padding:1px 6px 1px 0}#credit-panel{width:200px;padding:14px 16px;text-align:center}#credit-panel .credit-title{font-size:10px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:10px;letter-spacing:.03em}#credit-panel .credit-logos{display:flex;align-items:center;justify-content:center;gap:20px}#credit-panel .credit-logos img{max-height:40px;width:auto}#credit-panel hr{border:none;border-top:1px solid #e5e7eb;margin:12px 0}#credit-panel .credit-people{display:flex;justify-content:center;gap:20px}#credit-panel .credit-person{display:flex;flex-direction:column;align-items:center;gap:6px}#credit-panel .credit-person img{width:48px;height:48px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 1px #e5e7eb}#credit-panel .credit-person span{font-size:10px;color:#374151;line-height:1.3}
 #seasonal-info-panel{display:none;box-sizing:border-box;width:100%;max-width:100%;max-height:40vh;margin:10px 0;padding:10px 12px;text-align:left;overflow:hidden}
 #seasonal-info-panel .seasonal-info-header{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:6px}
@@ -1502,20 +1523,20 @@
 <label><input type="checkbox" id="ly-risiko-raster"> Komposit (Raster)</label><div class="opacity-row"><input type="range" id="op-risiko-raster" min="0" max="1" step="0.1" value="1" disabled><span id="op-risiko-raster-val">100%</span></div><div class="legend-row" id="legend-risiko-raster"><div class="legend-bar" style="background:linear-gradient(to right,#2c0a52,#1f4fd8,#00b4d8,#4caf50,#ffeb3b,#ff9800,#b71c1c)"></div><div class="legend-labels"><span>Rendah</span><span>Tinggi</span></div></div>
 <details id="index-methodology"><summary><span class="methodology-summary-copy"><span>Tentang Indeks Paparan ISPA</span><span class="methodology-summary-hint">Klik untuk metode, variabel &amp; batasan</span></span><span class="methodology-toggle"><span class="closed-label">Buka</span><span class="open-label">Tutup</span></span></summary><div class="methodology-content">
 <p>Indeks ini memakai <strong>Principal Component Analysis (PCA) gabungan</strong> pada empat dataset kuartalan. Satu set bobot, normalisasi, dan batas kelas diterapkan ke seluruh periode agar skor dapat dibandingkan antar-kuartal.</p>
-<p><strong>PC1</strong> dipilih sebagai indeks: menjelaskan 31,0% variasi total. Sekitar 75% variasi PC1 berkaitan dengan pergeseran musiman, terutama LST dan NO₂.</p>
+<p><strong>PC1</strong> dipilih sebagai indeks: menjelaskan 31,1% variasi total. Sekitar 73% variasi skor PC1 berasal dari perbedaan antar-kuartal (musiman), terutama LST (87% variasinya antar-kuartal) dan NO₂ (96%).</p>
 <h4>Kontribusi variabel (loading PC1)</h4>
 <table><thead><tr><th>Variabel</th><th>Makna</th><th>Loading</th></tr></thead><tbody>
-<tr><td>NDBI</td><td>Kawasan terbangun</td><td>+0,59</td></tr>
-<tr><td>NDVI</td><td>Vegetasi lebih sedikit</td><td>−0,55</td></tr>
-<tr><td>Proksi jalan</td><td>Kedekatan dengan jalan</td><td>+0,38</td></tr>
-<tr><td>LST</td><td>Panas permukaan</td><td>+0,33</td></tr>
-<tr><td>NO₂</td><td>Polusi udara</td><td>+0,31</td></tr>
+<tr><td>NO₂</td><td>Polusi udara</td><td>+0,62</td></tr>
+<tr><td>LST</td><td>Panas permukaan</td><td>+0,62</td></tr>
+<tr><td>NDVI</td><td>Vegetasi</td><td>+0,36</td></tr>
+<tr><td>NDBI</td><td>Kawasan terbangun</td><td>−0,28</td></tr>
+<tr><td>Proksi jalan</td><td>Kedekatan dengan jalan</td><td>−0,18</td></tr>
 </tbody></table>
-<p>Skor lebih tinggi terutama menunjukkan kawasan lebih terbangun dan minim vegetasi; panas, NO₂, dan paparan jalan turut berkontribusi. Perubahan antar-kuartal terutama berkaitan dengan LST dan NO₂. Pada badan air, NDVI dan NDBI dikecualikan; skor hanya menggunakan LST, NO₂, dan proksi jalan.</p>
+<p>Skor lebih tinggi terutama menunjukkan permukaan lebih panas dan NO₂ lebih tinggi, yang sebagian besar berubah mengikuti musim (skor rata-rata tertinggi pada Q2, terendah pada Q1). NDVI, NDBI, dan proksi jalan berkontribusi lebih kecil dan hampir seluruh variasinya antar-lokasi dalam kuartal yang sama; NDVI berkontribusi positif, sedangkan NDBI dan proksi jalan negatif. Pada badan air, NDVI dan NDBI dikecualikan; skor hanya menggunakan LST, NO₂, dan proksi jalan.</p>
 <p class="methodology-caveat"><strong>Perhatian pada badan air:</strong> masking air mungkin tidak mencakup semua piksel. Jika piksel air terlewat dan tetap mendapat kelas tinggi, nilai tersebut dapat mencerminkan karakteristik permukaan air atau data yang tersisa bukan paparan tinggi. Periksa layer dan mask badan air sebelum menafsirkan area tersebut.</p>
 <h4>Batasan</h4>
 <ul><li>Ini adalah <strong>indeks paparan lingkungan</strong>, bukan prediksi penyakit. Indeks belum divalidasi dengan jumlah kasus ISPA per kelurahan.</li>
-<li>PC1 menjelaskan 31,0% variasi total; sekitar 69% variasi lainnya tidak tergambarkan oleh indeks.</li>
+<li>PC1 menjelaskan 31,1% variasi total; sekitar 69% variasi lainnya tidak tergambarkan oleh indeks.</li>
 <li>Kelas merupakan kuintil data gabungan: “Sangat Tinggi” berarti 20% nilai tertinggi di Jakarta pada periode gabungan, bukan ambang batas kesehatan.</li></ul>
 <p class="methodology-caveat"><strong>Langkah berikutnya:</strong> validasi dengan data kasus Puskesmas atau Kemenkes, lalu evaluasi kembali bobot indeks.</p>
 </div></details>
