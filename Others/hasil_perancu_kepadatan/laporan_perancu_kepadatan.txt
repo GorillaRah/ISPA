@@ -1,0 +1,70 @@
+CSV: 260 kelurahan; insiden tidak konsisten dengan pasien/penduduk: 0 baris
+
+[Q1] RisikoISPAKelurahanQ1_26.shp: 260 fitur, CRS=EPSG:32748
+[Q1] kolom: ['KDPPUM', 'NAMOBJ', 'REMARK', 'KDPBPS', 'FCODE', 'LUASWH', 'UUPP', 'SRS_ID', 'LCODE', 'METADATA', 'KDEBPS', 'KDEPUM', 'KDCBPS', 'KDCPUM', 'KDBBPS', 'KDBPUM', 'WADMKD', 'WIADKD', 'WADMKC', 'WIADKC', 'WADMKK', 'WIADKK', 'WADMPR', 'WIADPR', 'TIPADM', 'SHAPE_Leng', 'SHAPE_Area', 'layer', 'path', 'mean', 'std', 'min', 'max', 'count', 'risiko_isp']
+[Q1] memakai kolom nama='NAMOBJ', kecamatan='WADMKC', risiko='risiko_isp'
+
+[Q2] RisikoISPAKelurahanQ2_25.shp: 260 fitur, CRS=EPSG:32748
+[Q2] kolom: ['KDPPUM', 'NAMOBJ', 'REMARK', 'KDPBPS', 'FCODE', 'LUASWH', 'UUPP', 'SRS_ID', 'LCODE', 'METADATA', 'KDEBPS', 'KDEPUM', 'KDCBPS', 'KDCPUM', 'KDBBPS', 'KDBPUM', 'WADMKD', 'WIADKD', 'WADMKC', 'WIADKC', 'WADMKK', 'WIADKK', 'WADMPR', 'WIADPR', 'TIPADM', 'SHAPE_Leng', 'SHAPE_Area', 'layer', 'path', 'mean', 'std', 'min', 'max', 'count', 'risiko_isp']
+[Q2] memakai kolom nama='NAMOBJ', kecamatan='WADMKC', risiko='risiko_isp'
+
+[Q3] RisikoISPAKelurahanQ3_24.shp: 260 fitur, CRS=EPSG:32748
+[Q3] kolom: ['KDPPUM', 'NAMOBJ', 'REMARK', 'KDPBPS', 'FCODE', 'LUASWH', 'UUPP', 'SRS_ID', 'LCODE', 'METADATA', 'KDEBPS', 'KDEPUM', 'KDCBPS', 'KDCPUM', 'KDBBPS', 'KDBPUM', 'WADMKD', 'WIADKD', 'WADMKC', 'WIADKC', 'WADMKK', 'WIADKK', 'WADMPR', 'WIADPR', 'TIPADM', 'SHAPE_Leng', 'SHAPE_Area', 'layer', 'path', 'mean', 'std', 'min', 'max', 'count', 'risiko_isp']
+[Q3] memakai kolom nama='NAMOBJ', kecamatan='WADMKC', risiko='risiko_isp'
+
+[Q4] RisikoISPAKelurahanQ4_23.shp: 260 fitur, CRS=EPSG:32748
+[Q4] kolom: ['KDPPUM', 'NAMOBJ', 'REMARK', 'KDPBPS', 'FCODE', 'LUASWH', 'UUPP', 'SRS_ID', 'LCODE', 'METADATA', 'KDEBPS', 'KDEPUM', 'KDCBPS', 'KDCPUM', 'KDBBPS', 'KDBPUM', 'WADMKD', 'WIADKD', 'WADMKC', 'WIADKC', 'WADMKK', 'WIADKK', 'WADMPR', 'WIADPR', 'TIPADM', 'SHAPE_Leng', 'SHAPE_Area', 'layer', 'path', 'mean', 'std', 'min', 'max', 'count', 'risiko_isp']
+[Q4] memakai kolom nama='NAMOBJ', kecamatan='WADMKC', risiko='risiko_isp'
+[Q1] pencocokan nama mirip (cek manual):
+      SHP 'halimperdanakusuma'  ->  CSV 'halimperdanakusumah'
+      SHP 'krendang'  ->  CSV 'kerendang'
+      SHP 'pangadegan'  ->  CSV 'pengadegan'
+      SHP 'panggilingan'  ->  CSV 'penggilingan'
+      SHP 'petegogan'  ->  CSV 'petogogan'
+      SHP 'tanahsareal'  ->  CSV 'tanahsereal'
+[Q1] cocok: 260/260 kelurahan CSV; SHP tanpa pasangan: 0; CSV tanpa pasangan: 0
+[Q2] pencocokan nama mirip (cek manual):
+      SHP 'halimperdanakusuma'  ->  CSV 'halimperdanakusumah'
+      SHP 'krendang'  ->  CSV 'kerendang'
+      SHP 'pangadegan'  ->  CSV 'pengadegan'
+      SHP 'panggilingan'  ->  CSV 'penggilingan'
+      SHP 'petegogan'  ->  CSV 'petogogan'
+      SHP 'tanahsareal'  ->  CSV 'tanahsereal'
+[Q2] cocok: 260/260 kelurahan CSV; SHP tanpa pasangan: 0; CSV tanpa pasangan: 0
+[Q3] pencocokan nama mirip (cek manual):
+      SHP 'halimperdanakusuma'  ->  CSV 'halimperdanakusumah'
+      SHP 'krendang'  ->  CSV 'kerendang'
+      SHP 'pangadegan'  ->  CSV 'pengadegan'
+      SHP 'panggilingan'  ->  CSV 'penggilingan'
+      SHP 'petegogan'  ->  CSV 'petogogan'
+      SHP 'tanahsareal'  ->  CSV 'tanahsereal'
+[Q3] cocok: 260/260 kelurahan CSV; SHP tanpa pasangan: 0; CSV tanpa pasangan: 0
+[Q4] pencocokan nama mirip (cek manual):
+      SHP 'halimperdanakusuma'  ->  CSV 'halimperdanakusumah'
+      SHP 'krendang'  ->  CSV 'kerendang'
+      SHP 'pangadegan'  ->  CSV 'pengadegan'
+      SHP 'panggilingan'  ->  CSV 'penggilingan'
+      SHP 'petegogan'  ->  CSV 'petogogan'
+      SHP 'tanahsareal'  ->  CSV 'tanahsereal'
+[Q4] cocok: 260/260 kelurahan CSV; SHP tanpa pasangan: 0; CSV tanpa pasangan: 0
+Kepadatan tersedia untuk 260/260 kelurahan
+
+======================================================================
+PENGARUH VARIABEL PERANCU: KEPADATAN PENDUDUK
+Korelasi Spearman dan R² dari regresi linear OLS; korelasi parsial mengontrol kepadatan (aproksimasi).
+======================================================================
+SHP Q1                       n=260  indeks~kepadatan=-0.572 (kuat); kepadatan~insiden=-0.314; indeks~insiden mentah=-0.051; setelah kontrol=-0.296 (p~1.16e-06); R² insiden~kepadatan=0.039; R² insiden~indeks+kepadatan=0.088; tambahan R² indeks=+0.050
+  Interpretasi: indeks berkorelasi kuat dengan kepadatan; asosiasi indeks-insiden menguat setelah kepadatan dikontrol.
+SHP Q2                       n=260  indeks~kepadatan=-0.608 (kuat); kepadatan~insiden=-0.314; indeks~insiden mentah=-0.047; setelah kontrol=-0.315 (p~2.05e-07); R² insiden~kepadatan=0.039; R² insiden~indeks+kepadatan=0.101; tambahan R² indeks=+0.063
+  Interpretasi: indeks berkorelasi kuat dengan kepadatan; asosiasi indeks-insiden menguat setelah kepadatan dikontrol.
+SHP Q3                       n=260  indeks~kepadatan=-0.608 (kuat); kepadatan~insiden=-0.314; indeks~insiden mentah=-0.051; setelah kontrol=-0.321 (p~1.21e-07); R² insiden~kepadatan=0.039; R² insiden~indeks+kepadatan=0.100; tambahan R² indeks=+0.062
+  Interpretasi: indeks berkorelasi kuat dengan kepadatan; asosiasi indeks-insiden menguat setelah kepadatan dikontrol.
+SHP Q4                       n=260  indeks~kepadatan=-0.610 (kuat); kepadatan~insiden=-0.314; indeks~insiden mentah=+0.000; setelah kontrol=-0.254 (p~3.48e-05); R² insiden~kepadatan=0.039; R² insiden~indeks+kepadatan=0.085; tambahan R² indeks=+0.047
+  Interpretasi: indeks berkorelasi kuat dengan kepadatan; asosiasi indeks-insiden menguat setelah kepadatan dikontrol.
+Rata-rata 4 kuartal          n=260  indeks~kepadatan=-0.628 (kuat); kepadatan~insiden=-0.314; indeks~insiden mentah=-0.035; setelah kontrol=-0.315 (p~2.12e-07); R² insiden~kepadatan=0.039; R² insiden~indeks+kepadatan=0.100; tambahan R² indeks=+0.062
+  Interpretasi: indeks berkorelasi kuat dengan kepadatan; asosiasi indeks-insiden menguat setelah kepadatan dikontrol.
+Kolom risiko di CSV          n=260  indeks~kepadatan=+0.407 (sedang); kepadatan~insiden=-0.314; indeks~insiden mentah=+0.066; setelah kontrol=+0.223 (p~0.000285); R² insiden~kepadatan=0.039; R² insiden~indeks+kepadatan=0.075; tambahan R² indeks=+0.037
+  Interpretasi: indeks berkorelasi sedang dengan kepadatan; asosiasi indeks-insiden menguat setelah kepadatan dikontrol.
+Catatan: hubungan yang dihitung bersifat asosiasi tingkat kelurahan, bukan bukti sebab-akibat. Korelasi parsial menggunakan residual peringkat dan nilai p-nya merupakan pendekatan. R² dihitung dari regresi linear OLS atas nilai asli, bukan kuadrat korelasi Spearman; tambahan R² membandingkan model kepadatan saja dengan model indeks dan kepadatan.
+
+Selesai. Hasil analisis kepadatan ada di: C:\Users\Ardra\Downloads\WebGISKesehatan2web\qgis2web_2026_09_17-15_43_47_334972\qgis2web_2026_09_17-15_43_47_334972\Others\hasil_perancu_kepadatan

@@ -1,0 +1,125 @@
+CSV: 260 kelurahan; insiden tidak konsisten dengan pasien/penduduk: 0 baris
+
+[Q1] RisikoISPAKelurahanQ1_26.shp: 260 fitur, CRS=EPSG:32748
+[Q1] kolom: ['KDPPUM', 'NAMOBJ', 'REMARK', 'KDPBPS', 'FCODE', 'LUASWH', 'UUPP', 'SRS_ID', 'LCODE', 'METADATA', 'KDEBPS', 'KDEPUM', 'KDCBPS', 'KDCPUM', 'KDBBPS', 'KDBPUM', 'WADMKD', 'WIADKD', 'WADMKC', 'WIADKC', 'WADMKK', 'WIADKK', 'WADMPR', 'WIADPR', 'TIPADM', 'SHAPE_Leng', 'SHAPE_Area', 'layer', 'path', 'mean', 'std', 'min', 'max', 'count', 'risiko_isp']
+[Q1] memakai kolom nama='NAMOBJ', kecamatan='WADMKC', risiko='risiko_isp'
+
+[Q2] RisikoISPAKelurahanQ2_25.shp: 260 fitur, CRS=EPSG:32748
+[Q2] kolom: ['KDPPUM', 'NAMOBJ', 'REMARK', 'KDPBPS', 'FCODE', 'LUASWH', 'UUPP', 'SRS_ID', 'LCODE', 'METADATA', 'KDEBPS', 'KDEPUM', 'KDCBPS', 'KDCPUM', 'KDBBPS', 'KDBPUM', 'WADMKD', 'WIADKD', 'WADMKC', 'WIADKC', 'WADMKK', 'WIADKK', 'WADMPR', 'WIADPR', 'TIPADM', 'SHAPE_Leng', 'SHAPE_Area', 'layer', 'path', 'mean', 'std', 'min', 'max', 'count', 'risiko_isp']
+[Q2] memakai kolom nama='NAMOBJ', kecamatan='WADMKC', risiko='risiko_isp'
+
+[Q3] RisikoISPAKelurahanQ3_24.shp: 260 fitur, CRS=EPSG:32748
+[Q3] kolom: ['KDPPUM', 'NAMOBJ', 'REMARK', 'KDPBPS', 'FCODE', 'LUASWH', 'UUPP', 'SRS_ID', 'LCODE', 'METADATA', 'KDEBPS', 'KDEPUM', 'KDCBPS', 'KDCPUM', 'KDBBPS', 'KDBPUM', 'WADMKD', 'WIADKD', 'WADMKC', 'WIADKC', 'WADMKK', 'WIADKK', 'WADMPR', 'WIADPR', 'TIPADM', 'SHAPE_Leng', 'SHAPE_Area', 'layer', 'path', 'mean', 'std', 'min', 'max', 'count', 'risiko_isp']
+[Q3] memakai kolom nama='NAMOBJ', kecamatan='WADMKC', risiko='risiko_isp'
+
+[Q4] RisikoISPAKelurahanQ4_23.shp: 260 fitur, CRS=EPSG:32748
+[Q4] kolom: ['KDPPUM', 'NAMOBJ', 'REMARK', 'KDPBPS', 'FCODE', 'LUASWH', 'UUPP', 'SRS_ID', 'LCODE', 'METADATA', 'KDEBPS', 'KDEPUM', 'KDCBPS', 'KDCPUM', 'KDBBPS', 'KDBPUM', 'WADMKD', 'WIADKD', 'WADMKC', 'WIADKC', 'WADMKK', 'WIADKK', 'WADMPR', 'WIADPR', 'TIPADM', 'SHAPE_Leng', 'SHAPE_Area', 'layer', 'path', 'mean', 'std', 'min', 'max', 'count', 'risiko_isp']
+[Q4] memakai kolom nama='NAMOBJ', kecamatan='WADMKC', risiko='risiko_isp'
+[Q1] pencocokan nama mirip (cek manual):
+      SHP 'halimperdanakusuma'  ->  CSV 'halimperdanakusumah'
+      SHP 'krendang'  ->  CSV 'kerendang'
+      SHP 'pangadegan'  ->  CSV 'pengadegan'
+      SHP 'panggilingan'  ->  CSV 'penggilingan'
+      SHP 'petegogan'  ->  CSV 'petogogan'
+      SHP 'tanahsareal'  ->  CSV 'tanahsereal'
+[Q1] cocok: 260/260 kelurahan CSV; SHP tanpa pasangan: 0; CSV tanpa pasangan: 0
+[Q2] pencocokan nama mirip (cek manual):
+      SHP 'halimperdanakusuma'  ->  CSV 'halimperdanakusumah'
+      SHP 'krendang'  ->  CSV 'kerendang'
+      SHP 'pangadegan'  ->  CSV 'pengadegan'
+      SHP 'panggilingan'  ->  CSV 'penggilingan'
+      SHP 'petegogan'  ->  CSV 'petogogan'
+      SHP 'tanahsareal'  ->  CSV 'tanahsereal'
+[Q2] cocok: 260/260 kelurahan CSV; SHP tanpa pasangan: 0; CSV tanpa pasangan: 0
+[Q3] pencocokan nama mirip (cek manual):
+      SHP 'halimperdanakusuma'  ->  CSV 'halimperdanakusumah'
+      SHP 'krendang'  ->  CSV 'kerendang'
+      SHP 'pangadegan'  ->  CSV 'pengadegan'
+      SHP 'panggilingan'  ->  CSV 'penggilingan'
+      SHP 'petegogan'  ->  CSV 'petogogan'
+      SHP 'tanahsareal'  ->  CSV 'tanahsereal'
+[Q3] cocok: 260/260 kelurahan CSV; SHP tanpa pasangan: 0; CSV tanpa pasangan: 0
+[Q4] pencocokan nama mirip (cek manual):
+      SHP 'halimperdanakusuma'  ->  CSV 'halimperdanakusumah'
+      SHP 'krendang'  ->  CSV 'kerendang'
+      SHP 'pangadegan'  ->  CSV 'pengadegan'
+      SHP 'panggilingan'  ->  CSV 'penggilingan'
+      SHP 'petegogan'  ->  CSV 'petogogan'
+      SHP 'tanahsareal'  ->  CSV 'tanahsereal'
+[Q4] cocok: 260/260 kelurahan CSV; SHP tanpa pasangan: 0; CSV tanpa pasangan: 0
+Kepadatan tersedia untuk 260/260 kelurahan
+
+======================================================================
+A. KORELASI RISIKO vs INSIDEN ISPA per 1.000 penduduk (tingkat kelurahan)
+======================================================================
+SHP Q1                       n=260  rho=-0.051 (dapat diabaikan) CI95=[-0.18, +0.07] p=0.414 AUC=0.47  (tidak signifikan)
+SHP Q2                       n=260  rho=-0.047 (dapat diabaikan) CI95=[-0.16, +0.06] p=0.452 AUC=0.45  (tidak signifikan)
+SHP Q3                       n=260  rho=-0.051 (dapat diabaikan) CI95=[-0.17, +0.06] p=0.412 AUC=0.44  (tidak signifikan)
+SHP Q4                       n=260  rho=+0.000 (dapat diabaikan) CI95=[-0.12, +0.12] p=0.994 AUC=0.45  (tidak signifikan)
+Rata-rata 4 kuartal          n=260  rho=-0.035 (dapat diabaikan) CI95=[-0.16, +0.08] p=0.57 AUC=0.45  (tidak signifikan)
+Maksimum 4 kuartal           n=260  rho=-0.047 (dapat diabaikan) CI95=[-0.16, +0.06] p=0.452 AUC=0.45  (tidak signifikan)
+Kolom risiko di CSV          n=260  rho=+0.066 (dapat diabaikan) CI95=[-0.05, +0.18] p=0.289 AUC=0.51  (tidak signifikan)
+
+======================================================================
+B. INSIDEN RATA-RATA per KUARTIL RISIKO (harapan: naik dari kuartil 1 ke 4)
+======================================================================
+                     kuartil_1  kuartil_2  kuartil_3  kuartil_4
+SHP Q1                    1.56       1.35       1.74       1.13
+SHP Q2                    1.54       1.80       1.32       1.12
+SHP Q3                    1.65       1.62       1.39       1.13
+SHP Q4                    1.37       1.95       1.31       1.16
+Rata-rata 4 kuartal       1.60       1.71       1.28       1.19
+Maksimum 4 kuartal        1.54       1.80       1.32       1.12
+Kolom risiko di CSV       1.09       1.71       1.58       1.41
+
+======================================================================
+C. SPEARMAN PER KOTA ADMINISTRASI (membandingkan kelurahan dalam kota yang sama)
+======================================================================
+                    n  SHP Q1  SHP Q2  SHP Q3  SHP Q4  Rata-rata 4 kuartal  Maksimum 4 kuartal  Kolom risiko di CSV
+Jakarta Barat    56.0    0.05    0.06    0.06    0.07                 0.07                0.06                -0.09
+Jakarta Pusat    44.0   -0.12   -0.12   -0.17   -0.05                -0.12               -0.12                -0.02
+Jakarta Selatan  65.0    0.00   -0.12   -0.12   -0.07                -0.06               -0.12                 0.08
+Jakarta Timur    65.0   -0.20   -0.15   -0.17   -0.24                -0.21               -0.15                 0.09
+Jakarta Utara    30.0    0.14    0.27    0.22    0.18                 0.23                0.27                -0.09
+
+======================================================================
+D. TINGKAT KECAMATAN (kasus dijumlah, risiko dirata-rata berbobot penduduk)
+======================================================================
+SHP Q1                       n=42  rho=-0.088 (dapat diabaikan) p=0.58
+SHP Q2                       n=42  rho=-0.143 (lemah) p=0.367
+SHP Q3                       n=42  rho=-0.144 (lemah) p=0.363
+SHP Q4                       n=42  rho=-0.004 (dapat diabaikan) p=0.982
+Rata-rata 4 kuartal          n=42  rho=-0.082 (dapat diabaikan) p=0.607
+Maksimum 4 kuartal           n=42  rho=-0.143 (lemah) p=0.367
+Kolom risiko di CSV          n=42  rho=+0.024 (dapat diabaikan) p=0.88
+
+======================================================================
+E. SPEARMAN PARSIAL — risiko vs insiden setelah mengontrol kepadatan penduduk
+======================================================================
+SHP Q1                       biasa=-0.051  parsial=-0.296 (p~1.16e-06)  risiko~kepadatan=-0.572
+SHP Q2                       biasa=-0.047  parsial=-0.315 (p~2.05e-07)  risiko~kepadatan=-0.608
+SHP Q3                       biasa=-0.051  parsial=-0.321 (p~1.21e-07)  risiko~kepadatan=-0.608
+SHP Q4                       biasa=+0.000  parsial=-0.254 (p~3.48e-05)  risiko~kepadatan=-0.610
+Rata-rata 4 kuartal          biasa=-0.035  parsial=-0.315 (p~2.12e-07)  risiko~kepadatan=-0.628
+Maksimum 4 kuartal           biasa=-0.047  parsial=-0.315 (p~2.05e-07)  risiko~kepadatan=-0.608
+Kolom risiko di CSV          biasa=+0.066  parsial=+0.223 (p~0.000285)  risiko~kepadatan=+0.407
+
+======================================================================
+F. KONSISTENSI risiko di CSV vs tiap SHP (r mendekati 1 & MAE mendekati 0 = sumber sama)
+======================================================================
+risk_Q1        Pearson r=-0.872  MAE=0.6391  (n=260)
+risk_Q2        Pearson r=-0.641  MAE=0.1440  (n=260)
+risk_Q3        Pearson r=-0.597  MAE=0.1831  (n=260)
+risk_Q4        Pearson r=-0.391  MAE=0.2964  (n=260)
+risk_mean4     Pearson r=-0.605  MAE=0.2715  (n=260)
+risk_max4      Pearson r=-0.641  MAE=0.1440  (n=260)
+
+======================================================================
+CATATAN INTERPRETASI
+======================================================================
+- Validasi ini memakai kasus TAHUNAN 2025; pola musiman antar-kuartal tidak dapat diuji.
+- Kasus ISPA = pasien tercatat di fasilitas kesehatan; dipengaruhi akses & pelaporan.
+- ISPA mayoritas disebabkan virus; lingkungan hanya salah satu faktor pemberat.
+- Kelurahan kecil punya insiden yang 'berisik' (kasus sedikit); lihat analisis tingkat kecamatan.
+- Korelasi tingkat wilayah tidak otomatis berlaku pada tingkat individu (ecological fallacy).
+- Rho yang rendah / CI mencakup 0 berarti indeks belum terbukti memprediksi insiden.

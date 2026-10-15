@@ -1,0 +1,261 @@
+kelurahan,kecamatan,kota_adm,provinsi,penduduk_laki,penduduk_perempuan,penduduk_total,pasien_ispa_2025,insiden_ispa_per1000,risiko_mean,risiko_std,risiko_min,risiko_max,jumlah_piksel,risiko_ispa_normalisasi
+Cempaka Putih Barat,Cempaka Putih,Jakarta Pusat,DKI Jakarta,21397,19705,41102,186,4.53,0.7773,0.0702,0.4393,1,12518,0.821
+Cempaka Putih Timur,Cempaka Putih,Jakarta Pusat,DKI Jakarta,14573,13488,28061,115,4.1,0.7798,0.0809,0.4247,0.9852,18122,0.8246
+Rawasari,Cempaka Putih,Jakarta Pusat,DKI Jakarta,13425,12266,25691,128,4.98,0.7265,0.1214,0.1397,1,12291,0.7476
+Cideng,Gambir,Jakarta Pusat,DKI Jakarta,9594,9117,18711,33,1.76,0.8691,0.0764,0.5542,1,12531,0.9537
+Duri Pulo,Gambir,Jakarta Pusat,DKI Jakarta,13477,13017,26494,16,0.6,0.6868,0.2448,0.1,1,6865,0.6902
+Gambir,Gambir,Jakarta Pusat,DKI Jakarta,1793,1766,3559,12,3.37,0.6975,0.1759,0.2092,1,25280,0.7057
+Kebon Kelapa,Gambir,Jakarta Pusat,DKI Jakarta,6498,6189,12687,11,0.87,0.8385,0.0978,0.2072,1,7864,0.9095
+Petojo Selatan,Gambir,Jakarta Pusat,DKI Jakarta,8459,8353,16812,22,1.31,0.8148,0.1074,0.2258,1,11355,0.8753
+Petojo Utara,Gambir,Jakarta Pusat,DKI Jakarta,11047,10702,21749,19,0.87,0.8682,0.0797,0.4057,1,11271,0.9525
+Galur,Johar Baru,Jakarta Pusat,DKI Jakarta,11287,10867,22154,30,1.35,0.8342,0.0577,0.6321,0.9807,2865,0.9033
+Johar Baru,Johar Baru,Jakarta Pusat,DKI Jakarta,22756,20777,43533,122,2.8,0.6993,0.1173,0.1249,0.8877,11709,0.7082
+Kampung Rawa,Johar Baru,Jakarta Pusat,DKI Jakarta,13722,13166,26888,82,3.05,0.7962,0.0351,0.643,0.8988,2831,0.8484
+Tanah Tinggi,Johar Baru,Jakarta Pusat,DKI Jakarta,23419,22365,45784,127,2.77,0.7914,0.0596,0.5948,0.9539,6251,0.8415
+Cempaka Baru,Kemayoran,Jakarta Pusat,DKI Jakarta,20293,18760,39053,129,3.3,0.7705,0.0749,0.1915,0.9789,9646,0.8112
+Gunung Sahari Selatan,Kemayoran,Jakarta Pusat,DKI Jakarta,12281,11631,23912,55,2.3,0.7113,0.1454,0.117,1,15529,0.7256
+Harapan Mulia,Kemayoran,Jakarta Pusat,DKI Jakarta,14189,13372,27561,79,2.87,0.8224,0.0738,0.5669,0.9966,5275,0.8862
+Kebon Kosong,Kemayoran,Jakarta Pusat,DKI Jakarta,17059,15867,32926,176,5.35,0.7343,0.1033,0.2921,1,10506,0.7589
+Kemayoran,Kemayoran,Jakarta Pusat,DKI Jakarta,12830,12259,25089,212,8.45,0.8011,0.0483,0.5584,0.9472,5927,0.8555
+Serdang,Kemayoran,Jakarta Pusat,DKI Jakarta,18598,16998,35596,179,5.03,0.7948,0.048,0.4992,0.9979,8138,0.8463
+Sumur Batu,Kemayoran,Jakarta Pusat,DKI Jakarta,14444,13279,27723,150,5.41,0.7705,0.0852,0.382,0.9847,11352,0.8112
+Utan Panjang,Kemayoran,Jakarta Pusat,DKI Jakarta,17834,16953,34787,126,3.62,0.801,0.0584,0.5788,0.9529,5392,0.8553
+Cikini,Menteng,Jakarta Pusat,DKI Jakarta,5076,4756,9832,18,1.83,0.7209,0.1059,0.18,0.9743,7991,0.7395
+Gondangdia,Menteng,Jakarta Pusat,DKI Jakarta,2464,2190,4654,42,9.02,0.7555,0.1088,0.3025,1,14748,0.7895
+Kebon Sirih,Menteng,Jakarta Pusat,DKI Jakarta,8076,7841,15917,33,2.07,0.7883,0.1096,0.3041,1,8183,0.837
+Menteng,Menteng,Jakarta Pusat,DKI Jakarta,15509,14466,29975,105,3.5,0.7829,0.1008,0.3161,1,24163,0.8291
+Pegangsaan,Menteng,Jakarta Pusat,DKI Jakarta,14148,13315,27463,34,1.24,0.7356,0.1166,0.3182,0.9947,9556,0.7608
+Gunung Sahari Utara,Sawah Besar,Jakarta Pusat,DKI Jakarta,10338,9652,19990,51,2.55,0.7468,0.0967,0.3259,0.9977,13010,0.7769
+Karang Anyar,Sawah Besar,Jakarta Pusat,DKI Jakarta,17047,16149,33196,91,2.74,0.7589,0.0715,0.4777,0.9313,4610,0.7945
+Kartini,Sawah Besar,Jakarta Pusat,DKI Jakarta,14591,13616,28207,97,3.44,0.756,0.0882,0.4944,1,5624,0.7903
+Mangga Dua Selatan,Sawah Besar,Jakarta Pusat,DKI Jakarta,17564,17213,34777,73,2.1,0.7069,0.1084,0.3058,0.9943,12932,0.7193
+Pasar Baru,Sawah Besar,Jakarta Pusat,DKI Jakarta,7879,7480,15359,51,3.32,0.7503,0.1304,0.1991,1,17401,0.7819
+Bungur,Senen,Jakarta Pusat,DKI Jakarta,11603,11112,22715,52,2.29,0.7954,0.0705,0.4823,0.9978,6617,0.8472
+Kenari,Senen,Jakarta Pusat,DKI Jakarta,5585,5402,10987,31,2.82,0.7217,0.1152,0.081,0.9989,8947,0.7406
+Kramat,Senen,Jakarta Pusat,DKI Jakarta,17723,17222,34945,88,2.52,0.7714,0.0741,0.5108,1,7064,0.8125
+Kwitang,Senen,Jakarta Pusat,DKI Jakarta,9805,9074,18879,46,2.44,0.8526,0.0645,0.6228,1,4489,0.9299
+Paseban,Senen,Jakarta Pusat,DKI Jakarta,14446,13644,28090,66,2.35,0.7721,0.097,0.3074,0.9983,8377,0.8135
+Senen,Senen,Jakarta Pusat,DKI Jakarta,4316,4153,8469,39,4.61,0.7222,0.1393,0.1856,1,8079,0.7414
+Bendungan Hilir,Tanah Abang,Jakarta Pusat,DKI Jakarta,13355,12592,25947,36,1.39,0.8279,0.1075,0.382,1,15856,0.8941
+Gelora,Tanah Abang,Jakarta Pusat,DKI Jakarta,2001,1863,3864,6,1.55,0.6337,0.1961,0.0853,1,33353,0.6134
+Kampung Bali,Tanah Abang,Jakarta Pusat,DKI Jakarta,7817,7199,15016,14,0.93,0.784,0.101,0.3353,0.9906,7256,0.8308
+Karet Tengsin,Tanah Abang,Jakarta Pusat,DKI Jakarta,11222,10871,22093,21,0.95,0.6655,0.2018,0.1773,1,15282,0.6593
+Kebon Kacang,Tanah Abang,Jakarta Pusat,DKI Jakarta,13277,12660,25937,56,2.16,0.8295,0.0848,0.3742,1,7342,0.8965
+Kebon Melati,Tanah Abang,Jakarta Pusat,DKI Jakarta,20286,19647,39933,28,0.7,0.7464,0.1475,0.0673,1,12504,0.7763
+Petamburan,Tanah Abang,Jakarta Pusat,DKI Jakarta,20591,19871,40462,21,0.52,0.7176,0.1491,0.3024,1,8842,0.7348
+Cilincing,Cilincing,Jakarta Utara,DKI Jakarta,48080,46166,94246,113,1.2,0.5421,0.1711,0,1,68966,0.4809
+Kali Baru,Cilincing,Jakarta Utara,DKI Jakarta,78258,75020,153278,114,0.74,0.6621,0.1161,0.0395,0.9556,24503,0.6545
+Marunda,Cilincing,Jakarta Utara,DKI Jakarta,22800,21849,44649,52,1.16,0.4894,0.1772,0.006,1,78728,0.4047
+Rorotan,Cilincing,Jakarta Utara,DKI Jakarta,37657,36507,74164,40,0.54,0.4175,0.1892,0,1,106555,0.3008
+Semper Barat,Cilincing,Jakarta Utara,DKI Jakarta,72213,69462,141675,64,0.45,0.6536,0.1331,0.0835,0.9713,33523,0.6422
+Semper Timur,Cilincing,Jakarta Utara,DKI Jakarta,36388,35369,71757,69,0.96,0.5647,0.1665,0.0044,0.9974,43895,0.5136
+Sukapura,Cilincing,Jakarta Utara,DKI Jakarta,61311,58776,120087,27,0.22,0.6047,0.1559,0.0214,0.9946,57385,0.5714
+Kelapa Gading Barat,Kelapa Gading,Jakarta Utara,DKI Jakarta,32819,32038,64857,192,2.96,0.6456,0.1615,0.001,1,74623,0.6305
+Kelapa Gading Timur,Kelapa Gading,Jakarta Utara,DKI Jakarta,28942,29245,58187,115,1.98,0.7963,0.1235,0.2068,1,35836,0.8485
+Pegangsaan Dua,Kelapa Gading,Jakarta Utara,DKI Jakarta,43197,43083,86280,123,1.43,0.6825,0.1684,0.0093,1,51503,0.684
+Koja,Koja,Jakarta Utara,DKI Jakarta,32070,31075,63145,37,0.59,0.6887,0.108,0.1464,0.9816,25469,0.693
+Lagoa,Koja,Jakarta Utara,DKI Jakarta,62318,61033,123351,65,0.53,0.7691,0.0531,0.5397,0.944,14729,0.8091
+Rawa Badak Selatan,Koja,Jakarta Utara,DKI Jakarta,43066,41535,84601,37,0.44,0.6953,0.1624,0.0536,1,17738,0.7024
+Rawa Badak Utara,Koja,Jakarta Utara,DKI Jakarta,37231,36360,73591,49,0.67,0.7619,0.0971,0.3224,1,12893,0.7988
+Tugu Selatan,Koja,Jakarta Utara,DKI Jakarta,39402,38157,77559,32,0.41,0.6789,0.1288,0.1172,1,18911,0.6788
+Tugu Utara,Koja,Jakarta Utara,DKI Jakarta,72676,70306,142982,78,0.55,0.7526,0.1006,0.1549,1,23189,0.7853
+Ancol,Pademangan,Jakarta Utara,DKI Jakarta,25971,25244,51215,145,2.83,0.5834,0.1777,0,1,72954,0.5407
+Pademangan Barat,Pademangan,Jakarta Utara,DKI Jakarta,78722,75906,154628,334,2.16,0.7568,0.1003,0.2895,1,15527,0.7914
+Pademangan Timur,Pademangan,Jakarta Utara,DKI Jakarta,35768,35460,71228,150,2.11,0.5996,0.2136,0.0595,1,34508,0.5641
+Kamal Muara,Penjaringan,Jakarta Utara,DKI Jakarta,11008,10418,21426,43,2.01,0.4535,0.1929,0,1,113314,0.3528
+Kapuk Muara,Penjaringan,Jakarta Utara,DKI Jakarta,30215,29343,59558,56,0.94,0.4899,0.1776,0,1,89758,0.4055
+Pejagalan,Penjaringan,Jakarta Utara,DKI Jakarta,77321,75739,153060,82,0.54,0.7882,0.1047,0.1267,1,32046,0.8369
+Pluit,Penjaringan,Jakarta Utara,DKI Jakarta,38975,38461,77436,129,1.67,0.6643,0.1422,0.0316,1,124594,0.6577
+Kebon Bawang,Tanjung Priok,Jakarta Utara,DKI Jakarta,55529,54297,109826,104,0.95,0.8054,0.0862,0.3391,1,19122,0.8617
+Papanggo,Tanjung Priok,Jakarta Utara,DKI Jakarta,41353,40467,81820,111,1.36,0.665,0.1457,0.0914,0.9919,30178,0.6587
+Sungai Bambu,Tanjung Priok,Jakarta Utara,DKI Jakarta,31964,31376,63340,38,0.6,0.7133,0.1219,0.1084,1,21424,0.7285
+Sunter Agung,Tanjung Priok,Jakarta Utara,DKI Jakarta,68453,69217,137670,330,2.4,0.7646,0.1252,0.0748,1,57201,0.8026
+Sunter Jaya,Tanjung Priok,Jakarta Utara,DKI Jakarta,59655,59169,118824,394,3.32,0.7184,0.1209,0.0136,0.9991,46305,0.7359
+Tanjung Priok,Tanjung Priok,Jakarta Utara,DKI Jakarta,39400,38740,78140,136,1.74,0.7024,0.1029,0.1371,0.972,38670,0.7127
+Warakas,Tanjung Priok,Jakarta Utara,DKI Jakarta,48553,47635,96188,56,0.58,0.8136,0.0526,0.6032,0.9724,10816,0.8735
+Cengkareng Barat,Cengkareng,Jakarta Barat,DKI Jakarta,62172,60924,123096,98,0.8,0.6357,0.1602,0.0627,1,38349,0.6163
+Cengkareng Timur,Cengkareng,Jakarta Barat,DKI Jakarta,79087,76502,155589,69,0.44,0.6428,0.1421,0.0133,1,37109,0.6265
+Duri Kosambi,Cengkareng,Jakarta Barat,DKI Jakarta,72079,70332,142411,104,0.73,0.6211,0.1873,0,1,59820,0.5951
+Kapuk,Cengkareng,Jakarta Barat,DKI Jakarta,138960,133947,272907,69,0.25,0.6657,0.1171,0.041,0.9841,60754,0.6596
+Kedaung Kali Angke,Cengkareng,Jakarta Barat,DKI Jakarta,34181,33683,67864,32,0.47,0.5802,0.1908,0.008,0.9713,30040,0.5361
+Rawa Buaya,Cengkareng,Jakarta Barat,DKI Jakarta,63179,61333,124512,62,0.5,0.652,0.1741,0.0179,1,37106,0.6399
+Grogol,Grogol Petamburan,Jakarta Barat,DKI Jakarta,17120,17090,34210,53,1.55,0.8361,0.0891,0.4927,1,10628,0.906
+Jelambar,Grogol Petamburan,Jakarta Barat,DKI Jakarta,29361,29032,58393,24,0.41,0.8213,0.0962,0.2042,1,15836,0.8847
+Jelambar Baru,Grogol Petamburan,Jakarta Barat,DKI Jakarta,37551,36784,74335,36,0.48,0.8027,0.0659,0.452,0.9878,14285,0.8578
+Tanjung Duren Selatan,Grogol Petamburan,Jakarta Barat,DKI Jakarta,23967,23221,47188,54,1.14,0.772,0.1138,0.2561,1,13081,0.8134
+Tanjung Duren Utara,Grogol Petamburan,Jakarta Barat,DKI Jakarta,16442,16133,32575,23,0.71,0.8012,0.0821,0.4115,1,13033,0.8556
+Tomang,Grogol Petamburan,Jakarta Barat,DKI Jakarta,28548,28226,56774,18,0.32,0.8192,0.1274,0.1902,1,18608,0.8816
+Wijaya Kusuma,Grogol Petamburan,Jakarta Barat,DKI Jakarta,38877,38198,77075,36,0.47,0.7519,0.1172,0.1501,0.9995,22792,0.7843
+Kalideres,Kali Deres,Jakarta Barat,DKI Jakarta,71732,69341,141073,102,0.72,0.6127,0.1462,0.0051,0.9476,51053,0.583
+Kamal,Kali Deres,Jakarta Barat,DKI Jakarta,51781,49498,101279,25,0.25,0.4761,0.1814,0,0.9996,51700,0.3856
+Pegadungan,Kali Deres,Jakarta Barat,DKI Jakarta,67846,65963,133809,98,0.73,0.5438,0.1558,0,1,74940,0.4834
+Semanan,Kali Deres,Jakarta Barat,DKI Jakarta,72748,70531,143279,64,0.45,0.5227,0.1889,0,0.9778,51255,0.4529
+Tegal Alur,Kali Deres,Jakarta Barat,DKI Jakarta,87064,83140,170204,63,0.37,0.5303,0.1798,0,1,54631,0.4639
+Duri Kepa,Kebon Jeruk,Jakarta Barat,DKI Jakarta,56785,55208,111993,74,0.66,0.7962,0.0913,0.2542,1,36582,0.8483
+Kebon Jeruk,Kebon Jeruk,Jakarta Barat,DKI Jakarta,49752,48805,98557,61,0.62,0.7341,0.123,0.0929,1,38231,0.7585
+Kedoya Selatan,Kebon Jeruk,Jakarta Barat,DKI Jakarta,30942,29987,60929,44,0.72,0.7292,0.1394,0.0981,1,25611,0.7514
+Kedoya Utara,Kebon Jeruk,Jakarta Barat,DKI Jakarta,43109,42496,85605,57,0.67,0.7638,0.0999,0.2728,0.9966,29029,0.8015
+Kelapa Dua,Kebon Jeruk,Jakarta Barat,DKI Jakarta,22717,22514,45231,15,0.33,0.7567,0.1258,0.2538,0.9859,13470,0.7912
+Sukabumi Selatan,Kebon Jeruk,Jakarta Barat,DKI Jakarta,37849,36791,74640,22,0.29,0.7706,0.1062,0.1824,0.9735,13464,0.8113
+Sukabumi Utara,Kebon Jeruk,Jakarta Barat,DKI Jakarta,37325,36406,73731,25,0.34,0.7879,0.0684,0.2448,0.9791,15189,0.8364
+Joglo,Kembangan,Jakarta Barat,DKI Jakarta,37708,36720,74428,158,2.12,0.6144,0.1864,0.0705,0.978,45226,0.5855
+Kembangan Selatan,Kembangan,Jakarta Barat,DKI Jakarta,24293,24186,48479,111,2.29,0.6674,0.1735,0.0908,1,44846,0.6621
+Kembangan Utara,Kembangan,Jakarta Barat,DKI Jakarta,51945,50587,102532,62,0.6,0.6128,0.1459,0.0873,1,41903,0.5832
+Meruya Selatan,Kembangan,Jakarta Barat,DKI Jakarta,28067,27641,55708,55,0.99,0.6088,0.1659,0.028,0.9752,32581,0.5774
+Meruya Utara,Kembangan,Jakarta Barat,DKI Jakarta,39777,38757,78534,79,1.01,0.7339,0.1347,0.1282,1,40532,0.7583
+Srengseng,Kembangan,Jakarta Barat,DKI Jakarta,41115,40640,81755,84,1.03,0.6466,0.1716,0.093,0.9904,45926,0.6321
+Jati Pulo,Palmerah,Jakarta Barat,DKI Jakarta,29478,28745,58223,13,0.22,0.8645,0.0737,0.5632,1,8241,0.9471
+Kemanggisan,Palmerah,Jakarta Barat,DKI Jakarta,32423,32479,64902,28,0.43,0.7908,0.1095,0.2074,1,20975,0.8405
+Kota Bambu Selatan,Palmerah,Jakarta Barat,DKI Jakarta,22321,21749,44070,8,0.18,0.7364,0.1267,0.2839,0.9977,5845,0.7619
+Kota Bambu Utara,Palmerah,Jakarta Barat,DKI Jakarta,25942,25223,51165,6,0.12,0.8028,0.0751,0.4129,1,6811,0.8579
+Palmerah,Palmerah,Jakarta Barat,DKI Jakarta,62200,60584,122784,34,0.28,0.7663,0.1043,0.1614,1,21961,0.8052
+Slipi,Palmerah,Jakarta Barat,DKI Jakarta,16776,16368,33144,10,0.3,0.7204,0.1355,0.1893,1,9788,0.7387
+Glodok,Taman Sari,Jakarta Barat,DKI Jakarta,6627,6726,13353,9,0.67,0.8397,0.0659,0.5935,1,3661,0.9113
+Keagungan,Taman Sari,Jakarta Barat,DKI Jakarta,17864,17764,35628,22,0.62,0.8318,0.0603,0.6599,0.999,3529,0.8998
+Krukut,Taman Sari,Jakarta Barat,DKI Jakarta,19487,19249,38736,13,0.34,0.8116,0.0674,0.538,1,6054,0.8706
+Mangga Besar,Taman Sari,Jakarta Barat,DKI Jakarta,7020,7202,14222,14,0.98,0.8018,0.0958,0.3338,1,5477,0.8565
+Maphar,Taman Sari,Jakarta Barat,DKI Jakarta,16659,16715,33374,35,1.05,0.8259,0.0887,0.2587,0.9993,7144,0.8913
+Pinangsia,Taman Sari,Jakarta Barat,DKI Jakarta,11084,10912,21996,19,0.86,0.7693,0.121,0.2938,1,9424,0.8095
+Taman Sari,Taman Sari,Jakarta Barat,DKI Jakarta,14570,14353,28923,45,1.56,0.7583,0.0688,0.3923,0.9489,5971,0.7936
+Tangki,Taman Sari,Jakarta Barat,DKI Jakarta,13320,13382,26702,13,0.49,0.7099,0.1002,0.2316,0.9395,3883,0.7236
+Angke,Tambora,Jakarta Barat,DKI Jakarta,30253,30076,60329,14,0.23,0.7942,0.0689,0.4537,0.9938,7871,0.8455
+Duri Selatan,Tambora,Jakarta Barat,DKI Jakarta,14653,14545,29198,18,0.62,0.7414,0.0605,0.3474,0.9104,3825,0.7692
+Duri Utara,Tambora,Jakarta Barat,DKI Jakarta,20750,20624,41374,15,0.36,0.7588,0.0484,0.5586,0.8667,3682,0.7943
+Jembatan Besi,Tambora,Jakarta Barat,DKI Jakarta,33108,32503,65611,21,0.32,0.7927,0.064,0.5882,1,5236,0.8433
+Jembatan Lima,Tambora,Jakarta Barat,DKI Jakarta,21695,21203,42898,6,0.14,0.7615,0.0655,0.3735,0.9759,4892,0.7982
+Kali Anyar,Tambora,Jakarta Barat,DKI Jakarta,26887,26531,53418,6,0.11,0.766,0.0628,0.3637,0.9197,3109,0.8047
+Kerendang,Tambora,Jakarta Barat,DKI Jakarta,21036,20580,41616,12,0.29,0.8031,0.0446,0.6555,0.9164,3285,0.8583
+Pekojan,Tambora,Jakarta Barat,DKI Jakarta,22608,22626,45234,15,0.33,0.7692,0.0785,0.4308,0.9821,7791,0.8093
+Roa Malaka,Tambora,Jakarta Barat,DKI Jakarta,3215,3289,6504,7,1.08,0.8535,0.0883,0.5304,1,5293,0.9313
+Tambora,Tambora,Jakarta Barat,DKI Jakarta,10637,10528,21165,25,1.18,0.7926,0.0638,0.4889,0.9602,2894,0.8432
+Tanah Sereal,Tambora,Jakarta Barat,DKI Jakarta,26051,25404,51455,26,0.51,0.8165,0.0472,0.6157,0.9563,5753,0.8777
+Cilandak Barat,Cilandak,Jakarta Selatan,DKI Jakarta,29118,28563,57681,85,1.47,0.7429,0.1472,0.1714,1,58906,0.7712
+Cipete Selatan,Cilandak,Jakarta Selatan,DKI Jakarta,15359,14848,30207,31,1.03,0.7597,0.1037,0.2281,0.9995,24503,0.7956
+Gandaria Selatan,Cilandak,Jakarta Selatan,DKI Jakarta,12268,12046,24314,21,0.86,0.6461,0.2294,0.1134,0.9992,16040,0.6313
+Lebak Bulus,Cilandak,Jakarta Selatan,DKI Jakarta,19677,19291,38968,41,1.05,0.6972,0.1776,0.1094,1,46117,0.7051
+Pondok Labu,Cilandak,Jakarta Selatan,DKI Jakarta,24258,23927,48185,57,1.18,0.6621,0.1622,0.1086,0.9927,34476,0.6545
+Ciganjur,Jagakarsa,Jakarta Selatan,DKI Jakarta,19036,18265,37301,69,1.85,0.6416,0.1486,0.1605,0.9833,36883,0.6248
+Cipedak,Jagakarsa,Jakarta Selatan,DKI Jakarta,18260,17665,35925,39,1.09,0.6143,0.1982,0.1168,0.9687,40901,0.5853
+Jagakarsa,Jagakarsa,Jakarta Selatan,DKI Jakarta,31912,30838,62750,243,3.87,0.6826,0.1303,0.1268,0.9997,44378,0.6841
+Lenteng Agung,Jagakarsa,Jakarta Selatan,DKI Jakarta,28714,27607,56321,46,0.82,0.7488,0.1272,0.2503,0.9881,15578,0.7799
+Srengseng Sawah,Jagakarsa,Jakarta Selatan,DKI Jakarta,30531,29621,60152,40,0.66,0.6823,0.165,0.1271,0.9937,62410,0.6837
+Tanjung Barat,Jagakarsa,Jakarta Selatan,DKI Jakarta,21186,20638,41824,34,0.81,0.7473,0.1575,0.1041,1,43805,0.7777
+Cipete Utara,Kebayoran Baru,Jakarta Selatan,DKI Jakarta,19369,18426,37795,24,0.64,0.7488,0.1292,0.152,0.9997,16427,0.7799
+Gandaria Utara,Kebayoran Baru,Jakarta Selatan,DKI Jakarta,22422,22021,44443,28,0.63,0.805,0.1209,0.1784,0.9972,16042,0.861
+Gunung,Kebayoran Baru,Jakarta Selatan,DKI Jakarta,5337,5258,10595,11,1.04,0.8378,0.0939,0.4368,1,14401,0.9085
+Kramat Pela,Kebayoran Baru,Jakarta Selatan,DKI Jakarta,8123,7698,15821,9,0.57,0.8586,0.1051,0.3522,1,11936,0.9386
+Melawai,Kebayoran Baru,Jakarta Selatan,DKI Jakarta,1571,1603,3174,11,3.47,0.8396,0.1014,0.3443,1,12809,0.9111
+Petogogan,Kebayoran Baru,Jakarta Selatan,DKI Jakarta,7046,6618,13664,11,0.81,0.8195,0.1112,0.3866,1,8587,0.882
+Pulo,Kebayoran Baru,Jakarta Selatan,DKI Jakarta,3291,3565,6856,8,1.17,0.7856,0.1349,0.3257,1,10836,0.8331
+Rawa Barat,Kebayoran Baru,Jakarta Selatan,DKI Jakarta,3352,3386,6738,10,1.48,0.8535,0.0809,0.5326,1,6464,0.9312
+Selong,Kebayoran Baru,Jakarta Selatan,DKI Jakarta,2081,2126,4207,5,1.19,0.7641,0.1096,0.3375,1,14304,0.802
+Senayan,Kebayoran Baru,Jakarta Selatan,DKI Jakarta,2190,2163,4353,14,3.22,0.7525,0.1507,0.2468,1,14366,0.7851
+Cipulir,Kebayoran Lama,Jakarta Selatan,DKI Jakarta,22150,21484,43634,33,0.76,0.7369,0.1446,0.1575,1,17907,0.7625
+Grogol Selatan,Kebayoran Lama,Jakarta Selatan,DKI Jakarta,24757,23687,48444,25,0.52,0.7411,0.1268,0.1241,1,32810,0.7686
+Grogol Utara,Kebayoran Lama,Jakarta Selatan,DKI Jakarta,24409,23316,47725,45,0.94,0.7271,0.1297,0.2074,1,33128,0.7484
+Kebayoran Lama Selatan,Kebayoran Lama,Jakarta Selatan,DKI Jakarta,23108,22105,45213,42,0.93,0.7121,0.1761,0.1453,1,24571,0.7268
+Kebayoran Lama Utara,Kebayoran Lama,Jakarta Selatan,DKI Jakarta,25585,23985,49570,30,0.61,0.784,0.1125,0.3122,1,17389,0.8307
+Pondok Pinang,Kebayoran Lama,Jakarta Selatan,DKI Jakarta,30527,30258,60785,72,1.18,0.7585,0.1762,0.1059,1,68187,0.7939
+Bangka,Mampang Prapatan,Jakarta Selatan,DKI Jakarta,12362,11833,24195,20,0.83,0.6771,0.1185,0.1592,1,30271,0.6761
+Kuningan Barat,Mampang Prapatan,Jakarta Selatan,DKI Jakarta,7775,7042,14817,18,1.21,0.7487,0.1424,0.1319,1,9766,0.7796
+Mampang Prapatan,Mampang Prapatan,Jakarta Selatan,DKI Jakarta,11084,10570,21654,52,2.4,0.784,0.1211,0.2407,1,7975,0.8307
+Pela Mampang,Mampang Prapatan,Jakarta Selatan,DKI Jakarta,25656,24446,50102,29,0.58,0.7416,0.0927,0.2347,1,20649,0.7694
+Tegal Parang,Mampang Prapatan,Jakarta Selatan,DKI Jakarta,19054,17865,36919,37,1,0.773,0.0631,0.4705,0.9699,10849,0.8148
+Cikoko,Pancoran,Jakarta Selatan,DKI Jakarta,6467,6249,12716,11,0.87,0.8393,0.1152,0.252,1,6720,0.9107
+Duren Tiga,Pancoran,Jakarta Selatan,DKI Jakarta,16328,15483,31811,51,1.6,0.7309,0.1228,0.1376,0.9874,21088,0.754
+Kalibata,Pancoran,Jakarta Selatan,DKI Jakarta,23772,23196,46968,112,2.38,0.727,0.1364,0.2337,0.988,22427,0.7482
+Pancoran,Pancoran,Jakarta Selatan,DKI Jakarta,10810,10418,21228,111,5.23,0.7414,0.1366,0.2212,1,13866,0.7692
+Pengadegan,Pancoran,Jakarta Selatan,DKI Jakarta,11525,11342,22867,57,2.49,0.7487,0.129,0.1112,0.9824,9726,0.7797
+Rawa Jati,Pancoran,Jakarta Selatan,DKI Jakarta,10130,9907,20037,78,3.89,0.7285,0.1318,0.2799,0.9979,15364,0.7505
+Cilandak Timur,Pasar Minggu,Jakarta Selatan,DKI Jakarta,15010,13468,28478,37,1.3,0.6796,0.1672,0.1518,1,38257,0.6797
+Jati Padang,Pasar Minggu,Jakarta Selatan,DKI Jakarta,20806,20503,41309,72,1.74,0.7363,0.1339,0.1283,1,39479,0.7618
+Kebagusan,Pasar Minggu,Jakarta Selatan,DKI Jakarta,23874,22915,46789,40,0.85,0.6606,0.1524,0.1332,0.9983,28708,0.6522
+Pasar Minggu,Pasar Minggu,Jakarta Selatan,DKI Jakarta,14183,13612,27795,89,3.2,0.8071,0.1176,0.3386,1,19225,0.8641
+Pejaten Barat,Pasar Minggu,Jakarta Selatan,DKI Jakarta,21099,20459,41558,51,1.23,0.7167,0.1216,0.1349,0.9944,29623,0.7334
+Pejaten Timur,Pasar Minggu,Jakarta Selatan,DKI Jakarta,33234,31916,65150,103,1.58,0.7209,0.1287,0.1714,0.9929,29010,0.7394
+Ragunan,Pasar Minggu,Jakarta Selatan,DKI Jakarta,22361,21468,43829,44,1,0.5802,0.199,0.0841,1,38297,0.536
+Bintaro,Pesanggrahan,Jakarta Selatan,DKI Jakarta,27332,26503,53835,32,0.59,0.6706,0.167,0.1021,0.9979,43467,0.6667
+Pesanggrahan,Pesanggrahan,Jakarta Selatan,DKI Jakarta,14827,14276,29103,27,0.93,0.6716,0.1488,0.1413,0.9884,21837,0.6682
+Petukangan Selatan,Pesanggrahan,Jakarta Selatan,DKI Jakarta,19491,19035,38526,36,0.93,0.6904,0.1519,0.0756,0.9959,20905,0.6954
+Petukangan Utara,Pesanggrahan,Jakarta Selatan,DKI Jakarta,28843,27970,56813,135,2.38,0.6891,0.1373,0.1131,0.9936,29632,0.6935
+Ulujami,Pesanggrahan,Jakarta Selatan,DKI Jakarta,22907,21828,44735,35,0.78,0.6727,0.1495,0.0787,0.9881,20312,0.6698
+Guntur,Setia Budi,Jakarta Selatan,DKI Jakarta,2268,2389,4657,11,2.36,0.687,0.2103,0.0975,1,6425,0.6904
+Karet,Setia Budi,Jakarta Selatan,DKI Jakarta,6201,5962,12163,14,1.15,0.7126,0.2097,0.0681,1,10195,0.7275
+Karet Kuningan,Setia Budi,Jakarta Selatan,DKI Jakarta,9406,9230,18636,58,3.11,0.7701,0.1512,0.101,1,17140,0.8105
+Karet Semanggi,Setia Budi,Jakarta Selatan,DKI Jakarta,1466,1412,2878,13,4.52,0.8087,0.1375,0.265,1,9056,0.8664
+Kuningan Timur,Setia Budi,Jakarta Selatan,DKI Jakarta,3703,3445,7148,44,6.16,0.7348,0.1636,0.1173,1,21590,0.7595
+Menteng Atas,Setia Budi,Jakarta Selatan,DKI Jakarta,15897,16041,31938,47,1.47,0.68,0.1862,0.1076,1,13990,0.6804
+Pasar Manggis,Setia Budi,Jakarta Selatan,DKI Jakarta,15995,15510,31505,15,0.48,0.7955,0.0794,0.2904,1,6467,0.8474
+Setia Budi,Setia Budi,Jakarta Selatan,DKI Jakarta,1824,1791,3615,39,10.79,0.7472,0.1828,0.1585,1,6437,0.7776
+Bukit Duri,Tebet,Jakarta Selatan,DKI Jakarta,21414,20599,42013,36,0.86,0.7938,0.0766,0.4316,0.9998,10850,0.8448
+Kebon Baru,Tebet,Jakarta Selatan,DKI Jakarta,20809,20241,41050,28,0.68,0.8108,0.0842,0.3362,1,12587,0.8695
+Manggarai,Tebet,Jakarta Selatan,DKI Jakarta,17447,16985,34432,16,0.46,0.7043,0.1276,0.176,0.9998,11705,0.7155
+Manggarai Selatan,Tebet,Jakarta Selatan,DKI Jakarta,13560,13294,26854,30,1.12,0.8178,0.055,0.5796,0.9689,5910,0.8795
+Menteng Dalam,Tebet,Jakarta Selatan,DKI Jakarta,21408,20766,42174,82,1.94,0.7158,0.166,0.1977,1,20339,0.7321
+Tebet Barat,Tebet,Jakarta Selatan,DKI Jakarta,11993,12219,24212,78,3.22,0.8713,0.0992,0.3775,1,16534,0.9569
+Tebet Timur,Tebet,Jakarta Selatan,DKI Jakarta,9906,10309,20215,94,4.65,0.9011,0.0877,0.4568,1,13275,1
+Cakung Barat,Cakung,Jakarta Timur,DKI Jakarta,31870,30214,62084,28,0.45,0.6119,0.1985,0,1,60930,0.5818
+Cakung Timur,Cakung,Jakarta Timur,DKI Jakarta,32448,30959,63407,38,0.6,0.4791,0.2131,0,0.9989,91612,0.3898
+Jatinegara,Cakung,Jakarta Timur,DKI Jakarta,50401,46678,97079,48,0.49,0.6612,0.1408,0.1002,1,66115,0.6531
+Penggilingan,Cakung,Jakarta Timur,DKI Jakarta,51618,49101,100719,39,0.39,0.6797,0.1435,0.0033,0.9924,43685,0.6799
+Pulo Gebang,Cakung,Jakarta Timur,DKI Jakarta,47764,46327,94091,40,0.43,0.7072,0.171,0.0348,1,65039,0.7196
+Rawa Terate,Cakung,Jakarta Timur,DKI Jakarta,16026,14259,30285,8,0.26,0.608,0.18,0,0.9995,40994,0.5762
+Ujung Menteng,Cakung,Jakarta Timur,DKI Jakarta,15817,15065,30882,16,0.52,0.5102,0.1834,0,0.9756,36547,0.4349
+Bambu Apus,Cipayung,Jakarta Timur,DKI Jakarta,13561,13065,26626,41,1.54,0.596,0.1629,0.0871,0.9886,30446,0.5589
+Ceger,Cipayung,Jakarta Timur,DKI Jakarta,10209,9726,19935,12,0.6,0.6434,0.1621,0.166,1,31101,0.6274
+Cilangkap,Cipayung,Jakarta Timur,DKI Jakarta,13610,12896,26506,21,0.79,0.5412,0.2043,0.0663,0.9768,54072,0.4796
+Cipayung,Cipayung,Jakarta Timur,DKI Jakarta,13406,12589,25995,50,1.92,0.6896,0.1512,0.1779,0.9939,29158,0.6942
+Lubang Buaya,Cipayung,Jakarta Timur,DKI Jakarta,34166,32997,67163,170,2.53,0.6735,0.1723,0.1387,0.9684,36113,0.6709
+Munjul,Cipayung,Jakarta Timur,DKI Jakarta,12332,11862,24194,10,0.41,0.6386,0.1814,0.1448,0.9801,20490,0.6205
+Pondok Ranggon,Cipayung,Jakarta Timur,DKI Jakarta,12651,12136,24787,9,0.36,0.524,0.1775,0.116,1,44835,0.4548
+Setu,Cipayung,Jakarta Timur,DKI Jakarta,10008,9581,19589,30,1.53,0.6225,0.1524,0.1298,0.9361,28567,0.5973
+Cibubur,Ciracas,Jakarta Timur,DKI Jakarta,35787,34793,70580,23,0.33,0.7485,0.1293,0.179,1,48702,0.7794
+Ciracas,Ciracas,Jakarta Timur,DKI Jakarta,35504,33853,69357,42,0.61,0.7205,0.1399,0.1145,1,35269,0.7389
+Kelapa Dua Wetan,Ciracas,Jakarta Timur,DKI Jakarta,24053,23809,47862,22,0.46,0.7441,0.1261,0.1869,1,33737,0.773
+Rambutan,Ciracas,Jakarta Timur,DKI Jakarta,20669,19718,40387,31,0.77,0.7868,0.1265,0.2271,1,25448,0.8347
+Susukan,Ciracas,Jakarta Timur,DKI Jakarta,21626,20024,41650,21,0.5,0.7024,0.1967,0.0966,1,23973,0.7128
+Duren Sawit,Duren Sawit,Jakarta Timur,DKI Jakarta,32454,32123,64577,81,1.25,0.7671,0.0965,0.2857,1,41091,0.8063
+Klender,Duren Sawit,Jakarta Timur,DKI Jakarta,40106,38294,78400,46,0.59,0.7965,0.0954,0.2539,1,29976,0.8488
+Malaka Jaya,Duren Sawit,Jakarta Timur,DKI Jakarta,17947,18222,36169,14,0.39,0.843,0.1192,0.3173,1,11001,0.916
+Malaka Sari,Duren Sawit,Jakarta Timur,DKI Jakarta,16191,16364,32555,10,0.31,0.8,0.0987,0.3788,0.9948,12644,0.8538
+Pondok Bambu,Duren Sawit,Jakarta Timur,DKI Jakarta,34118,32297,66415,45,0.68,0.7863,0.13,0.1344,1,45899,0.834
+Pondok Kelapa,Duren Sawit,Jakarta Timur,DKI Jakarta,36517,35963,72480,49,0.68,0.7411,0.1505,0.0929,1,55044,0.7687
+Pondok Kopi,Duren Sawit,Jakarta Timur,DKI Jakarta,18874,18485,37359,18,0.48,0.7013,0.1684,0.1483,0.9989,22670,0.7111
+Bali Mester,Jatinegara,Jakarta Timur,DKI Jakarta,5877,5714,11591,13,1.12,0.8692,0.0769,0.5258,1,6737,0.9539
+Bidara Cina,Jatinegara,Jakarta Timur,DKI Jakarta,22540,22172,44712,17,0.38,0.8037,0.1121,0.2288,1,12432,0.8591
+Cipinang Besar Selatan,Jatinegara,Jakarta Timur,DKI Jakarta,19516,18646,38162,20,0.52,0.7569,0.1724,0.1841,1,16992,0.7915
+Cipinang Besar Utara,Jatinegara,Jakarta Timur,DKI Jakarta,28981,27194,56175,22,0.39,0.7895,0.124,0.258,1,10944,0.8387
+Cipinang Cempedak,Jatinegara,Jakarta Timur,DKI Jakarta,19179,19082,38261,32,0.84,0.8742,0.1026,0.3705,1,16667,0.9612
+Cipinang Muara,Jatinegara,Jakarta Timur,DKI Jakarta,31792,30624,62416,38,0.61,0.7947,0.0912,0.2241,1,27107,0.8462
+Kampung Melayu,Jatinegara,Jakarta Timur,DKI Jakarta,15846,14859,30705,14,0.46,0.8008,0.0864,0.4659,1,4815,0.855
+Rawa Bunga,Jatinegara,Jakarta Timur,DKI Jakarta,12785,12271,25056,25,1,0.8307,0.122,0.3724,1,7589,0.8982
+Bale Kambang,Kramat Jati,Jakarta Timur,DKI Jakarta,15421,14659,30080,29,0.96,0.6596,0.1291,0.151,0.9249,16838,0.6508
+Batu Ampar,Kramat Jati,Jakarta Timur,DKI Jakarta,25909,25044,50953,67,1.31,0.7466,0.0798,0.2841,0.9399,26026,0.7767
+Cawang,Kramat Jati,Jakarta Timur,DKI Jakarta,20029,19036,39065,24,0.61,0.7659,0.1592,0.1274,1,20052,0.8046
+Cililitan,Kramat Jati,Jakarta Timur,DKI Jakarta,23838,23130,46968,26,0.55,0.7401,0.113,0.2565,1,17457,0.7673
+Dukuh,Kramat Jati,Jakarta Timur,DKI Jakarta,13570,12965,26535,32,1.21,0.7986,0.1286,0.2421,1,16937,0.8519
+Kampung Tengah,Kramat Jati,Jakarta Timur,DKI Jakarta,25288,24002,49290,44,0.89,0.7735,0.0789,0.2323,0.9489,20049,0.8156
+Kramat Jati,Kramat Jati,Jakarta Timur,DKI Jakarta,20098,19119,39217,49,1.25,0.785,0.0988,0.3228,1,14486,0.8322
+Cipinang Melayu,Makasar,Jakarta Timur,DKI Jakarta,23743,23185,46928,30,0.64,0.7986,0.1413,0.1326,1,28297,0.8518
+Halim Perdana Kusumah,Makasar,Jakarta Timur,DKI Jakarta,17084,16195,33279,64,1.92,0.4738,0.2297,0.017,1,128914,0.3823
+Kebon Pala,Makasar,Jakarta Timur,DKI Jakarta,26713,25375,52088,28,0.54,0.7611,0.1384,0.2247,1,20613,0.7975
+Makasar,Makasar,Jakarta Timur,DKI Jakarta,19422,18863,38285,45,1.18,0.7432,0.1627,0.0952,1,14638,0.7717
+Pinang Ranti,Makasar,Jakarta Timur,DKI Jakarta,14254,13705,27959,70,2.5,0.7141,0.1681,0.1922,1,22794,0.7297
+Kayu Manis,Matraman,Jakarta Timur,DKI Jakarta,15120,14940,30060,48,1.6,0.7909,0.0452,0.6026,0.9654,5462,0.8408
+Kebon Manggis,Matraman,Jakarta Timur,DKI Jakarta,10112,9857,19969,24,1.2,0.7569,0.0913,0.1388,0.9884,7761,0.7916
+Pal Meriam,Matraman,Jakarta Timur,DKI Jakarta,12057,11874,23931,25,1.04,0.7963,0.0786,0.4595,0.9949,6426,0.8485
+Pisangan Baru,Matraman,Jakarta Timur,DKI Jakarta,18867,18473,37340,37,0.99,0.7932,0.0886,0.4608,1,8018,0.844
+Utan Kayu Selatan,Matraman,Jakarta Timur,DKI Jakarta,19372,19193,38565,71,1.84,0.783,0.0754,0.3472,0.9953,11333,0.8293
+Utan Kayu Utara,Matraman,Jakarta Timur,DKI Jakarta,16942,16333,33275,54,1.62,0.8019,0.08,0.4395,1,10176,0.8566
+Baru,Pasar Rebo,Jakarta Timur,DKI Jakarta,13845,12866,26711,8,0.3,0.683,0.1922,0.1385,1,19303,0.6846
+Cijantung,Pasar Rebo,Jakarta Timur,DKI Jakarta,22375,21680,44055,15,0.34,0.7084,0.1539,0.1513,0.9853,28221,0.7214
+Gedong,Pasar Rebo,Jakarta Timur,DKI Jakarta,19772,19132,38904,28,0.72,0.7674,0.1581,0.2074,1,24368,0.8067
+Kalisari,Pasar Rebo,Jakarta Timur,DKI Jakarta,22891,21949,44840,18,0.4,0.7054,0.1666,0.2199,0.9595,27090,0.7171
+Pekayon,Pasar Rebo,Jakarta Timur,DKI Jakarta,23365,22478,45843,6,0.13,0.7376,0.142,0.1646,0.9907,28245,0.7637
+Cipinang,Pulo Gadung,Jakarta Timur,DKI Jakarta,23251,22571,45822,67,1.46,0.7589,0.0997,0.2289,0.9676,15199,0.7944
+Jati,Pulo Gadung,Jakarta Timur,DKI Jakarta,18485,18643,37128,48,1.29,0.8219,0.1169,0.3516,1,20680,0.8855
+Jatinegara Kaum,Pulo Gadung,Jakarta Timur,DKI Jakarta,13809,12993,26802,27,1.01,0.6715,0.1348,0.1606,0.9934,13041,0.6681
+Kayu Putih,Pulo Gadung,Jakarta Timur,DKI Jakarta,24459,24351,48810,139,2.85,0.6798,0.1803,0.0423,1,42141,0.6801
+Pisangan Timur,Pulo Gadung,Jakarta Timur,DKI Jakarta,24621,23848,48469,69,1.42,0.7669,0.1091,0.2551,1,18548,0.806
+Pulo Gadung,Pulo Gadung,Jakarta Timur,DKI Jakarta,20094,18936,39030,63,1.61,0.7797,0.1094,0.0917,1,17627,0.8246
+Rawamangun,Pulo Gadung,Jakarta Timur,DKI Jakarta,22167,21936,44103,92,2.09,0.7103,0.223,0.065,1,26261,0.7241

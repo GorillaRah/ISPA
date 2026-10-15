@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="id">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -21,7 +21,7 @@
             margin: 0;
         }
         </style>
-        <title></title>
+        <title>WebGIS Indeks Paparan Lingkungan ISPA DKI Jakarta</title>
     </head>
     <body>
         <div id="map">
@@ -42,10 +42,47 @@
         <script src="data/RisikoISPAKelurahanQ3_24.js"></script>
         <script src="data/RisikoISPAKelurahanQ2_25.js"></script>
         <script src="data/RisikoISPAKelurahanQ1_26.js"></script>
+        <script src="data/insiden_ispa_2025.js"></script>
         <script src="data/PolygonKota_28.js"></script>
         <script src="data/PolygonKecamatan_30.js"></script>
         <script src="data/FasilitasKesehatan_33.js"></script>
         <script>
+        function createISPAIncidenceDetail(properties) {
+            var name = String(properties.NAMOBJ || properties.WADMKD || '')
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .toLocaleLowerCase()
+                .replace(/[^a-z0-9]/g, '');
+            var record = window.ispaIncidence2025 &&
+                window.ispaIncidence2025.records[name];
+            var detail = document.createElement('div');
+            detail.className = 'attribute-detail';
+
+            var label = document.createElement('span');
+            label.textContent = 'Insiden ISPA 2025 per 1.000 penduduk: ';
+            detail.appendChild(label);
+            detail.appendChild(document.createTextNode(
+                record ? Number(record.per1000).toFixed(2) : 'Data tidak tersedia'
+            ));
+
+            var help = document.createElement('span');
+            help.className = 'env-help';
+            help.textContent = '?';
+            help.setAttribute('role', 'img');
+            help.setAttribute('tabindex', '0');
+            help.setAttribute('title',
+                'Data kasus ISPA tahunan 2025 dari Dinas Kesehatan Provinsi DKI Jakarta, diunduh dari dinkes.jakarta.go.id; ' +
+                'angka per 1.000 penduduk dihitung dari jumlah pasien dan jumlah penduduk. ' +
+                'Angka agregat kelurahan ini bukan prediksi risiko kesehatan.'
+            );
+            help.setAttribute('aria-label', help.title);
+            detail.appendChild(help);
+            return detail;
+        }
+
+        function labelKlasifikasiRisiko(value) {
+            return value ? 'Relatif ' + value : '-';
+        }
         var map = L.map('map', {
             zoomControl:false, maxZoom:28, minZoom:1
         }).fitBounds([[-6.344967173751162,106.59408741559224],[-6.1217079897862945,107.01848153582966]]);
@@ -340,12 +377,12 @@
                         <td colspan="2">' + (feature.properties['NAMOBJ'] !== null ? autolinker.link(String(feature.properties['NAMOBJ']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">risiko_ispa_normalisasi</th>\
+                        <th scope="row">Indeks paparan (ternormalisasi)</th>\
                         <td class="visible-with-data" id="risiko_ispa_normalisasi">' + (feature.properties['risiko_ispa_normalisasi'] !== null ? autolinker.link(String(feature.properties['risiko_ispa_normalisasi']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
                         <th scope="row">klasifikasi</th>\
-                        <td class="visible-with-data" id="klasifikasi">' + (feature.properties['klasifikasi'] !== null ? autolinker.link(String(feature.properties['klasifikasi']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                        <td class="visible-with-data" id="klasifikasi">' + (feature.properties['klasifikasi'] !== null ? autolinker.link(String(labelKlasifikasiRisiko(feature.properties['klasifikasi'])).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                 </table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
@@ -454,12 +491,12 @@
                         <td colspan="2">' + (feature.properties['NAMOBJ'] !== null ? autolinker.link(String(feature.properties['NAMOBJ']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">risiko_ispa_normalisasi</th>\
+                        <th scope="row">Indeks paparan (ternormalisasi)</th>\
                         <td class="visible-with-data" id="risiko_ispa_normalisasi">' + (feature.properties['risiko_ispa_normalisasi'] !== null ? autolinker.link(String(feature.properties['risiko_ispa_normalisasi']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
                         <th scope="row">klasifikasi</th>\
-                        <td class="visible-with-data" id="klasifikasi">' + (feature.properties['klasifikasi'] !== null ? autolinker.link(String(feature.properties['klasifikasi']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                        <td class="visible-with-data" id="klasifikasi">' + (feature.properties['klasifikasi'] !== null ? autolinker.link(String(labelKlasifikasiRisiko(feature.properties['klasifikasi'])).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                 </table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
@@ -568,12 +605,12 @@
                         <td colspan="2">' + (feature.properties['NAMOBJ'] !== null ? autolinker.link(String(feature.properties['NAMOBJ']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">risiko_ispa_normalisasi</th>\
+                        <th scope="row">Indeks paparan (ternormalisasi)</th>\
                         <td class="visible-with-data" id="risiko_ispa_normalisasi">' + (feature.properties['risiko_ispa_normalisasi'] !== null ? autolinker.link(String(feature.properties['risiko_ispa_normalisasi']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
                         <th scope="row">klasifikasi</th>\
-                        <td class="visible-with-data" id="klasifikasi">' + (feature.properties['klasifikasi'] !== null ? autolinker.link(String(feature.properties['klasifikasi']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                        <td class="visible-with-data" id="klasifikasi">' + (feature.properties['klasifikasi'] !== null ? autolinker.link(String(labelKlasifikasiRisiko(feature.properties['klasifikasi'])).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                 </table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
@@ -682,12 +719,12 @@
                         <td colspan="2">' + (feature.properties['NAMOBJ'] !== null ? autolinker.link(String(feature.properties['NAMOBJ']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <th scope="row">risiko_ispa_normalisasi</th>\
+                        <th scope="row">Indeks paparan (ternormalisasi)</th>\
                         <td class="visible-with-data" id="risiko_ispa_normalisasi">' + (feature.properties['risiko_ispa_normalisasi'] !== null ? autolinker.link(String(feature.properties['risiko_ispa_normalisasi']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                     <tr>\
                         <th scope="row">klasifikasi</th>\
-                        <td class="visible-with-data" id="klasifikasi">' + (feature.properties['klasifikasi'] !== null ? autolinker.link(String(feature.properties['klasifikasi']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                        <td class="visible-with-data" id="klasifikasi">' + (feature.properties['klasifikasi'] !== null ? autolinker.link(String(labelKlasifikasiRisiko(feature.properties['klasifikasi'])).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
                 </table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
@@ -1481,7 +1518,7 @@
 #index-methodology th:last-child,#index-methodology td:last-child{text-align:right;font-variant-numeric:tabular-nums}
 #index-methodology th{font-weight:600;color:#6b7280}
 .methodology-caveat{padding:7px 8px;border-left:3px solid #f59e0b;background:#fffbeb;border-radius:4px}
-.legend-row{display:none;margin:0 0 10px 22px}.legend-bar{height:10px;border-radius:3px}.legend-labels{display:flex;justify-content:space-between;font-size:9px;color:#9ca3af;margin-top:2px}.legend-swatches{display:none;flex-direction:column;gap:2px;margin:0 0 10px 22px}.legend-swatches .sw-row{display:flex;align-items:center;gap:6px;font-size:10px;color:#4b5563}.legend-swatches .sw-color{width:14px;height:10px;border-radius:2px;flex-shrink:0}
+.legend-row{display:none;margin:0 0 10px 22px}.legend-bar{height:10px;border-radius:3px}.legend-labels{display:flex;justify-content:space-between;font-size:9px;color:#9ca3af;margin-top:2px}.legend-swatches{display:none;flex-direction:column;gap:2px;margin:0 0 10px 22px}.legend-swatches .sw-row{display:flex;align-items:center;gap:6px;font-size:10px;color:#4b5563}.legend-swatches .sw-color{width:14px;height:10px;border-radius:2px;flex-shrink:0}.legend-caption{margin-top:4px;font-size:9px;line-height:1.4;color:#6b7280}
 #layer-panel .legend-gradient{display:block;width:100%;height:12px;object-fit:fill;border-radius:3px}
 #topright-stack{position:absolute;top:16px;right:16px;z-index:1000;display:flex;flex-direction:column;gap:10px;align-items:flex-end}.round-btn{width:42px;height:42px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px}#btn-locate{background:#1f2937;color:#fff}#btn-locate.tracking{background:#16a34a}#buffer-control{display:none;padding:10px 12px;width:160px}#buffer-control label{display:block;font-size:10px;color:#6b7280;margin-bottom:4px}#buffer-control select{width:100%;font-size:12px;padding:4px;border-radius:6px;border:1px solid #e5e7eb}
 #nearby-faskes-panel{display:none;position:absolute;top:140px;right:16px;bottom:auto;left:auto;z-index:1000;width:230px;padding:12px 16px;max-height:240px;overflow-y:auto}#nearby-faskes-panel h4,#attribute-panel h4{margin:0 0 6px;font-size:12px;color:#111827}.nearby-row{font-size:11px;color:#374151;padding:4px 0;border-bottom:1px solid #f3f4f6;cursor:pointer}.nearby-row:last-child{border-bottom:none}.nearby-row:hover{color:#1f2937;font-weight:600}.nearby-empty{font-size:11px;color:#9ca3af}
@@ -1517,9 +1554,9 @@
 .env-tooltip .env-warning p{margin:4px 0 0}
 #coord-display{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);z-index:1000;padding:6px 16px;font-family:'Courier New',monospace;font-size:12px;color:#374151}
 </style>
-<div id="webgis-header"><h1>WebGIS Risiko ISPA DKI Jakarta</h1><p>Integrasi LST, NO₂, NDVI, NDBI, Proksi Jalan, dan Risiko ISPA - Multitemporal Kuartal 2025</p></div>
+<div id="webgis-header"><h1>WebGIS Indeks Paparan Lingkungan ISPA DKI Jakarta</h1><p>Integrasi LST, NO₂, NDVI, NDBI, dan Proksi Jalan - Multitemporal Q4 2023–Q1 2026</p></div>
 <div id="layer-panel" class="wgis-card"><h3>Layer Peta</h3><span class="group-title">Peta Dasar</span><label><input type="radio" name="basemap" id="basemap-osm" checked> OSM Standard</label><label><input type="radio" name="basemap" id="basemap-esri"> ESRI Satellite</label><span class="group-title">Waktu</span><div id="time-control"><input type="range" id="time-slider" min="0" max="3" step="1" value="0"><div class="time-ticks"><span data-q="0">Q1</span><span data-q="1">Q2</span><span data-q="2">Q3</span><span data-q="3">Q4</span></div><div class="time-note">Berlaku untuk layer bertitik dua di bawah yang sedang dicentang</div></div>
-<span class="group-title">Risiko ISPA</span><label><input type="checkbox" id="ly-risiko-kelurahan" checked> Per Kelurahan</label><div class="opacity-row"><input type="range" id="op-risiko-kelurahan" min="0" max="1" step="0.1" value="1"><span id="op-risiko-kelurahan-val">100%</span></div><div class="legend-swatches" id="legend-risiko-kelurahan"><div class="sw-row"><span class="sw-color" style="background:#FFF5F0"></span>Sangat Rendah</div><div class="sw-row"><span class="sw-color" style="background:#FCBEA5"></span>Rendah</div><div class="sw-row"><span class="sw-color" style="background:#FB7050"></span>Sedang</div><div class="sw-row"><span class="sw-color" style="background:#D32020"></span>Tinggi</div><div class="sw-row"><span class="sw-color" style="background:#67000D"></span>Sangat Tinggi</div></div>
+<span class="group-title">Indeks Paparan ISPA</span><label><input type="checkbox" id="ly-risiko-kelurahan" checked> Per Kelurahan</label><div class="opacity-row"><input type="range" id="op-risiko-kelurahan" min="0" max="1" step="0.1" value="1"><span id="op-risiko-kelurahan-val">100%</span></div><div class="legend-swatches" id="legend-risiko-kelurahan"><div class="sw-row"><span class="sw-color" style="background:#FFF5F0"></span>Relatif Sangat Rendah</div><div class="sw-row"><span class="sw-color" style="background:#FCBEA5"></span>Relatif Rendah</div><div class="sw-row"><span class="sw-color" style="background:#FB7050"></span>Relatif Sedang</div><div class="sw-row"><span class="sw-color" style="background:#D32020"></span>Relatif Tinggi</div><div class="sw-row"><span class="sw-color" style="background:#67000D"></span>Relatif Sangat Tinggi</div><div class="legend-caption">Kelas menunjukkan peringkat paparan lingkungan relatif, bukan tingkat risiko kesehatan.</div></div>
 <label><input type="checkbox" id="ly-risiko-raster"> Komposit (Raster)</label><div class="opacity-row"><input type="range" id="op-risiko-raster" min="0" max="1" step="0.1" value="1" disabled><span id="op-risiko-raster-val">100%</span></div><div class="legend-row" id="legend-risiko-raster"><div class="legend-bar" style="background:linear-gradient(to right,#2c0a52,#1f4fd8,#00b4d8,#4caf50,#ffeb3b,#ff9800,#b71c1c)"></div><div class="legend-labels"><span>Rendah</span><span>Tinggi</span></div></div>
 <details id="index-methodology"><summary><span class="methodology-summary-copy"><span>Tentang Indeks Paparan ISPA</span><span class="methodology-summary-hint">Klik untuk metode, variabel &amp; batasan</span></span><span class="methodology-toggle"><span class="closed-label">Buka</span><span class="open-label">Tutup</span></span></summary><div class="methodology-content">
 <p>Indeks ini memakai <strong>Principal Component Analysis (PCA) gabungan</strong> pada empat dataset kuartalan. Satu set bobot, normalisasi, dan batas kelas diterapkan ke seluruh periode agar skor dapat dibandingkan antar-kuartal.</p>
@@ -1535,16 +1572,34 @@
 <p>Skor lebih tinggi terutama menunjukkan permukaan lebih panas dan NO₂ lebih tinggi, yang sebagian besar berubah mengikuti musim (skor rata-rata tertinggi pada Q2, terendah pada Q1). NDVI, NDBI, dan proksi jalan berkontribusi lebih kecil dan hampir seluruh variasinya antar-lokasi dalam kuartal yang sama; NDVI berkontribusi positif, sedangkan NDBI dan proksi jalan negatif. Pada badan air, NDVI dan NDBI dikecualikan; skor hanya menggunakan LST, NO₂, dan proksi jalan.</p>
 <p class="methodology-caveat"><strong>Perhatian pada badan air:</strong> masking air mungkin tidak mencakup semua piksel. Jika piksel air terlewat dan tetap mendapat kelas tinggi, nilai tersebut dapat mencerminkan karakteristik permukaan air atau data yang tersisa bukan paparan tinggi. Periksa layer dan mask badan air sebelum menafsirkan area tersebut.</p>
 <h4>Batasan</h4>
-<ul><li>Ini adalah <strong>indeks paparan lingkungan</strong>, bukan prediksi penyakit. Indeks belum divalidasi dengan jumlah kasus ISPA per kelurahan.</li>
+<ul><li>Ini adalah <strong>indeks paparan lingkungan</strong>, bukan prediksi penyakit. Uji awal terhadap data insiden ISPA tahunan 2025 di 260 kelurahan menunjukkan indeks <strong>belum memprediksi insiden</strong> (lihat catatan hasil uji di bawah).</li>
 <li>PC1 menjelaskan 31,1% variasi total; sekitar 69% variasi lainnya tidak tergambarkan oleh indeks.</li>
-<li>Kelas merupakan kuintil data gabungan: “Sangat Tinggi” berarti 20% nilai tertinggi di Jakarta pada periode gabungan, bukan ambang batas kesehatan.</li></ul>
-<p class="methodology-caveat"><strong>Langkah berikutnya:</strong> validasi dengan data kasus Puskesmas atau Kemenkes, lalu evaluasi kembali bobot indeks.</p>
+<li>Kelas merupakan kuintil data gabungan: “Relatif Sangat Tinggi” berarti 20% nilai tertinggi di Jakarta pada periode gabungan, bukan ambang batas kesehatan.</li></ul>
+<p class="methodology-caveat"><strong>Hasil uji awal:</strong> Indeks diuji terhadap insiden ISPA tahunan 2025 tingkat kelurahan (n = 260) sambil mengontrol kepadatan penduduk sebagai variabel perancu. Korelasi Spearman mentah antara indeks dan insiden hampir nol (rata-rata 4 kuartal: −0,04). Setelah kepadatan dikontrol, asosiasinya lemah dan berarah negatif (korelasi parsial aproksimasi ≈ −0,32), dan tambahan R² dari indeks hanya ≈ 0,06 (R² model total ≈ 0,10). Indeks juga berkorelasi kuat negatif dengan kepadatan penduduk (ρ ≈ −0,63), sehingga sebagian skornya dapat mencerminkan kepadatan, bukan paparan lingkungan. Hasil ini adalah asosiasi tingkat kelurahan, bukan bukti sebab-akibat. Data kasus yang tersedia hanya tahunan 2025, sehingga slider kuartal belum divalidasi terhadap insiden kuartalan. <strong>Indeks sebaiknya dibaca sebagai gambaran kondisi lingkungan dan pola musiman, bukan sebagai penanda risiko kasus ISPA.</strong></p>
+<p><strong>Rencana perbaikan:</strong> (1) standardisasi variabel per kuartal agar indeks menangkap variasi antar-lokasi, bukan musim; (2) uji bobot alternatif berbasis literatur; (3) validasi dengan data kasus per kuartal bila tersedia.</p>
 </div></details>
 <span class="group-title">Variabel Lingkungan</span><label><input type="checkbox" id="ly-lst"> LST (Suhu Permukaan)</label><div class="opacity-row"><input type="range" id="op-lst" min="0" max="1" step="0.1" value="1" disabled><span id="op-lst-val">100%</span></div><div class="legend-row" id="legend-lst"><div class="legend-bar" style="background:linear-gradient(to right,#000,#fff)"></div><div class="legend-labels"><span>Rendah</span><span>Tinggi</span></div></div><label><input type="checkbox" id="ly-no2"> NO₂</label><div class="opacity-row"><input type="range" id="op-no2" min="0" max="1" step="0.1" value="1" disabled><span id="op-no2-val">100%</span></div><div class="legend-row" id="legend-no2"><div class="legend-bar" style="background:linear-gradient(to right,#000,#fff)"></div><div class="legend-labels"><span>Rendah</span><span>Tinggi</span></div></div><label><input type="checkbox" id="ly-ndvi"> NDVI</label><div class="opacity-row"><input type="range" id="op-ndvi" min="0" max="1" step="0.1" value="1" disabled><span id="op-ndvi-val">100%</span></div><div class="legend-row" id="legend-ndvi"><div class="legend-bar" style="background:linear-gradient(to right,#000,#fff)"></div><div class="legend-labels"><span>Rendah</span><span>Tinggi</span></div></div><label><input type="checkbox" id="ly-ndbi"> NDBI</label><div class="opacity-row"><input type="range" id="op-ndbi" min="0" max="1" step="0.1" value="1" disabled><span id="op-ndbi-val">100%</span></div><div class="legend-row" id="legend-ndbi"><div class="legend-bar" style="background:linear-gradient(to right,#000,#fff)"></div><div class="legend-labels"><span>Rendah</span><span>Tinggi</span></div></div><label><input type="checkbox" id="ly-proksi"> Proksi Jalan (Raster)</label><div class="opacity-row"><input type="range" id="op-proksi" min="0" max="1" step="0.1" value="1" disabled><span id="op-proksi-val">100%</span></div><hr><span class="group-title">Batas Wilayah</span><label><input type="checkbox" id="ly-batas-kota" checked> Batas Kota</label><div class="opacity-row"><input type="range" id="op-batas-kota" min="0" max="1" step="0.1" value="1"><span id="op-batas-kota-val">100%</span></div><label><input type="checkbox" id="ly-batas-kecamatan"> Batas Kecamatan</label><div class="opacity-row"><input type="range" id="op-batas-kecamatan" min="0" max="1" step="0.1" value="1" disabled><span id="op-batas-kecamatan-val">100%</span></div><label><input type="checkbox" id="ly-batas-kelurahan"> Batas Kelurahan</label><div class="opacity-row"><input type="range" id="op-batas-kelurahan" min="0" max="1" step="0.1" value="1" disabled><span id="op-batas-kelurahan-val">100%</span></div><hr><span class="group-title">Fasilitas Kesehatan</span><label><input type="checkbox" id="ly-faskes" checked> Tampilkan Titik Faskes</label></div>
 <div id="topright-stack"><button id="btn-locate" class="round-btn" title="Lokasi Saya"><i class="fas fa-location-arrow"></i></button><div id="buffer-control" class="wgis-card"><label>Radius pencarian faskes</label><select id="buffer-radius"><option value="500">500 m</option><option value="1000" selected>1 km</option><option value="2000">2 km</option><option value="5000">5 km</option></select></div></div><div id="nearby-faskes-panel" class="wgis-card"><h4>Faskes Terdekat</h4><div id="nearby-faskes-list"></div></div><div id="bottomright-stack"><div id="attribute-panel" class="wgis-card"></div><div id="credit-panel" class="wgis-card"><div class="credit-title">Dibuat oleh</div><div class="credit-logos"><img src="images/UGMlogo.png" alt="Logo UGM"><img src="images/WaindoLogo.png" alt="Logo Waindo SpecTerra"></div><hr><div class="credit-people"><div class="credit-person"><img src="images/andhi.png" alt="Andhika Bayu Darmawan"><span>Andhika Bayu<br>Darmawan</span></div><div class="credit-person"><img src="images/arda.png" alt="Ardra Adhyatma"><span>Ardra<br>Adhyatma</span></div></div></div></div><div id="coord-display" class="wgis-card">Lat: -, Lng: -</div>
 <script>
 (function(){
+var rasterRiskLabel=document.getElementById('ly-risiko-raster').parentNode;
+var incidenceLabel=document.createElement('label');
+incidenceLabel.innerHTML='<input type="checkbox" id="ly-insiden-ispa-2025"> Insiden ISPA 2025 per Kelurahan';
+var incidenceOpacity=document.createElement('div');
+incidenceOpacity.className='opacity-row';
+incidenceOpacity.innerHTML='<input type="range" id="op-insiden-ispa-2025" min="0" max="1" step="0.1" value="1" disabled><span id="op-insiden-ispa-2025-val">100%</span>';
+var incidenceLegend=document.createElement('div');
+incidenceLegend.className='legend-swatches';
+incidenceLegend.id='legend-insiden-ispa-2025';
+rasterRiskLabel.parentNode.insertBefore(incidenceLabel,rasterRiskLabel);
+rasterRiskLabel.parentNode.insertBefore(incidenceOpacity,rasterRiskLabel);
+rasterRiskLabel.parentNode.insertBefore(incidenceLegend,rasterRiskLabel);
 var environmentalDataInfo={
+    'ly-insiden-ispa-2025':{
+        title:'Insiden ISPA 2025 per Kelurahan',
+        source:'Dinas Kesehatan Provinsi DKI Jakarta; diunduh dari dinkes.jakarta.go.id.',
+        process:'Data tahunan 2025. Insiden dihitung sebagai jumlah pasien ISPA per 1.000 penduduk di setiap kelurahan. Layer ini terpisah dari Indeks Paparan ISPA agar keduanya dapat dibandingkan.'
+    },
     'ly-lst':{
         title:'LST (Land Surface Temperature)',
         source:'Landsat 8 (ST_B10, awan < 20%, QA masked).',
@@ -1639,6 +1694,81 @@ function riskFor(value){return riskInfo[value]||{color:'#e0e0e0',text:'#000'}}fu
 var currentTimeIndex=0,quarterlyLayers={risikoKelurahan:[layer_RisikoISPAKelurahanQ1_26,layer_RisikoISPAKelurahanQ2_25,layer_RisikoISPAKelurahanQ3_24,layer_RisikoISPAKelurahanQ4_23],risikoRaster:[layer_RisikoISPAQ1_22,layer_RisikoISPAQ2_21,layer_RisikoISPAQ3_20,layer_RisikoISPAQ4_19],lst:[layer_LandSurfaceTempeartureQ1_6,layer_LandSurfaceTemperatureQ2_5,layer_LandSurfaceTemperatureQ3_4,layer_LandSurfaceTemperatureQ4_3],no2:[layer_MeanKadarNO2Q1_10,layer_MeanKadarNO2Q2_9,layer_MeanKadarNO2Q3_8,layer_MeanKadarNO2Q4_7],ndvi:[layer_NDVIQ1_18,layer_NDVIQ2_17,layer_NDVIQ3_16,layer_NDVIQ4_15],ndbi:[layer_NDBIQ1_14,layer_NDBIQ2_13,layer_NDBIQ3_12,layer_NDBIQ4_11]},quarterlyState={};Object.keys(quarterlyLayers).forEach(function(type){quarterlyState[type]={checked:false,opacity:1};quarterlyLayers[type].forEach(function(layer){setVisible(layer,false)})});
 function wireQuarterlyRow(checkId,opacityId,legendId,type,defaultChecked){var checkbox=document.getElementById(checkId),opacity=document.getElementById(opacityId),value=document.getElementById(opacityId+'-val'),legend=legendId&&document.getElementById(legendId);quarterlyState[type].checked=defaultChecked;opacity.disabled=!defaultChecked;if(legend)legend.style.display=defaultChecked?(legend.classList.contains('legend-swatches')?'flex':'block'):'none';setVisible(quarterlyLayers[type][0],defaultChecked);checkbox.addEventListener('change',function(){quarterlyState[type].checked=this.checked;setVisible(quarterlyLayers[type][currentTimeIndex],this.checked);opacity.disabled=!this.checked;if(legend)legend.style.display=this.checked?(legend.classList.contains('legend-swatches')?'flex':'block'):'none'});opacity.addEventListener('input',function(){var amount=parseFloat(this.value);quarterlyState[type].opacity=amount;setOpacity(quarterlyLayers[type][currentTimeIndex],amount);value.textContent=Math.round(amount*100)+'%'})}
 wireQuarterlyRow('ly-risiko-kelurahan','op-risiko-kelurahan','legend-risiko-kelurahan','risikoKelurahan',true);wireQuarterlyRow('ly-risiko-raster','op-risiko-raster','legend-risiko-raster','risikoRaster',false);wireQuarterlyRow('ly-lst','op-lst','legend-lst','lst',false);wireQuarterlyRow('ly-no2','op-no2','legend-no2','no2',false);wireQuarterlyRow('ly-ndvi','op-ndvi','legend-ndvi','ndvi',false);wireQuarterlyRow('ly-ndbi','op-ndbi','legend-ndbi','ndbi',false);
+var incidenceSourceRecords=window.ispaIncidence2025.records;
+var incidenceUniqueRates=Object.create(null);
+Object.keys(incidenceSourceRecords).forEach(function(key){
+    var record=incidenceSourceRecords[key];
+    incidenceUniqueRates[record.kelurahan]=Number(record.per1000);
+});
+var incidenceRates=Object.keys(incidenceUniqueRates).map(function(name){
+    return incidenceUniqueRates[name];
+}).sort(function(a,b){return a-b});
+function incidenceQuantile(percentile){
+    var index=(incidenceRates.length-1)*percentile;
+    var lower=Math.floor(index),upper=Math.ceil(index);
+    return incidenceRates[lower]+(incidenceRates[upper]-incidenceRates[lower])*(index-lower);
+}
+var incidenceBreaks=[.2,.4,.6,.8].map(incidenceQuantile);
+var incidenceColors=['#eff6ff','#bfdbfe','#60a5fa','#2563eb','#1e3a8a'];
+var incidenceLegend=document.getElementById('legend-insiden-ispa-2025');
+incidenceColors.forEach(function(color,index){
+    var row=document.createElement('div');
+    row.className='sw-row';
+    var swatch=document.createElement('span');
+    swatch.className='sw-color';
+    swatch.style.background=color;
+    var lower=index===0?null:incidenceBreaks[index-1];
+    var upper=index===incidenceBreaks.length?null:incidenceBreaks[index];
+    var range=index===0?'≤ '+upper.toFixed(2):
+        index===incidenceColors.length-1?'> '+lower.toFixed(2):
+        '> '+lower.toFixed(2)+' – ≤ '+upper.toFixed(2);
+    row.appendChild(swatch);
+    row.appendChild(document.createTextNode(range+' per 1.000 penduduk'));
+    incidenceLegend.appendChild(row);
+});
+var incidenceFeatures=json_RisikoISPAKelurahanQ1_26.features.map(function(feature){
+    var mapName=String(feature.properties.NAMOBJ||feature.properties.WADMKD||'')
+        .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+        .toLocaleLowerCase().replace(/[^a-z0-9]/g,'');
+    var record=incidenceSourceRecords[mapName];
+    if(!record)throw new Error('Data insiden ISPA 2025 tidak ditemukan untuk '+mapName);
+    return {
+        type:'Feature',
+        geometry:feature.geometry,
+        properties:Object.assign({},feature.properties,{
+            insiden_ispa_2025_per1000:Number(record.per1000)
+        })
+    };
+});
+map.createPane('pane_InsidenISPA2025');
+var incidenceLayer=L.geoJSON({type:'FeatureCollection',features:incidenceFeatures},{
+    pane:'pane_InsidenISPA2025',
+    style:function(feature){
+        var value=feature.properties.insiden_ispa_2025_per1000;
+        var color=incidenceColors[incidenceBreaks.findIndex(function(limit){return value<=limit})];
+        return {
+            color:'#ffffff',
+            weight:0.7,
+            opacity:1,
+            fillColor:color||incidenceColors[incidenceColors.length-1],
+            fillOpacity:0.85
+        };
+    }
+});
+map.getPane('pane_InsidenISPA2025').style.zIndex=450;
+var incidenceCheckbox=document.getElementById('ly-insiden-ispa-2025');
+var incidenceOpacityInput=document.getElementById('op-insiden-ispa-2025');
+incidenceCheckbox.addEventListener('change',function(){
+    setVisible(incidenceLayer,this.checked);
+    incidenceOpacityInput.disabled=!this.checked;
+    incidenceLegend.style.display=this.checked?'flex':'none';
+});
+incidenceOpacityInput.addEventListener('input',function(){
+    var amount=parseFloat(this.value);
+    setOpacity(incidenceLayer,amount);
+    document.getElementById('op-insiden-ispa-2025-val').textContent=
+        Math.round(amount*100)+'%';
+});
 var riskSearchControl=document.createElement('div');riskSearchControl.id='risk-search-control';riskSearchControl.className='wgis-card';riskSearchControl.innerHTML='<label for="risk-search-input">Cari Kelurahan</label><input id="risk-search-input" type="search" placeholder="Ketik nama kelurahan" autocomplete="off" aria-controls="risk-search-results" aria-autocomplete="list"><div id="risk-search-results" role="listbox"></div>';var topRightStack=document.getElementById('topright-stack'),riskSearchButton=document.createElement('button');riskSearchButton.type='button';riskSearchButton.id='btn-risk-search';riskSearchButton.className='round-btn';riskSearchButton.title='Cari Kelurahan';riskSearchButton.setAttribute('aria-label','Cari Kelurahan');riskSearchButton.setAttribute('aria-expanded','false');riskSearchButton.innerHTML='<i class="fas fa-search" aria-hidden="true"></i>';topRightStack.insertBefore(riskSearchButton,document.getElementById('btn-locate'));topRightStack.appendChild(riskSearchControl);riskSearchButton.addEventListener('click',function(){var isOpen=riskSearchControl.classList.toggle('open');riskSearchButton.setAttribute('aria-expanded',String(isOpen));if(isOpen){var orderDetails=document.getElementById('order-details'),orderButton=document.getElementById('btn-order');if(orderDetails)orderDetails.style.display='none';if(orderButton)orderButton.setAttribute('aria-expanded','false');riskSearchInput.focus()}else closeRiskSearch()});
 var riskSearchInput=document.getElementById('risk-search-input'),riskSearchResults=document.getElementById('risk-search-results'),riskSearchIndex=[],riskSearchByName=Object.create(null);
 quarterlyLayers.risikoKelurahan.forEach(function(layer,quarterIndex){layer.eachLayer(function(featureLayer){var name=featureLayer.feature&&featureLayer.feature.properties&&featureLayer.feature.properties.NAMOBJ;if(!name)return;var key=String(name).trim().toLocaleLowerCase(),entry=riskSearchByName[key];if(!entry){entry={name:String(name).trim(),key:key,quarters:[]};riskSearchByName[key]=entry;riskSearchIndex.push(entry)}if(entry.quarters.indexOf(quarterIndex)===-1)entry.quarters.push(quarterIndex)})});
@@ -1650,7 +1780,8 @@ riskSearchInput.setAttribute('aria-expanded','false');riskSearchInput.addEventLi
 function updateTimeTicks(index){document.querySelectorAll('#time-control .time-ticks span').forEach(function(item){item.classList.toggle('active',parseInt(item.getAttribute('data-q'),10)===index)})}updateTimeTicks(0);document.getElementById('time-slider').addEventListener('input',function(){var next=parseInt(this.value,10);Object.keys(quarterlyLayers).forEach(function(type){if(quarterlyState[type].checked){setVisible(quarterlyLayers[type][currentTimeIndex],false);setVisible(quarterlyLayers[type][next],true);setOpacity(quarterlyLayers[type][next],quarterlyState[type].opacity)}});currentTimeIndex=next;updateTimeTicks(next)});
 setVisible(layer_ESRISatelliteArcGISWorld_Imagery_0,false);setVisible(layer_ProksiJalanJakarta500m_2,false);document.getElementById('basemap-osm').addEventListener('change',function(){setVisible(layer_OSMStandard_1,this.checked);setVisible(layer_ESRISatelliteArcGISWorld_Imagery_0,!this.checked)});document.getElementById('basemap-esri').addEventListener('change',function(){setVisible(layer_ESRISatelliteArcGISWorld_Imagery_0,this.checked);setVisible(layer_OSMStandard_1,!this.checked)});document.getElementById('ly-proksi').addEventListener('change',function(){setVisible(layer_ProksiJalanJakarta500m_2,this.checked);document.getElementById('op-proksi').disabled=!this.checked});document.getElementById('op-proksi').addEventListener('input',function(){var amount=parseFloat(this.value);setOpacity(layer_ProksiJalanJakarta500m_2,amount);document.getElementById('op-proksi-val').textContent=Math.round(amount*100)+'%'});
 function wireBoundaryPair(checkId,opacityId,line,polygon,checked){var checkbox=document.getElementById(checkId),opacity=document.getElementById(opacityId),value=document.getElementById(opacityId+'-val'),shapes=[];polygon.eachLayer(function(shape){shapes.push({layer:shape,fillOpacity:shape.options.fillOpacity||0})});setVisible(line,checked);setVisible(polygon,checked);opacity.disabled=!checked;checkbox.addEventListener('change',function(){setVisible(line,this.checked);setVisible(polygon,this.checked);opacity.disabled=!this.checked});opacity.addEventListener('input',function(){var amount=parseFloat(this.value);shapes.forEach(function(shape){shape.layer.setStyle({opacity:amount,fillOpacity:shape.fillOpacity*amount});var tooltip=shape.layer.getTooltip();if(tooltip&&tooltip._container){tooltip._container.dataset.layerOpacity=amount;tooltip._container.style.opacity=amount}});value.textContent=Math.round(amount*100)+'%'})}wireBoundaryPair('ly-batas-kota','op-batas-kota',layer_LineKota_27,layer_PolygonKota_28,true);wireBoundaryPair('ly-batas-kecamatan','op-batas-kecamatan',layer_LineKecamatan_29,layer_PolygonKecamatan_30,false);wireBoundaryPair('ly-batas-kelurahan','op-batas-kelurahan',layer_LineKelurahan_31,layer_PolygonKelurahan_32,false);document.getElementById('ly-faskes').addEventListener('change',function(){setVisible(cluster_FasilitasKesehatan_33,this.checked)});
-var attributePanel=document.getElementById('attribute-panel');function showKelurahanInfo(properties){var risk=riskFor(properties.klasifikasi);attributePanel.style.display='block';attributePanel.innerHTML='<h4>'+(properties.WADMKD||'-')+', '+(properties.WADMKC||'-')+'</h4><span class="risk-badge" style="background:'+risk.color+';color:'+risk.text+'">'+(properties.klasifikasi||'-')+'</span> ('+safe(properties.risiko_ispa_normalisasi)+')<table><tr><td>Min</td><td>'+safe(properties.min)+'</td><td>Max</td><td>'+safe(properties.max)+'</td></tr><tr><td>Mean</td><td>'+safe(properties.mean)+'</td><td>Std</td><td>'+safe(properties.std)+'</td></tr><tr><td>Luas</td><td colspan="3">'+safe(properties.LUASWH)+' m²</td></tr></table>'}quarterlyLayers.risikoKelurahan.forEach(function(layer){layer.on('click',function(event){showKelurahanInfo(event.layer.feature.properties)})});var coordinates=document.getElementById('coord-display');map.on('mousemove',function(event){coordinates.textContent='Lat: '+event.latlng.lat.toFixed(6)+', Lng: '+event.latlng.lng.toFixed(6)});map.on('mouseout',function(){coordinates.textContent='Lat: -, Lng: -'});
+var attributePanel=document.getElementById('attribute-panel');function showKelurahanInfo(properties){var risk=riskFor(properties.klasifikasi);attributePanel.style.display='block';attributePanel.innerHTML='<h4>'+(properties.WADMKD||'-')+', '+(properties.WADMKC||'-')+'</h4><span class="risk-badge" style="background:'+risk.color+';color:'+risk.text+'">'+labelKlasifikasiRisiko(properties.klasifikasi)+'</span> ('+safe(properties.risiko_ispa_normalisasi)+')<table><tr><td>Min</td><td>'+safe(properties.min)+'</td><td>Max</td><td>'+safe(properties.max)+'</td></tr><tr><td>Mean</td><td>'+safe(properties.mean)+'</td><td>Std</td><td>'+safe(properties.std)+'</td></tr><tr><td>Luas</td><td colspan="3">'+safe(properties.LUASWH)+' m²</td></tr></table>';attributePanel.querySelector('table').before(createISPAIncidenceDetail(properties))}quarterlyLayers.risikoKelurahan.forEach(function(layer){layer.on('click',function(event){showKelurahanInfo(event.layer.feature.properties)})});var coordinates=document.getElementById('coord-display');map.on('mousemove',function(event){coordinates.textContent='Lat: '+event.latlng.lat.toFixed(6)+', Lng: '+event.latlng.lng.toFixed(6)});map.on('mouseout',function(){coordinates.textContent='Lat: -, Lng: -'});
+incidenceLayer.on('click',function(event){showKelurahanInfo(event.layer.feature.properties)});
 var locateButton=document.getElementById('btn-locate'),bufferControl=document.getElementById('buffer-control'),radiusSelect=document.getElementById('buffer-radius'),nearbyPanel=document.getElementById('nearby-faskes-panel'),nearbyList=document.getElementById('nearby-faskes-list'),watchId=null,meMarker=null,bufferCircle=null,lastLatLng=null;
 function updateBufferAndNearby(latlng){
     var radius=parseInt(radiusSelect.value,10);
@@ -1722,7 +1853,8 @@ locateButton.addEventListener('click',function(){if(watchId!==null){clearNearbyF
             'pane_RisikoISPAKelurahanQ1_26',
             'pane_RisikoISPAKelurahanQ2_25',
             'pane_RisikoISPAKelurahanQ3_24',
-            'pane_RisikoISPAKelurahanQ4_23'
+            'pane_RisikoISPAKelurahanQ4_23',
+            'pane_InsidenISPA2025'
         ],
         variabel_lingkungan: [
             'pane_ProksiJalanJakarta500m_2',
@@ -1754,7 +1886,7 @@ locateButton.addEventListener('click',function(){if(watchId!==null){clearNearbyF
     };
     var groups = [
         { id: 'batas_wilayah', label: 'Batas Wilayah' },
-        { id: 'risiko_ispa', label: 'Risiko ISPA' },
+        { id: 'risiko_ispa', label: 'Indeks Paparan ISPA' },
         { id: 'variabel_lingkungan', label: 'Variabel Lingkungan' }
     ];
 
@@ -1980,9 +2112,15 @@ locateButton.addEventListener('click',function(){if(watchId!==null){clearNearbyF
             var riskValue = properties.risiko_ispa_normalisasi;
             var riskDetail = document.createElement('div');
             riskDetail.className = 'attribute-detail';
-            riskDetail.textContent = 'Nilai Risiko ISPA: ' +
+            riskDetail.textContent = 'Nilai Indeks Paparan: ' +
                 (riskValue === undefined || riskValue === null || riskValue === '' ? '-' : Number(riskValue).toFixed(3));
-            attributePanel.replaceChildren(heading, classification, riskDetail, table);
+            attributePanel.replaceChildren(
+                heading,
+                classification,
+                riskDetail,
+                createISPAIncidenceDetail(properties),
+                table
+            );
             wrapper.appendChild(attributePanel);
             event.popup.update();
         }, 0);
