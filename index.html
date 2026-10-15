@@ -1565,6 +1565,15 @@
 .env-tooltip .env-warning h4{margin:0 0 4px;color:#92400e}
 .env-tooltip .env-warning p{margin:4px 0 0}
 #coord-display{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);z-index:1000;padding:6px 16px;font-family:'Courier New',monospace;font-size:12px;color:#374151}
+.search-overlap-hidden{display:none!important}
+.popup-overlap-hidden{display:none!important}
+#nearby-faskes-panel #buffer-control{box-sizing:border-box;width:100%;margin:0 0 8px;padding:0 0 8px;border:0;border-bottom:1px solid #e5e7eb;border-radius:0;background:transparent;box-shadow:none}
+#nearby-faskes-panel #buffer-control label{display:block;margin:0 0 5px;font-size:11px;font-weight:600;color:#6b7280}
+#nearby-faskes-panel #buffer-control select{box-sizing:border-box;width:100%;min-height:36px;padding:6px 8px;border:1px solid #d1d5db;border-radius:7px;background:#fff;color:#1f2937;font-size:12px}
+#nearby-faskes-panel .nearby-empty,#nearby-faskes-panel .nearby-error{padding:8px 0;font-size:12px;line-height:1.45;color:#6b7280}
+#nearby-faskes-panel .nearby-error{color:#b91c1c}
+#nearby-faskes-panel button.nearby-row{display:block;box-sizing:border-box;width:100%;margin:0;border:0;border-bottom:1px solid #f3f4f6;background:transparent;text-align:left;font:inherit;cursor:pointer}
+#nearby-faskes-panel .nearby-help{margin:0 0 8px;font-size:11px;line-height:1.4;color:#6b7280}
 </style>
 <div id="webgis-header"><h1>WebGIS Indeks Paparan Lingkungan ISPA DKI Jakarta</h1><p>Integrasi LST, NO₂, NDVI, NDBI, dan Proksi Jalan - Multitemporal Q4 2023–Q1 2026</p></div>
 <div id="layer-panel" class="wgis-card"><button type="button" id="mobile-layer-toggle" aria-controls="layer-panel-content" aria-expanded="false"><span class="mobile-sheet-grip" aria-hidden="true"></span><span class="mobile-sheet-title">Layer Peta</span><span class="mobile-sheet-chevron" aria-hidden="true"></span></button><div id="layer-panel-content"><h3>Layer Peta</h3><span class="group-title">Peta Dasar</span><label><input type="radio" name="basemap" id="basemap-osm" checked> OSM Standard</label><label><input type="radio" name="basemap" id="basemap-esri"> ESRI Satellite</label><span class="group-title">Waktu</span><div id="time-control"><input type="range" id="time-slider" min="0" max="3" step="1" value="0"><div class="time-ticks"><span data-q="0">Q1</span><span data-q="1">Q2</span><span data-q="2">Q3</span><span data-q="3">Q4</span></div><div class="time-note">Berlaku untuk layer bertitik dua di bawah yang sedang dicentang</div></div>
@@ -1591,7 +1600,7 @@
 <p><strong>Rencana perbaikan:</strong> (1) standardisasi variabel per kuartal agar indeks menangkap variasi antar-lokasi, bukan musim; (2) uji bobot alternatif berbasis literatur; (3) validasi dengan data kasus per kuartal bila tersedia.</p>
 </div></details>
 <span class="group-title">Variabel Lingkungan</span><label><input type="checkbox" id="ly-lst"> LST (Suhu Permukaan)</label><div class="opacity-row"><input type="range" id="op-lst" min="0" max="1" step="0.1" value="1" disabled><span id="op-lst-val">100%</span></div><div class="legend-row" id="legend-lst"><div class="legend-bar" style="background:linear-gradient(to right,#000,#fff)"></div><div class="legend-labels"><span>Rendah</span><span>Tinggi</span></div></div><label><input type="checkbox" id="ly-no2"> NO₂</label><div class="opacity-row"><input type="range" id="op-no2" min="0" max="1" step="0.1" value="1" disabled><span id="op-no2-val">100%</span></div><div class="legend-row" id="legend-no2"><div class="legend-bar" style="background:linear-gradient(to right,#000,#fff)"></div><div class="legend-labels"><span>Rendah</span><span>Tinggi</span></div></div><label><input type="checkbox" id="ly-ndvi"> NDVI</label><div class="opacity-row"><input type="range" id="op-ndvi" min="0" max="1" step="0.1" value="1" disabled><span id="op-ndvi-val">100%</span></div><div class="legend-row" id="legend-ndvi"><div class="legend-bar" style="background:linear-gradient(to right,#000,#fff)"></div><div class="legend-labels"><span>Rendah</span><span>Tinggi</span></div></div><label><input type="checkbox" id="ly-ndbi"> NDBI</label><div class="opacity-row"><input type="range" id="op-ndbi" min="0" max="1" step="0.1" value="1" disabled><span id="op-ndbi-val">100%</span></div><div class="legend-row" id="legend-ndbi"><div class="legend-bar" style="background:linear-gradient(to right,#000,#fff)"></div><div class="legend-labels"><span>Rendah</span><span>Tinggi</span></div></div><label><input type="checkbox" id="ly-proksi"> Proksi Jalan (Raster)</label><div class="opacity-row"><input type="range" id="op-proksi" min="0" max="1" step="0.1" value="1" disabled><span id="op-proksi-val">100%</span></div><hr><span class="group-title">Batas Wilayah</span><label><input type="checkbox" id="ly-batas-kota" checked> Batas Kota</label><div class="opacity-row"><input type="range" id="op-batas-kota" min="0" max="1" step="0.1" value="1"><span id="op-batas-kota-val">100%</span></div><label><input type="checkbox" id="ly-batas-kecamatan"> Batas Kecamatan</label><div class="opacity-row"><input type="range" id="op-batas-kecamatan" min="0" max="1" step="0.1" value="1" disabled><span id="op-batas-kecamatan-val">100%</span></div><label><input type="checkbox" id="ly-batas-kelurahan"> Batas Kelurahan</label><div class="opacity-row"><input type="range" id="op-batas-kelurahan" min="0" max="1" step="0.1" value="1" disabled><span id="op-batas-kelurahan-val">100%</span></div><hr><span class="group-title">Fasilitas Kesehatan</span><label><input type="checkbox" id="ly-faskes" checked> Tampilkan Titik Faskes</label></div></div>
-<div id="topright-stack"><button id="btn-locate" class="round-btn" title="Lokasi Saya"><i class="fas fa-location-arrow"></i></button><div id="buffer-control" class="wgis-card"><label>Radius pencarian faskes</label><select id="buffer-radius"><option value="500">500 m</option><option value="1000" selected>1 km</option><option value="2000">2 km</option><option value="5000">5 km</option></select></div></div><div id="nearby-faskes-panel" class="wgis-card"><h4>Faskes Terdekat</h4><div id="nearby-faskes-list"></div></div><div id="bottomright-stack"><div id="attribute-panel" class="wgis-card"></div><div id="credit-panel" class="wgis-card"><div class="credit-title">Dibuat oleh</div><div class="credit-logos"><img src="images/UGMlogo.png" alt="Logo UGM"><img src="images/WaindoLogo.png" alt="Logo Waindo SpecTerra"></div><hr><div class="credit-people"><div class="credit-person"><img src="images/andhi.png" alt="Andhika Bayu Darmawan"><span>Andhika Bayu<br>Darmawan</span></div><div class="credit-person"><img src="images/arda.png" alt="Ardra Adhyatma"><span>Ardra<br>Adhyatma</span></div></div></div></div><div id="coord-display" class="wgis-card">Lat: -, Lng: -</div>
+<div id="topright-stack"><button id="btn-locate" class="round-btn" title="Lokasi Saya"><i class="fas fa-location-arrow"></i></button><div id="buffer-control" class="wgis-card"><label for="buffer-radius">Radius pencarian faskes</label><select id="buffer-radius"><option value="500">500 m</option><option value="1000" selected>1 km</option><option value="2000">2 km</option><option value="5000">5 km</option></select></div></div><div id="nearby-faskes-panel" class="wgis-card"><h4>Faskes Terdekat</h4><div id="nearby-faskes-list" aria-live="polite"></div></div><div id="bottomright-stack"><div id="attribute-panel" class="wgis-card"></div><div id="credit-panel" class="wgis-card"><div class="credit-title">Dibuat oleh</div><div class="credit-logos"><img src="images/UGMlogo.png" alt="Logo UGM"><img src="images/WaindoLogo.png" alt="Logo Waindo SpecTerra"></div><hr><div class="credit-people"><div class="credit-person"><img src="images/andhi.png" alt="Andhika Bayu Darmawan"><span>Andhika Bayu<br>Darmawan</span></div><div class="credit-person"><img src="images/arda.png" alt="Ardra Adhyatma"><span>Ardra<br>Adhyatma</span></div></div></div></div><div id="coord-display" class="wgis-card">Lat: -, Lng: -</div>
 <script>
 (function(){
 var rasterRiskLabel=document.getElementById('ly-risiko-raster').parentNode;
@@ -1908,8 +1917,14 @@ var attributePanel=document.getElementById('attribute-panel');function showKelur
 incidenceLayer.on('click',function(event){showKelurahanInfo(event.layer.feature.properties)});
 var locateButton=document.getElementById('btn-locate'),bufferControl=document.getElementById('buffer-control'),radiusSelect=document.getElementById('buffer-radius'),nearbyPanel=document.getElementById('nearby-faskes-panel'),nearbyList=document.getElementById('nearby-faskes-list'),watchId=null,meMarker=null,bufferCircle=null,lastLatLng=null;
 nearbyPanel.insertBefore(bufferControl,nearbyList);
-map.on('popupopen',function(){nearbyPanel.classList.add('mobile-popup-hidden');bufferControl.classList.add('mobile-popup-hidden')});
-map.on('popupclose',function(){nearbyPanel.classList.remove('mobile-popup-hidden');bufferControl.classList.remove('mobile-popup-hidden')});
+locateButton.title='Cari faskes terdekat dari lokasi saya';
+locateButton.setAttribute('aria-label',locateButton.title);
+var nearbyHelp=document.createElement('p');
+nearbyHelp.className='nearby-help';
+nearbyHelp.textContent='Diurutkan dari yang terdekat. Pilih fasilitas untuk melihat detail.';
+nearbyPanel.insertBefore(nearbyHelp,bufferControl);
+map.on('popupopen',function(){nearbyPanel.classList.add('popup-overlap-hidden')});
+map.on('popupclose',function(){nearbyPanel.classList.remove('popup-overlap-hidden')});
 function updateBufferAndNearby(latlng){
     var radius=parseInt(radiusSelect.value,10);
     if(bufferCircle)map.removeLayer(bufferCircle);
@@ -1930,23 +1945,78 @@ function updateBufferAndNearby(latlng){
     });
     nearby.sort(function(first,second){return first.dist-second.dist});
     nearbyList.innerHTML='';
-    if(!nearby.length)nearbyList.innerHTML='<div class="nearby-empty">Tidak ada faskes dalam radius ini.</div>';
+    if(!nearby.length)nearbyList.innerHTML='<div class="nearby-empty">Tidak ada faskes dalam radius ini. Coba pilih radius yang lebih besar.</div>';
     nearby.forEach(function(facility){
         var distanceText=facility.dist>=1000?(facility.dist/1000).toFixed(2)+' km':Math.round(facility.dist)+' m';
-        var row=document.createElement('div');
+        var row=document.createElement('button');
+        row.type='button';
         row.className='nearby-row'+(facility.isHospital?' hospital-nearby-row':'');
         row.textContent=facility.name+' - '+distanceText;
+        row.setAttribute('aria-label','Buka '+facility.name+', '+distanceText+' dari lokasi');
         row.addEventListener('click',function(){
+            var faskesCheckbox=document.getElementById('ly-faskes');
+            if(!faskesCheckbox.checked){
+                faskesCheckbox.checked=true;
+                faskesCheckbox.dispatchEvent(new Event('change',{bubbles:true}));
+            }
             cluster_FasilitasKesehatan_33.zoomToShowLayer(facility.marker,function(){facility.marker.openPopup()});
         });
         nearbyList.appendChild(row);
     });
     nearbyPanel.style.display='block';
 }
-function clearNearbyFaskes(){if(watchId!==null){navigator.geolocation.clearWatch(watchId);watchId=null}locateButton.classList.remove('tracking');if(meMarker){map.removeLayer(meMarker);meMarker=null}if(bufferCircle){map.removeLayer(bufferCircle);bufferCircle=null}window.nearbyFaskesBuffer=null;bufferControl.style.display='none';nearbyPanel.style.display='none';nearbyList.innerHTML='';lastLatLng=null}
+function showNearbyMessage(message,className){nearbyList.innerHTML='';var status=document.createElement('div');status.className=className;status.textContent=message;nearbyList.appendChild(status);nearbyPanel.style.display='block'}
+function clearNearbyLocation(){
+    if(meMarker){map.removeLayer(meMarker);meMarker=null}
+    if(bufferCircle){map.removeLayer(bufferCircle);bufferCircle=null}
+    window.nearbyFaskesBuffer=null;
+    bufferControl.style.display='none';
+    lastLatLng=null;
+}
+function clearNearbyFaskes(){
+    if(watchId!==null){navigator.geolocation.clearWatch(watchId);watchId=null}
+    locateButton.classList.remove('tracking');
+    clearNearbyLocation();
+    nearbyPanel.style.display='none';
+    nearbyPanel.classList.remove('search-overlap-hidden','popup-overlap-hidden');
+    bufferControl.classList.remove('search-overlap-hidden');
+    nearbyList.innerHTML='';
+}
 window.closeNearbyFaskes=clearNearbyFaskes;
 radiusSelect.addEventListener('change',function(){if(lastLatLng)updateBufferAndNearby(lastLatLng)});
-locateButton.addEventListener('click',function(){if(watchId!==null){clearNearbyFaskes();return}if(!navigator.geolocation){alert('Browser tidak mendukung geolocation.');return}locateButton.classList.add('tracking');watchId=navigator.geolocation.watchPosition(function(position){var latlng=[position.coords.latitude,position.coords.longitude];lastLatLng=latlng;if(!meMarker){meMarker=L.circleMarker(latlng,{radius:8,color:'#fff',weight:2,fillColor:'#16a34a',fillOpacity:1}).addTo(map);map.setView(latlng,16);bufferControl.style.display='block'}else meMarker.setLatLng(latlng);updateBufferAndNearby(latlng)},function(error){alert('Tidak dapat mengambil lokasi: '+error.message);locateButton.classList.remove('tracking');watchId=null},{enableHighAccuracy:true})})
+locateButton.addEventListener('click',function(){
+    if(watchId!==null){clearNearbyFaskes();return}
+    closeRiskSearchOverlay();
+    map.closePopup();
+    if(!navigator.geolocation){
+        clearNearbyLocation();
+        showNearbyMessage('Browser ini tidak mendukung akses lokasi. Cari kelurahan untuk melihat faskes terdekat.','nearby-error');
+        return;
+    }
+    locateButton.classList.add('tracking');
+    nearbyPanel.classList.remove('search-overlap-hidden','popup-overlap-hidden');
+    bufferControl.classList.remove('search-overlap-hidden');
+    bufferControl.style.display='none';
+    showNearbyMessage('Mengambil lokasi perangkat…','nearby-empty');
+    watchId=navigator.geolocation.watchPosition(function(position){
+        var latlng=[position.coords.latitude,position.coords.longitude];
+        lastLatLng=latlng;
+        if(!meMarker){
+            meMarker=L.circleMarker(latlng,{radius:8,color:'#fff',weight:2,fillColor:'#16a34a',fillOpacity:1}).addTo(map);
+            map.setView(latlng,16);
+            bufferControl.style.display='block';
+        }else meMarker.setLatLng(latlng);
+        updateBufferAndNearby(latlng);
+    },function(error){
+        var failedWatchId=watchId;
+        if(failedWatchId!==null)navigator.geolocation.clearWatch(failedWatchId);
+        watchId=null;
+        locateButton.classList.remove('tracking');
+        map.closePopup();
+        clearNearbyLocation();
+        showNearbyMessage('Tidak dapat mengambil lokasi: '+error.message+' Cari kelurahan untuk melihat faskes dari titik tersebut.','nearby-error');
+    },{enableHighAccuracy:true,maximumAge:30000,timeout:15000});
+});
 })();
 </script>
         <style>
@@ -2491,7 +2561,6 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
     #risk-search-results{max-height:28dvh;margin-top:8px;border-radius:8px}
     .risk-search-result{min-height:42px;padding:9px 10px;font-size:13px}
     .risk-search-empty{padding:12px;font-size:12px}
-    .search-overlap-hidden{display:none!important}
     #nearby-faskes-panel{
         top:calc(env(safe-area-inset-top) + 214px);right:calc(env(safe-area-inset-right) + 62px);
         left:auto;bottom:auto;box-sizing:border-box;width:min(260px,calc(100vw - 82px));
