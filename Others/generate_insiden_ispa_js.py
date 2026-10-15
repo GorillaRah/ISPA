@@ -1,11 +1,3 @@
-"""Generate a JavaScript lookup for annual 2025 ISPA incidence by kelurahan.
-
-Run from the project root with:
-    python Others\\generate_insiden_ispa_js.py
-
-The generated file is loaded by index.html and joins incidence to map features
-using normalized kelurahan names.
-"""
 from __future__ import annotations
 
 import csv
