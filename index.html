@@ -1527,6 +1527,8 @@
 #swipe-comparison select{box-sizing:border-box;width:100%;margin-top:3px;padding:5px;border:1px solid #d1d5db;border-radius:5px;background:#fff;font:10px 'Segoe UI',Arial,sans-serif;color:#374151}
 #swipe-comparison button{width:100%;margin-top:8px;padding:6px;border:0;border-radius:6px;background:#2563eb;color:#fff;font:600 10px 'Segoe UI',Arial,sans-serif;cursor:pointer}
 #swipe-comparison button:hover{background:#1d4ed8}
+#swipe-comparison button.active{background:#dc2626}
+#swipe-comparison button.active:hover{background:#b91c1c}
 #swipe-comparison button:disabled{background:#9ca3af;cursor:not-allowed}
 #swipe-comparison .swipe-note{margin:6px 0 0;font-size:9px;line-height:1.4;color:#6b7280}
 .leaflet-sbs-range{height:28px;margin:0;cursor:ew-resize;touch-action:none;pointer-events:auto!important;z-index:1200!important;background:transparent!important}
@@ -1958,6 +1960,7 @@ function startSwipeComparison(){
     swipeRange.addEventListener('pointerup',endSwipeDividerDrag);
     swipeRange.addEventListener('pointercancel',endSwipeDividerDrag);
     swipeToggle.textContent='Hentikan perbandingan';
+    swipeToggle.classList.add('active');
     setSwipeButtonActive(true);
     swipeLeftSelect.disabled=true;
     swipeRightSelect.disabled=true;
@@ -1990,6 +1993,7 @@ function stopSwipeComparison(){
         delete control.dataset.swipeWasDisabled;
     });
     swipeToggle.textContent='Mulai perbandingan';
+    swipeToggle.classList.remove('active');
     setSwipeButtonActive(false);
     swipeLeftSelect.disabled=false;
     swipeRightSelect.disabled=false;
