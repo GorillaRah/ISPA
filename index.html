@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <link rel="stylesheet" href="css/leaflet.css">
@@ -28,6 +28,7 @@
         </div>
         <script src="js/qgis2web_expressions.js"></script>
         <script src="js/leaflet.js"></script>
+        <script src="js/leaflet-side-by-side.js"></script>
         <script src="js/multi-style-layer.js"></script>
         <script src="js/leaflet.rotatedMarker.js"></script>
         <script src="js/leaflet.pattern.js"></script>
@@ -1519,6 +1520,17 @@
 #index-methodology th{font-weight:600;color:#6b7280}
 .methodology-caveat{padding:7px 8px;border-left:3px solid #f59e0b;background:#fffbeb;border-radius:4px}
 .legend-row{display:none;margin:0 0 10px 22px}.legend-bar{height:10px;border-radius:3px}.legend-labels{display:flex;justify-content:space-between;font-size:9px;color:#9ca3af;margin-top:2px}.legend-swatches{display:none;flex-direction:column;gap:2px;margin:0 0 10px 22px}.legend-swatches .sw-row{display:flex;align-items:center;gap:6px;font-size:10px;color:#4b5563}.legend-swatches .sw-color{width:14px;height:10px;border-radius:2px;flex-shrink:0}.legend-caption{margin-top:4px;font-size:9px;line-height:1.4;color:#6b7280}
+#swipe-comparison{margin:10px 0;padding-top:8px;border-top:1px solid #e5e7eb}
+#swipe-comparison summary{font-size:10px;font-weight:700;color:#374151;cursor:pointer}
+#swipe-comparison .swipe-fields{display:grid;gap:6px;margin-top:8px}
+#swipe-comparison label{display:block;font-size:9px;color:#6b7280}
+#swipe-comparison select{box-sizing:border-box;width:100%;margin-top:3px;padding:5px;border:1px solid #d1d5db;border-radius:5px;background:#fff;font:10px 'Segoe UI',Arial,sans-serif;color:#374151}
+#swipe-comparison button{width:100%;margin-top:8px;padding:6px;border:0;border-radius:6px;background:#2563eb;color:#fff;font:600 10px 'Segoe UI',Arial,sans-serif;cursor:pointer}
+#swipe-comparison button:hover{background:#1d4ed8}
+#swipe-comparison button:disabled{background:#9ca3af;cursor:not-allowed}
+#swipe-comparison .swipe-note{margin:6px 0 0;font-size:9px;line-height:1.4;color:#6b7280}
+.leaflet-sbs-range{height:28px;margin:0;cursor:ew-resize;touch-action:none}
+.leaflet-sbs-divider{margin-left:-2px;width:4px;background:#fff;box-shadow:0 0 0 1px rgba(31,41,55,.45),0 0 8px rgba(0,0,0,.25)}
 #layer-panel .legend-gradient{display:block;width:100%;height:12px;object-fit:fill;border-radius:3px}
 #topright-stack{position:absolute;top:16px;right:16px;z-index:1000;display:flex;flex-direction:column;gap:10px;align-items:flex-end}.round-btn{width:42px;height:42px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px}#btn-locate{background:#1f2937;color:#fff}#btn-locate.tracking{background:#16a34a}#buffer-control{display:none;padding:10px 12px;width:160px}#buffer-control label{display:block;font-size:10px;color:#6b7280;margin-bottom:4px}#buffer-control select{width:100%;font-size:12px;padding:4px;border-radius:6px;border:1px solid #e5e7eb}
 #nearby-faskes-panel{display:none;position:absolute;top:140px;right:16px;bottom:auto;left:auto;z-index:1000;width:230px;padding:12px 16px;max-height:240px;overflow-y:auto}#nearby-faskes-panel h4,#attribute-panel h4{margin:0 0 6px;font-size:12px;color:#111827}.nearby-row{font-size:11px;color:#374151;padding:4px 0;border-bottom:1px solid #f3f4f6;cursor:pointer}.nearby-row:last-child{border-bottom:none}.nearby-row:hover{color:#1f2937;font-weight:600}.nearby-empty{font-size:11px;color:#9ca3af}
@@ -1555,6 +1567,7 @@
 #coord-display{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);z-index:1000;padding:6px 16px;font-family:'Courier New',monospace;font-size:12px;color:#374151}
 </style>
 <div id="webgis-header"><h1>WebGIS Indeks Paparan Lingkungan ISPA DKI Jakarta</h1><p>Integrasi LST, NO₂, NDVI, NDBI, dan Proksi Jalan - Multitemporal Q4 2023–Q1 2026</p></div>
+<button type="button" id="mobile-layer-toggle" aria-controls="layer-panel" aria-expanded="false"><i class="fas fa-layer-group" aria-hidden="true"></i><span>Layer</span></button>
 <div id="layer-panel" class="wgis-card"><h3>Layer Peta</h3><span class="group-title">Peta Dasar</span><label><input type="radio" name="basemap" id="basemap-osm" checked> OSM Standard</label><label><input type="radio" name="basemap" id="basemap-esri"> ESRI Satellite</label><span class="group-title">Waktu</span><div id="time-control"><input type="range" id="time-slider" min="0" max="3" step="1" value="0"><div class="time-ticks"><span data-q="0">Q1</span><span data-q="1">Q2</span><span data-q="2">Q3</span><span data-q="3">Q4</span></div><div class="time-note">Berlaku untuk layer bertitik dua di bawah yang sedang dicentang</div></div>
 <span class="group-title">Indeks Paparan ISPA</span><label><input type="checkbox" id="ly-risiko-kelurahan" checked> Per Kelurahan</label><div class="opacity-row"><input type="range" id="op-risiko-kelurahan" min="0" max="1" step="0.1" value="1"><span id="op-risiko-kelurahan-val">100%</span></div><div class="legend-swatches" id="legend-risiko-kelurahan"><div class="sw-row"><span class="sw-color" style="background:#FFF5F0"></span>Relatif Sangat Rendah</div><div class="sw-row"><span class="sw-color" style="background:#FCBEA5"></span>Relatif Rendah</div><div class="sw-row"><span class="sw-color" style="background:#FB7050"></span>Relatif Sedang</div><div class="sw-row"><span class="sw-color" style="background:#D32020"></span>Relatif Tinggi</div><div class="sw-row"><span class="sw-color" style="background:#67000D"></span>Relatif Sangat Tinggi</div><div class="legend-caption">Kelas menunjukkan peringkat paparan lingkungan relatif, bukan tingkat risiko kesehatan.</div></div>
 <label><input type="checkbox" id="ly-risiko-raster"> Komposit (Raster)</label><div class="opacity-row"><input type="range" id="op-risiko-raster" min="0" max="1" step="0.1" value="1" disabled><span id="op-risiko-raster-val">100%</span></div><div class="legend-row" id="legend-risiko-raster"><div class="legend-bar" style="background:linear-gradient(to right,#2c0a52,#1f4fd8,#00b4d8,#4caf50,#ffeb3b,#ff9800,#b71c1c)"></div><div class="legend-labels"><span>Rendah</span><span>Tinggi</span></div></div>
@@ -1594,6 +1607,19 @@ incidenceLegend.id='legend-insiden-ispa-2025';
 rasterRiskLabel.parentNode.insertBefore(incidenceLabel,rasterRiskLabel);
 rasterRiskLabel.parentNode.insertBefore(incidenceOpacity,rasterRiskLabel);
 rasterRiskLabel.parentNode.insertBefore(incidenceLegend,rasterRiskLabel);
+var swipeDetails=document.createElement('details');
+swipeDetails.id='swipe-comparison';
+swipeDetails.innerHTML=
+    '<summary>Perbandingan Peta (Swipe)</summary>' +
+    '<div class="swipe-fields">' +
+    '<label for="swipe-left-layer">Sisi kiri</label>' +
+    '<select id="swipe-left-layer"></select>' +
+    '<label for="swipe-right-layer">Sisi kanan</label>' +
+    '<select id="swipe-right-layer"></select>' +
+    '</div>' +
+    '<button type="button" id="swipe-toggle">Mulai perbandingan</button>' +
+    '<p class="swipe-note">Geser pembatas di tengah peta. Saat aktif, kontrol kuartal dan layer indeks biasa dijeda.</p>';
+document.getElementById('index-methodology').before(swipeDetails);
 var environmentalDataInfo={
     'ly-insiden-ispa-2025':{
         title:'Insiden ISPA 2025 per Kelurahan',
@@ -1768,6 +1794,100 @@ incidenceOpacityInput.addEventListener('input',function(){
     setOpacity(incidenceLayer,amount);
     document.getElementById('op-insiden-ispa-2025-val').textContent=
         Math.round(amount*100)+'%';
+});
+var swipeChoices=[
+    {id:'exposure-q1',label:'Indeks Paparan Q1 2026',data:json_RisikoISPAKelurahanQ1_26,style:style_RisikoISPAKelurahanQ1_26_0},
+    {id:'exposure-q2',label:'Indeks Paparan Q2 2025',data:json_RisikoISPAKelurahanQ2_25,style:style_RisikoISPAKelurahanQ2_25_0},
+    {id:'exposure-q3',label:'Indeks Paparan Q3 2024',data:json_RisikoISPAKelurahanQ3_24,style:style_RisikoISPAKelurahanQ3_24_0},
+    {id:'exposure-q4',label:'Indeks Paparan Q4 2023',data:json_RisikoISPAKelurahanQ4_23,style:style_RisikoISPAKelurahanQ4_23_0},
+    {id:'incidence-2025',label:'Insiden ISPA tahunan 2025',data:{type:'FeatureCollection',features:incidenceFeatures},style:incidenceLayer.options.style}
+];
+var swipeLeftSelect=document.getElementById('swipe-left-layer');
+var swipeRightSelect=document.getElementById('swipe-right-layer');
+swipeChoices.forEach(function(choice){
+    [swipeLeftSelect,swipeRightSelect].forEach(function(select){
+        var option=document.createElement('option');
+        option.value=choice.id;
+        option.textContent=choice.label;
+        select.appendChild(option);
+    });
+});
+swipeLeftSelect.value='exposure-q3';
+swipeRightSelect.value='exposure-q1';
+var swipeToggle=document.getElementById('swipe-toggle');
+var swipeControl=null;
+var swipeLeftLayer=null;
+var swipeRightLayer=null;
+var swipeSavedVisibility=null;
+var swipeComparisonLayers=quarterlyLayers.risikoKelurahan
+    .concat(quarterlyLayers.risikoRaster,[incidenceLayer]);
+if(!map.getPane('pane_SwipeLeft'))map.createPane('pane_SwipeLeft');
+if(!map.getPane('pane_SwipeRight'))map.createPane('pane_SwipeRight');
+map.getPane('pane_SwipeLeft').style.zIndex=451;
+map.getPane('pane_SwipeRight').style.zIndex=452;
+function makeSwipeLayer(choice,paneName){
+    var renderer=L.svg({pane:paneName});
+    var layer=L.geoJSON(choice.data,{
+        pane:paneName,
+        renderer:renderer,
+        style:function(feature){
+            return Object.assign({},choice.style(feature),{pane:paneName});
+        },
+        onEachFeature:function(feature,featureLayer){
+            featureLayer.on('click',function(){showKelurahanInfo(feature.properties)});
+        }
+    });
+    layer.getContainer=function(){return renderer._container};
+    return layer;
+}
+function selectedSwipeChoice(select){
+    return swipeChoices.filter(function(choice){return choice.id===select.value})[0];
+}
+function startSwipeComparison(){
+    var leftChoice=selectedSwipeChoice(swipeLeftSelect);
+    var rightChoice=selectedSwipeChoice(swipeRightSelect);
+    if(!leftChoice||!rightChoice||leftChoice.id===rightChoice.id){
+        window.alert('Pilih dua layer yang berbeda untuk dibandingkan.');
+        return;
+    }
+    swipeSavedVisibility=swipeComparisonLayers.map(function(layer){return map.hasLayer(layer)});
+    ['time-slider','ly-risiko-kelurahan','ly-risiko-raster','ly-insiden-ispa-2025'].forEach(function(id){
+        var control=document.getElementById(id);
+        control.dataset.swipeWasDisabled=String(control.disabled);
+        control.disabled=true;
+    });
+    swipeComparisonLayers.forEach(function(layer){setVisible(layer,false)});
+    swipeLeftLayer=makeSwipeLayer(leftChoice,'pane_SwipeLeft');
+    swipeRightLayer=makeSwipeLayer(rightChoice,'pane_SwipeRight');
+    swipeLeftLayer.addTo(map);
+    swipeRightLayer.addTo(map);
+    swipeControl=L.control.sideBySide(swipeLeftLayer,swipeRightLayer,{padding:8}).addTo(map);
+    swipeToggle.textContent='Hentikan perbandingan';
+    swipeLeftSelect.disabled=true;
+    swipeRightSelect.disabled=true;
+}
+function stopSwipeComparison(){
+    if(swipeControl){swipeControl.remove();swipeControl=null}
+    if(swipeLeftLayer){map.removeLayer(swipeLeftLayer);swipeLeftLayer=null}
+    if(swipeRightLayer){map.removeLayer(swipeRightLayer);swipeRightLayer=null}
+    if(swipeSavedVisibility){
+        swipeComparisonLayers.forEach(function(layer,index){
+            setVisible(layer,swipeSavedVisibility[index]);
+        });
+        swipeSavedVisibility=null;
+    }
+    ['time-slider','ly-risiko-kelurahan','ly-risiko-raster','ly-insiden-ispa-2025'].forEach(function(id){
+        var control=document.getElementById(id);
+        control.disabled=control.dataset.swipeWasDisabled==='true';
+        delete control.dataset.swipeWasDisabled;
+    });
+    swipeToggle.textContent='Mulai perbandingan';
+    swipeLeftSelect.disabled=false;
+    swipeRightSelect.disabled=false;
+}
+swipeToggle.addEventListener('click',function(){
+    if(swipeControl){stopSwipeComparison();return}
+    startSwipeComparison();
 });
 var riskSearchControl=document.createElement('div');riskSearchControl.id='risk-search-control';riskSearchControl.className='wgis-card';riskSearchControl.innerHTML='<label for="risk-search-input">Cari Kelurahan</label><input id="risk-search-input" type="search" placeholder="Ketik nama kelurahan" autocomplete="off" aria-controls="risk-search-results" aria-autocomplete="list"><div id="risk-search-results" role="listbox"></div>';var topRightStack=document.getElementById('topright-stack'),riskSearchButton=document.createElement('button');riskSearchButton.type='button';riskSearchButton.id='btn-risk-search';riskSearchButton.className='round-btn';riskSearchButton.title='Cari Kelurahan';riskSearchButton.setAttribute('aria-label','Cari Kelurahan');riskSearchButton.setAttribute('aria-expanded','false');riskSearchButton.innerHTML='<i class="fas fa-search" aria-hidden="true"></i>';topRightStack.insertBefore(riskSearchButton,document.getElementById('btn-locate'));topRightStack.appendChild(riskSearchControl);riskSearchButton.addEventListener('click',function(){var isOpen=riskSearchControl.classList.toggle('open');riskSearchButton.setAttribute('aria-expanded',String(isOpen));if(isOpen){var orderDetails=document.getElementById('order-details'),orderButton=document.getElementById('btn-order');if(orderDetails)orderDetails.style.display='none';if(orderButton)orderButton.setAttribute('aria-expanded','false');riskSearchInput.focus()}else closeRiskSearch()});
 var riskSearchInput=document.getElementById('risk-search-input'),riskSearchResults=document.getElementById('risk-search-results'),riskSearchIndex=[],riskSearchByName=Object.create(null);
@@ -2281,9 +2401,105 @@ locateButton.addEventListener('click',function(){if(watchId!==null){clearNearbyF
 #nearby-faskes-close{flex-shrink:0;width:24px;height:24px;padding:0;border:0;border-radius:6px;background:#f3f4f6;color:#374151;cursor:pointer;font-size:18px;line-height:1}
 #nearby-faskes-close:hover{background:#e5e7eb}
 #nearby-faskes-close:focus-visible{outline:2px solid #2563eb;outline-offset:2px}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #2563eb;outline-offset:2px}
+#mobile-layer-toggle{display:none}
+@media (max-width:700px){
+    html,body,#map{height:100%;height:100dvh;min-height:100%}
+    #mobile-layer-toggle{
+        position:absolute;top:calc(env(safe-area-inset-top) + 10px);left:calc(env(safe-area-inset-left) + 10px);
+        z-index:1102;display:flex;align-items:center;justify-content:center;gap:7px;min-width:44px;height:44px;
+        padding:0 12px;border:0;border-radius:12px;background:#fff;color:#1f2937;
+        box-shadow:0 3px 12px rgba(0,0,0,.2);font:600 12px 'Segoe UI',Arial,sans-serif;cursor:pointer
+    }
+    #mobile-layer-toggle[aria-expanded="true"]{background:#1f2937;color:#fff}
+    #webgis-header{
+        top:calc(env(safe-area-inset-top) + 62px);left:10px;right:10px;transform:none;
+        box-sizing:border-box;width:auto;max-width:none;padding:7px 10px;border-radius:10px
+    }
+    #webgis-header h1{font-size:12px;line-height:1.3}
+    #webgis-header p{font-size:9px;line-height:1.3}
+    #layer-panel{
+        display:none!important;box-sizing:border-box;top:auto;right:10px;bottom:calc(env(safe-area-inset-bottom) + 10px);
+        left:10px;width:auto;max-height:min(74dvh,680px);padding:14px;
+        overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch
+    }
+    #layer-panel.mobile-open{display:block!important}
+    #layer-panel label{min-height:36px;gap:9px;font-size:13px}
+    #layer-panel input[type="checkbox"],#layer-panel input[type="radio"]{width:18px;height:18px;flex:0 0 18px}
+    #layer-panel input[type="range"]{min-height:32px;touch-action:pan-y}
+    #layer-panel .group-title{font-size:10px}
+    #layer-panel .legend-row,#layer-panel .legend-swatches{margin-left:27px}
+    #swipe-comparison select,#swipe-comparison button{min-height:40px;font-size:12px}
+    #swipe-comparison summary{min-height:36px;display:flex;align-items:center;font-size:12px}
+    #topright-stack{
+        top:calc(env(safe-area-inset-top) + 10px);right:calc(env(safe-area-inset-right) + 10px);
+        gap:8px
+    }
+    #topright-actions{gap:7px}
+    .round-btn{width:44px;height:44px;font-size:17px}
+    #buffer-control{width:min(190px,calc(100vw - 24px));padding:10px}
+    #buffer-control select{min-height:38px}
+    #order-details{top:52px;right:0;width:min(290px,calc(100vw - 20px));max-height:65dvh}
+    #nearby-faskes-panel{
+        top:calc(env(safe-area-inset-top) + 112px);right:10px;left:10px;bottom:auto;
+        box-sizing:border-box;width:auto;max-height:34dvh;padding:12px;overflow-y:auto
+    }
+    #nearby-faskes-panel .nearby-row{min-height:36px;display:flex;align-items:center;font-size:12px}
+    #bottomright-stack{
+        right:calc(env(safe-area-inset-right) + 8px);bottom:calc(env(safe-area-inset-bottom) + 24px);
+        max-width:min(250px,calc(100vw - 16px));gap:6px
+    }
+    #attribute-panel{
+        box-sizing:border-box;width:min(250px,calc(100vw - 16px));max-height:30dvh;
+        overflow-y:auto;padding:10px 12px;border:0;border-radius:10px;background:rgba(255,255,255,.96);
+        box-shadow:0 3px 12px rgba(0,0,0,.18)
+    }
+    #attribute-panel .attribute-detail{font-size:12px;line-height:1.45}
+    #credit-panel{display:none}
+    #coord-display{display:none}
+    .leaflet-top.leaflet-left{top:58px}
+    .leaflet-touch .leaflet-bar a{width:42px;height:42px;line-height:42px}
+    .leaflet-popup-content-wrapper{max-width:calc(100vw - 40px)}
+    .leaflet-popup-content{max-width:calc(100vw - 74px);max-height:45dvh;overflow:auto}
+    .leaflet-control-attribution{max-width:calc(100vw - 16px);font-size:9px;line-height:1.4}
+    .leaflet-sbs-range{height:44px}
+}
+@media (max-width:380px){
+    #webgis-header{top:calc(env(safe-area-inset-top) + 61px);padding:6px 8px}
+    #webgis-header p{display:none}
+    #topright-actions{gap:5px}
+    .round-btn{width:40px;height:40px}
+    #bottomright-stack{bottom:calc(env(safe-area-inset-bottom) + 20px)}
+}
+@media (max-width:700px) and (orientation:landscape){
+    #webgis-header{top:calc(env(safe-area-inset-top) + 8px);left:62px;right:162px}
+    #webgis-header p{display:none}
+    #layer-panel{max-height:82dvh}
+    #nearby-faskes-panel{top:calc(env(safe-area-inset-top) + 62px);max-height:48dvh}
+}
 </style>
 <script>
 (function(){
+    var layerToggle=document.getElementById('mobile-layer-toggle');
+    var layerPanel=document.getElementById('layer-panel');
+    function setMobileLayerPanel(open){
+        layerPanel.classList.toggle('mobile-open',open);
+        layerToggle.setAttribute('aria-expanded',String(open));
+        layerToggle.setAttribute('aria-label',open?'Tutup pengaturan layer peta':'Buka pengaturan layer peta');
+    }
+    layerToggle.addEventListener('click',function(){
+        setMobileLayerPanel(!layerPanel.classList.contains('mobile-open'));
+    });
+    document.addEventListener('keydown',function(event){
+        if(event.key==='Escape'&&layerPanel.classList.contains('mobile-open')){
+            setMobileLayerPanel(false);
+            layerToggle.focus();
+        }
+    });
+    window.addEventListener('resize',function(){
+        if(window.matchMedia('(min-width: 701px)').matches)setMobileLayerPanel(false);
+    });
+
     var nearbyPanel=document.getElementById('nearby-faskes-panel');
     var heading=nearbyPanel.querySelector('h4');
     var locateIcon=document.querySelector('#btn-locate i');
