@@ -1893,8 +1893,9 @@ var riskSearchClose=document.createElement('button');riskSearchClose.type='butto
 var riskSearchInput=document.getElementById('risk-search-input'),riskSearchResults=document.getElementById('risk-search-results'),riskSearchIndex=[],riskSearchByName=Object.create(null);
 quarterlyLayers.risikoKelurahan.forEach(function(layer,quarterIndex){layer.eachLayer(function(featureLayer){var name=featureLayer.feature&&featureLayer.feature.properties&&featureLayer.feature.properties.NAMOBJ;if(!name)return;var key=String(name).trim().toLocaleLowerCase(),entry=riskSearchByName[key];if(!entry){entry={name:String(name).trim(),key:key,quarters:[]};riskSearchByName[key]=entry;riskSearchIndex.push(entry)}if(entry.quarters.indexOf(quarterIndex)===-1)entry.quarters.push(quarterIndex)})});
 function closeRiskSearch(){riskSearchResults.classList.remove('open');riskSearchInput.setAttribute('aria-expanded','false')}
-function closeRiskSearchOverlay(){riskSearchControl.classList.remove('open');riskSearchButton.setAttribute('aria-expanded','false');closeRiskSearch();document.querySelectorAll('.search-overlap-hidden').forEach(function(item){item.classList.remove('search-overlap-hidden')})}
-function openRiskSearchOverlay(){riskSearchControl.classList.add('open');riskSearchButton.setAttribute('aria-expanded','true');var orderDetails=document.getElementById('order-details'),orderButton=document.getElementById('btn-order'),layerPanel=document.getElementById('layer-panel'),layerToggle=document.getElementById('mobile-layer-toggle');if(orderDetails)orderDetails.style.display='none';if(orderButton)orderButton.setAttribute('aria-expanded','false');layerPanel.classList.remove('mobile-open');document.body.classList.remove('mobile-sheet-open');layerToggle.setAttribute('aria-expanded','false');document.getElementById('nearby-faskes-panel').classList.add('search-overlap-hidden');document.getElementById('buffer-control').classList.add('search-overlap-hidden');riskSearchInput.focus()}
+function closeRiskSearchOverlay(){var wasOpen=riskSearchControl.classList.contains('open');riskSearchControl.classList.remove('open');riskSearchButton.setAttribute('aria-expanded','false');closeRiskSearch();if(wasOpen)document.querySelectorAll('.search-overlap-hidden').forEach(function(item){item.classList.remove('search-overlap-hidden')})}
+window.closeRiskSearchOverlay=closeRiskSearchOverlay;
+function openRiskSearchOverlay(){riskSearchControl.classList.add('open');riskSearchButton.setAttribute('aria-expanded','true');var orderDetails=document.getElementById('order-details'),orderButton=document.getElementById('btn-order'),layerPanel=document.getElementById('layer-panel'),layerToggle=document.getElementById('mobile-layer-toggle');if(orderDetails)orderDetails.style.display='none';if(orderButton)orderButton.setAttribute('aria-expanded','false');layerPanel.classList.remove('mobile-open','sheet-full');document.body.classList.remove('mobile-sheet-open');layerToggle.setAttribute('aria-expanded','false');document.getElementById('nearby-faskes-panel').classList.add('search-overlap-hidden');document.getElementById('buffer-control').classList.add('search-overlap-hidden');riskSearchInput.focus()}
 document.getElementById('btn-locate').addEventListener('click',closeRiskSearchOverlay);
 map.on('popupopen',function(event){var feature=event.popup._source&&event.popup._source.feature;if(feature&&feature.properties&&feature.properties.klasifikasi!==undefined)showKelurahanInfo(feature.properties)});
 function selectRiskSearchResult(result){var selectedFeature=null,selectedQuarter=currentTimeIndex;function findInQuarter(quarter){var found=null;quarterlyLayers.risikoKelurahan[quarter].eachLayer(function(featureLayer){var name=featureLayer.feature&&featureLayer.feature.properties&&featureLayer.feature.properties.NAMOBJ;if(name&&String(name).trim().toLocaleLowerCase()===result.key)found=featureLayer});return found}selectedFeature=findInQuarter(selectedQuarter);if(!selectedFeature){for(var quarter=0;quarter<quarterlyLayers.risikoKelurahan.length;quarter++){selectedFeature=findInQuarter(quarter);if(selectedFeature){selectedQuarter=quarter;break}}}if(!selectedFeature)return;if(selectedQuarter!==currentTimeIndex){var timeSlider=document.getElementById('time-slider');timeSlider.value=selectedQuarter;timeSlider.dispatchEvent(new Event('input',{bubbles:true}))}if(!quarterlyState.risikoKelurahan.checked){var vectorCheckbox=document.getElementById('ly-risiko-kelurahan');vectorCheckbox.checked=true;vectorCheckbox.dispatchEvent(new Event('change',{bubbles:true}))}setVisible(quarterlyLayers.risikoKelurahan[selectedQuarter],true);riskSearchInput.value=result.name;closeRiskSearchOverlay();map.closePopup();map.fitBounds(selectedFeature.getBounds(),{maxZoom:15,padding:[24,24]});lastLatLng=selectedFeature.getBounds().getCenter();bufferControl.style.display='block';updateBufferAndNearby(lastLatLng);selectedFeature.openPopup()}
@@ -1906,6 +1907,9 @@ function wireBoundaryPair(checkId,opacityId,line,polygon,checked){var checkbox=d
 var attributePanel=document.getElementById('attribute-panel');function showKelurahanInfo(properties){var risk=riskFor(properties.klasifikasi);attributePanel.style.display='block';attributePanel.innerHTML='<h4>'+(properties.WADMKD||'-')+', '+(properties.WADMKC||'-')+'</h4><span class="risk-badge" style="background:'+risk.color+';color:'+risk.text+'">'+labelKlasifikasiRisiko(properties.klasifikasi)+'</span> ('+safe(properties.risiko_ispa_normalisasi)+')<table><tr><td>Min</td><td>'+safe(properties.min)+'</td><td>Max</td><td>'+safe(properties.max)+'</td></tr><tr><td>Mean</td><td>'+safe(properties.mean)+'</td><td>Std</td><td>'+safe(properties.std)+'</td></tr><tr><td>Luas</td><td colspan="3">'+safe(properties.LUASWH)+' m²</td></tr></table>';attributePanel.querySelector('table').before(createISPAIncidenceDetail(properties))}quarterlyLayers.risikoKelurahan.forEach(function(layer){layer.on('click',function(event){showKelurahanInfo(event.layer.feature.properties)})});var coordinates=document.getElementById('coord-display');map.on('mousemove',function(event){coordinates.textContent='Lat: '+event.latlng.lat.toFixed(6)+', Lng: '+event.latlng.lng.toFixed(6)});map.on('mouseout',function(){coordinates.textContent='Lat: -, Lng: -'});
 incidenceLayer.on('click',function(event){showKelurahanInfo(event.layer.feature.properties)});
 var locateButton=document.getElementById('btn-locate'),bufferControl=document.getElementById('buffer-control'),radiusSelect=document.getElementById('buffer-radius'),nearbyPanel=document.getElementById('nearby-faskes-panel'),nearbyList=document.getElementById('nearby-faskes-list'),watchId=null,meMarker=null,bufferCircle=null,lastLatLng=null;
+nearbyPanel.insertBefore(bufferControl,nearbyList);
+map.on('popupopen',function(){nearbyPanel.classList.add('mobile-popup-hidden');bufferControl.classList.add('mobile-popup-hidden')});
+map.on('popupclose',function(){nearbyPanel.classList.remove('mobile-popup-hidden');bufferControl.classList.remove('mobile-popup-hidden')});
 function updateBufferAndNearby(latlng){
     var radius=parseInt(radiusSelect.value,10);
     if(bufferCircle)map.removeLayer(bufferCircle);
@@ -2058,25 +2062,47 @@ locateButton.addEventListener('click',function(){if(watchId!==null){clearNearbyF
     details.querySelector('#order-close').addEventListener('click', function () {
         details.style.display = 'none';
         orderButton.setAttribute('aria-expanded', 'false');
+        document.querySelectorAll('.search-overlap-hidden').forEach(function (item) {
+            item.classList.remove('search-overlap-hidden');
+        });
     });
     orderButton.addEventListener('click', function () {
         var isOpen = details.style.display === 'block';
         if (!isOpen) {
-            closeRiskSearchOverlay();
+            if(window.closeRiskSearchOverlay)window.closeRiskSearchOverlay();
+            document.getElementById('nearby-faskes-panel').classList.add('search-overlap-hidden');
+            document.getElementById('buffer-control').classList.add('search-overlap-hidden');
         }
         details.style.display = isOpen ? 'none' : 'block';
         orderButton.setAttribute('aria-expanded', String(!isOpen));
+        if (isOpen) {
+            document.querySelectorAll('.search-overlap-hidden').forEach(function (item) {
+                item.classList.remove('search-overlap-hidden');
+            });
+        }
     });
     document.addEventListener('click', function (event) {
         if (!details.contains(event.target) && !orderButton.contains(event.target)) {
+            var wasOpen = details.style.display === 'block';
             details.style.display = 'none';
             orderButton.setAttribute('aria-expanded', 'false');
+            if (wasOpen) {
+                document.querySelectorAll('.search-overlap-hidden').forEach(function (item) {
+                    item.classList.remove('search-overlap-hidden');
+                });
+            }
         }
     });
     document.addEventListener('keydown', function (event) {
         if (event.key === 'Escape') {
+            var wasOpen = details.style.display === 'block';
             details.style.display = 'none';
             orderButton.setAttribute('aria-expanded', 'false');
+            if (wasOpen) {
+                document.querySelectorAll('.search-overlap-hidden').forEach(function (item) {
+                    item.classList.remove('search-overlap-hidden');
+                });
+            }
         }
     });
     var list = details.querySelector('#order-list');
@@ -2263,7 +2289,7 @@ locateButton.addEventListener('click',function(){if(watchId!==null){clearNearbyF
             '<h3 id="seasonal-info-title" aria-live="polite">Konteks Musiman</h3>' +
             '<button type="button" class="seasonal-collapse-button" aria-expanded="true" aria-controls="seasonal-info-content">Tutup</button>' +
         '</div><div id="seasonal-info-content"></div>';
-    layerPanel.insertBefore(panel, methodology);
+    methodology.parentNode.insertBefore(panel, methodology);
 
     var title = panel.querySelector('#seasonal-info-title');
     var content = panel.querySelector('#seasonal-info-content');
@@ -2419,7 +2445,8 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
         border-radius:16px 16px 0 0;transition:height .24s ease,box-shadow .24s ease;
         padding-bottom:env(safe-area-inset-bottom)
     }
-    #layer-panel.mobile-open{height:min(82dvh,720px);overflow-y:auto}
+    #layer-panel.mobile-open{height:min(46dvh,420px);overflow-y:auto}
+    #layer-panel.mobile-open.sheet-full{height:min(82dvh,720px)}
     #layer-panel h3{display:none}
     #layer-panel-content{display:none;padding:0 0 16px}
     #layer-panel.mobile-open #layer-panel-content{display:block}
@@ -2442,16 +2469,19 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
     #swipe-comparison select,#swipe-comparison button{min-height:40px;font-size:12px}
     #swipe-comparison summary{min-height:36px;display:flex;align-items:center;font-size:12px}
     #topright-stack{
-        top:calc(env(safe-area-inset-top) + 66px);right:auto;left:50%;transform:translateX(-50%);
-        display:block;width:max-content;max-width:calc(100vw - 20px);z-index:1101
+        top:calc(env(safe-area-inset-top) + 66px);right:calc(env(safe-area-inset-right) + 10px);
+        left:auto;transform:none;display:block;width:max-content;max-width:calc(100vw - 20px);z-index:1101
     }
-    #topright-actions{display:flex;justify-content:center;gap:10px}
+    #topright-actions{display:flex;flex-direction:column;align-items:center;gap:8px}
     .round-btn{width:42px;height:42px;font-size:16px}
-    #buffer-control{position:fixed;top:calc(env(safe-area-inset-top) + 108px);right:12px;width:min(190px,calc(100vw - 24px));padding:10px}
+    #buffer-control{position:static;box-sizing:border-box;width:100%;margin:0 0 8px;padding:0 0 8px;border:0;border-bottom:1px solid #e5e7eb;border-radius:0;box-shadow:none}
     #buffer-control select{min-height:38px}
-    #order-details{top:48px;right:0;width:min(290px,calc(100vw - 20px));max-height:45dvh}
+    #order-details{position:fixed;top:calc(env(safe-area-inset-top) + 118px);right:calc(env(safe-area-inset-right) + 62px);width:min(280px,calc(100vw - 82px));max-height:50dvh;z-index:1205}
+    #order-list{touch-action:none}
+    #order-list li{min-height:44px}
+    #order-list .grip{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:6px;background:#f3f4f6;touch-action:none}
     #risk-search-control{
-        top:calc(env(safe-area-inset-top) + 108px);right:12px;left:12px;width:auto;max-width:420px;
+        top:calc(env(safe-area-inset-top) + 214px);right:12px;left:12px;width:auto;max-width:420px;z-index:1205;
         margin:0 auto;padding:10px;border-radius:12px
     }
     #risk-search-control > label{font-size:12px;padding-right:34px}
@@ -2463,9 +2493,13 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
     .risk-search-empty{padding:12px;font-size:12px}
     .search-overlap-hidden{display:none!important}
     #nearby-faskes-panel{
-        top:calc(env(safe-area-inset-top) + 108px);right:12px;left:auto;bottom:auto;
-        box-sizing:border-box;width:min(250px,calc(100vw - 24px));max-height:36dvh;padding:12px;overflow-y:auto
+        top:calc(env(safe-area-inset-top) + 214px);right:calc(env(safe-area-inset-right) + 62px);
+        left:auto;bottom:auto;box-sizing:border-box;width:min(260px,calc(100vw - 82px));
+        max-height:34dvh;padding:12px;overflow-y:auto;z-index:1101
     }
+    #nearby-faskes-panel h4{font-size:12px}
+    #nearby-faskes-panel .nearby-row{min-height:36px;display:flex;align-items:center;font-size:12px}
+    #nearby-faskes-panel.mobile-popup-hidden,#buffer-control.mobile-popup-hidden{display:none!important}
     #nearby-faskes-panel .nearby-row{min-height:36px;display:flex;align-items:center;font-size:12px}
     #bottomright-stack{
         right:calc(env(safe-area-inset-right) + 8px);bottom:calc(env(safe-area-inset-bottom) + 82px);
@@ -2477,7 +2511,11 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
         box-shadow:0 3px 12px rgba(0,0,0,.18)
     }
     #attribute-panel .attribute-detail{font-size:12px;line-height:1.45}
-    #credit-panel{display:none}
+    #credit-panel{display:block;box-sizing:border-box;width:100%;max-width:none;margin:16px 0 0;padding:12px;border-top:1px solid #e5e7eb;border-radius:0;background:transparent;box-shadow:none}
+    #credit-panel .credit-logos{gap:16px}
+    #credit-panel .credit-logos img{max-height:32px}
+    #credit-panel .credit-person img{width:38px;height:38px}
+    #credit-panel .credit-people{gap:24px}
     #coord-display{display:none}
     .leaflet-top.leaflet-left{top:auto;bottom:84px}
     body.mobile-sheet-open .leaflet-top.leaflet-left{display:none}
@@ -2490,35 +2528,43 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 @media (max-width:380px){
     #webgis-header{top:calc(env(safe-area-inset-top) + 5px);padding:5px 8px}
     #webgis-header p{font-size:8px}
-    #topright-stack{top:calc(env(safe-area-inset-top) + 76px)}
-    #topright-actions{gap:8px}
+    #topright-stack{top:calc(env(safe-area-inset-top) + 66px)}
+    #topright-actions{gap:7px}
     .round-btn{width:40px;height:40px}
     #bottomright-stack{bottom:calc(env(safe-area-inset-bottom) + 82px)}
-    #risk-search-control,#nearby-faskes-panel{top:calc(env(safe-area-inset-top) + 124px)}
-    #buffer-control{top:calc(env(safe-area-inset-top) + 124px)}
+    #risk-search-control{top:calc(env(safe-area-inset-top) + 214px)}
 }
 @media (max-width:700px) and (orientation:landscape){
     #webgis-header{top:calc(env(safe-area-inset-top) + 5px);left:10px;right:10px}
     #webgis-header p{display:none}
     #topright-stack{top:calc(env(safe-area-inset-top) + 48px)}
     #layer-panel{max-height:88dvh}
-    #layer-panel.mobile-open{height:88dvh}
-    #nearby-faskes-panel{top:calc(env(safe-area-inset-top) + 96px);max-height:48dvh}
-    #risk-search-control{top:calc(env(safe-area-inset-top) + 96px)}
+    #layer-panel.mobile-open{height:55dvh}
+    #layer-panel.mobile-open.sheet-full{height:88dvh}
+    #risk-search-control{top:calc(env(safe-area-inset-top) + 156px)}
 }
 </style>
 <script>
 (function(){
     var layerToggle=document.getElementById('mobile-layer-toggle');
     var layerPanel=document.getElementById('layer-panel');
+    var layerPanelContent=document.getElementById('layer-panel-content');
+    layerPanelContent.appendChild(document.getElementById('credit-panel'));
     var dragStartY=null;
     var sheetWasDragged=false;
-    function setMobileLayerPanel(open){
-        if(open&&typeof closeRiskSearchOverlay==='function')closeRiskSearchOverlay();
+    function setMobileLayerState(state){
+        var open=state!=='closed';
+        if(open&&window.closeRiskSearchOverlay)window.closeRiskSearchOverlay();
+        document.getElementById('nearby-faskes-panel').classList.toggle('search-overlap-hidden',open);
+        document.getElementById('buffer-control').classList.toggle('search-overlap-hidden',open);
         layerPanel.classList.toggle('mobile-open',open);
+        layerPanel.classList.toggle('sheet-full',state==='full');
         document.body.classList.toggle('mobile-sheet-open',open);
         layerToggle.setAttribute('aria-expanded',String(open));
-        layerToggle.setAttribute('aria-label',open?'Tutup pengaturan layer peta':'Buka pengaturan layer peta');
+        layerToggle.setAttribute('aria-label',state==='full'?'Layer peta terbuka penuh; tarik ke bawah untuk ukuran setengah':'Layer Peta; tarik untuk membuka atau menutup');
+    }
+    function setMobileLayerPanel(open){
+        setMobileLayerState(open?'half':'closed');
     }
     layerToggle.addEventListener('click',function(event){
         if(sheetWasDragged&&event.detail!==0){
@@ -2539,7 +2585,11 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
     layerToggle.addEventListener('pointerup',function(event){
         if(dragStartY===null)return;
         var delta=event.clientY-dragStartY;
-        if(Math.abs(delta)>24)setMobileLayerPanel(delta<0);
+        if(Math.abs(delta)>24){
+            var isOpen=layerPanel.classList.contains('mobile-open');
+            var isFull=layerPanel.classList.contains('sheet-full');
+            setMobileLayerState(delta<0?(isOpen?'full':'half'):(isFull?'half':'closed'));
+        }
         dragStartY=null;
         if(sheetWasDragged)window.setTimeout(function(){sheetWasDragged=false},250);
     });
