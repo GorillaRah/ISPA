@@ -1637,6 +1637,11 @@ var environmentalDataInfo={
         source:'Dinas Kesehatan Provinsi DKI Jakarta; diunduh dari dinkes.jakarta.go.id.',
         process:'Data tahunan 2025. Insiden dihitung sebagai jumlah pasien ISPA per 1.000 penduduk di setiap kelurahan. Layer ini terpisah dari Indeks Paparan ISPA agar keduanya dapat dibandingkan.'
     },
+    'ly-faskes':{
+        title:'Fasilitas Kesehatan',
+        source:'HealthSite.io.',
+        process:'Data diakses pada 10 September 2026 pukul 10.24 WIB.'
+    },
     'ly-lst':{
         title:'LST (Land Surface Temperature)',
         source:'Landsat 8 (ST_B10, awan < 20%, QA masked).',
@@ -1893,7 +1898,7 @@ function makeSwipeLayer(choice,paneName){
             featureLayer.on('click',function(){showKelurahanInfo(feature.properties)});
         }
     });
-    layer.getContainer=function(){return renderer._container};
+    layer.getContainer=function(){return map.getPane(paneName)};
     return layer;
 }
 function selectedSwipeChoice(select){
@@ -1981,6 +1986,9 @@ function stopSwipeComparison(){
     if(swipeControl){swipeControl.remove();swipeControl=null}
     if(swipeLeftLayer){map.removeLayer(swipeLeftLayer);swipeLeftLayer=null}
     if(swipeRightLayer){map.removeLayer(swipeRightLayer);swipeRightLayer=null}
+    ['pane_SwipeLeft','pane_SwipeRight'].forEach(function(paneName){
+        map.getPane(paneName).style.clip='';
+    });
     if(swipeSavedVisibility){
         swipeComparisonLayers.forEach(function(layer,index){
             setVisible(layer,swipeSavedVisibility[index]);
