@@ -1766,7 +1766,7 @@ function attachEnvironmentalHelp(help,info){
     help.className='env-help';
     help.textContent='?';
     help.setAttribute('role','img');
-    help.setAttribute('aria-label',info.title+': Sumber: '+info.source+' Proses: '+info.process+(info.clarification?' Data Sentinel-2: '+info.clarification.join(' '):''));
+    help.setAttribute('aria-label',info.title+': Sumber: '+info.source+' Proses: '+info.process+(info.clarification?' '+info.clarification.join(' '):''));
     help.addEventListener('mouseenter',function(){
         environmentalTooltip.replaceChildren();
         var title=document.createElement('h4');
@@ -1784,7 +1784,7 @@ function attachEnvironmentalHelp(help,info){
             var warning=document.createElement('div');
             warning.className='env-warning';
             var clarificationHeading=document.createElement('h4');
-            clarificationHeading.textContent='Data Sentinel-2';
+            clarificationHeading.textContent=info.clarificationTitle||'Keterangan';
             warning.appendChild(clarificationHeading);
             info.clarification.forEach(function(note){
                 var clarification=document.createElement('p');
@@ -1820,7 +1820,8 @@ Object.keys(environmentalDataInfo).forEach(function(id){
 var healthsitesInfo={
     title:'Healthsites.io',
     source:'Healthsites.io.',
-    process:'Data diakses pada 10 September 2026 pukul 10.24 WIB melalui healthsites.io.'
+    process:'Data diakses pada 10 September 2026 pukul 10.24 WIB melalui healthsites.io.',
+    clarification:['Mungkin ada fasilitas kurang relevan yang tercatat.']
 };
 var healthsitesHelp=document.createElement('span');
 attachEnvironmentalHelp(healthsitesHelp,healthsitesInfo);
@@ -1830,13 +1831,15 @@ window.updateFaskesInfo=function(source){
     if(source==='osm'){
         info.source='OpenStreetMap contributors, melalui Overpass API.';
         var generatedAt=json_FasilitasKesehatan_OSM.generated_at;
-        info.process='Rumah sakit di Jakarta dari data OSM terbaru yang diunduh pada '+(generatedAt?new Date(generatedAt).toLocaleString('id-ID'):'tanggal tidak tersedia')+'. Sebagian fasilitas mungkin tercatat lebih dari sekali; data dideduplikasi berdasarkan nama dan koordinat, tetapi duplikasi dengan nama atau lokasi berbeda masih mungkin.';
+        info.process='Data rumah sakit OSM terbaru di Jakarta; diperbarui pada '+(generatedAt?new Date(generatedAt).toLocaleString('id-ID'):'tanggal tidak tersedia')+'.';
+        info.clarification=['Data mungkin terduplikasi.'];
     }else{
         info.source='Healthsites.io.';
         info.process='Data diakses pada 10 September 2026 pukul 10.24 WIB melalui healthsites.io.';
+        delete info.clarification;
     }
     if(facilityInfoHelp){
-        facilityInfoHelp.setAttribute('aria-label',info.title+': Sumber: '+info.source+' Proses: '+info.process);
+        facilityInfoHelp.setAttribute('aria-label',info.title+': Sumber: '+info.source+' Proses: '+info.process+(info.clarification?' '+info.clarification.join(' '):''));
     }
 };
 window.initializeFaskesControls();
