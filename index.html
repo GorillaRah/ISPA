@@ -47,6 +47,7 @@
         <script src="data/PolygonKota_28.js"></script>
         <script src="data/PolygonKecamatan_30.js"></script>
         <script src="data/FasilitasKesehatan_33.js"></script>
+        <script src="data/FasilitasKesehatan_OSM.js"></script>
         <script>
         function createISPAIncidenceDetail(properties) {
             var name = String(properties.NAMOBJ || properties.WADMKD || '')
@@ -1357,6 +1358,15 @@
         }
         function pop_FasilitasKesehatan_33(feature, layer) {
             var hospitalBadge = isHospitalFacility(feature.properties) ? '<span class="hospital-popup-badge">RUMAH SAKIT</span><br>' : '';
+            var osmEditedRow = '';
+            if (feature.properties.source_osm && feature.properties.changeset_timestamp) {
+                var editedDate = new Date(feature.properties.changeset_timestamp);
+                if (!isNaN(editedDate.getTime())) {
+                    osmEditedRow = '<tr><td colspan="2"><strong>Terakhir diedit di OSM:</strong> ' +
+                        editedDate.toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'}) +
+                        '</td></tr>';
+                }
+            }
             var popupContent = hospitalBadge + '<table>\
                     <tr>\
                         <td colspan="2">' + (feature.properties['healthcare'] !== null ? autolinker.link(String(feature.properties['healthcare']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
@@ -1364,7 +1374,7 @@
                     <tr>\
                         <td colspan="2">' + (feature.properties['name'] !== null ? autolinker.link(String(feature.properties['name']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
                     </tr>\
-                </table>';
+                ' + osmEditedRow + '</table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
 			layer.on('popupopen', function(e) {
 				addClassToPopupIfMedia(content, e.popup);
@@ -1438,6 +1448,73 @@
             }
         });
         cluster_FasilitasKesehatan_33.addLayer(layer_FasilitasKesehatan_33);
+
+        var facilitySource='healthsites';
+        var facilityStatus=null;
+        var osmAttribution='&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>';
+        function facilityCount(){
+            var count=0;
+            layer_FasilitasKesehatan_33.eachLayer(function(){count++});
+            return count;
+        }
+        function updateFacilityInfo(){
+            if(typeof window.updateFaskesInfo==='function'){
+                window.updateFaskesInfo(facilitySource);
+            }
+        }
+        function updateFacilityStatus(){
+            var prefix=facilityCount()+' titik';
+            if(facilitySource==='osm'){
+                var generatedAt=json_FasilitasKesehatan_OSM.generated_at;
+                prefix+=' · OSM · data diperbarui '+(generatedAt?new Date(generatedAt).toLocaleString('id-ID'):'waktu tidak tersedia');
+            }else{
+                prefix+=' · Healthsites.io';
+            }
+            facilityStatus.textContent=prefix;
+            updateFacilityInfo();
+        }
+        function replaceFacilityData(featureCollection){
+            cluster_FasilitasKesehatan_33.clearLayers();
+            layer_FasilitasKesehatan_33.clearLayers();
+            layer_FasilitasKesehatan_33.addData(featureCollection);
+            cluster_FasilitasKesehatan_33.addLayer(layer_FasilitasKesehatan_33);
+        }
+        function useHealthsites(){
+            facilitySource='healthsites';
+            document.getElementById('faskes-source-healthsites').checked=true;
+            document.getElementById('faskes-source-osm').checked=false;
+            if(map.attributionControl)map.attributionControl.removeAttribution(osmAttribution);
+            replaceFacilityData(json_FasilitasKesehatan_0);
+            updateFacilityStatus();
+            if(typeof window.refreshFaskesNearby==='function')window.refreshFaskesNearby();
+        }
+        function useOsmFacilities(){
+            facilitySource='osm';
+            document.getElementById('faskes-source-healthsites').checked=false;
+            document.getElementById('faskes-source-osm').checked=true;
+            if(map.attributionControl)map.attributionControl.addAttribution(osmAttribution);
+            replaceFacilityData(json_FasilitasKesehatan_OSM);
+            updateFacilityStatus();
+            if(typeof window.refreshFaskesNearby==='function')window.refreshFaskesNearby();
+        }
+        window.initializeFaskesControls=function(){
+            facilityStatus=document.getElementById('faskes-source-status');
+            document.getElementById('faskes-source-healthsites').checked=true;
+            document.getElementById('faskes-source-osm').checked=false;
+            document.getElementById('faskes-source-healthsites').addEventListener('change',function(){
+                if(this.checked)useHealthsites();
+            });
+            document.getElementById('faskes-source-osm').addEventListener('change',function(){
+                if(this.checked)useOsmFacilities();
+            });
+            window.addEventListener('pageshow',function(){
+                if(facilitySource!=='healthsites')return;
+                document.getElementById('faskes-source-healthsites').checked=true;
+                document.getElementById('faskes-source-osm').checked=false;
+                updateFacilityStatus();
+            },{once:true});
+            updateFacilityStatus();
+        };
 
         bounds_group.addLayer(layer_FasilitasKesehatan_33);
         cluster_FasilitasKesehatan_33.addTo(map);
@@ -1538,6 +1615,10 @@
 #topright-stack{position:absolute;top:16px;right:16px;z-index:1000;display:flex;flex-direction:column;gap:10px;align-items:flex-end}#topright-actions{display:flex;flex-direction:column;align-items:center;gap:8px}.round-btn{width:42px;height:42px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px}#btn-locate{background:#1f2937;color:#fff}#btn-locate.tracking{background:#16a34a}#btn-swipe-panel{background:#2563eb;color:#fff}#btn-swipe-panel:hover{background:#1d4ed8}#btn-swipe-panel.active{background:#dc2626;color:#fff}#btn-swipe-panel.active:hover{background:#b91c1c}#btn-swipe-panel:focus-visible{outline:2px solid #1d4ed8;outline-offset:3px}#btn-swipe-panel.active:focus-visible{outline-color:#dc2626}#buffer-control{display:none;padding:10px 12px;width:160px}#buffer-control label{display:block;font-size:10px;color:#6b7280;margin-bottom:4px}#buffer-control select{width:100%;font-size:12px;padding:4px;border-radius:6px;border:1px solid #e5e7eb}
 #nearby-faskes-panel{display:none;position:absolute;top:68px;right:68px;bottom:auto;left:auto;z-index:1000;width:230px;padding:12px 16px;max-height:240px;overflow-y:auto}#nearby-faskes-panel h4,#attribute-panel h4{margin:0 0 6px;font-size:12px;color:#111827}.nearby-row{font-size:11px;color:#374151;padding:4px 0;border-bottom:1px solid #f3f4f6;cursor:pointer}.nearby-row:last-child{border-bottom:none}.nearby-row:hover{color:#1f2937;font-weight:600}.nearby-empty{font-size:11px;color:#9ca3af}
 .nearby-row.hospital-nearby-row{padding-left:7px;border-left:3px solid #dc2626;background:#fef2f2;color:#b91c1c;font-weight:700}
+.faskes-source-options{margin:4px 0 0 8px;padding:0;border:0}
+.faskes-source-options label{display:flex;align-items:flex-start;gap:6px;margin:5px 0;font-size:11px;line-height:1.35}
+.faskes-source-options input{flex:0 0 auto;margin:1px 0 0}
+#faskes-source-status{margin:4px 0 8px 24px;font-size:10px;line-height:1.4;color:#6b7280}
 .hospital-popup-badge{display:inline-block;margin-bottom:4px;padding:2px 6px;border-radius:4px;background:#dc2626;color:#fff;font-size:10px;font-weight:700}
 .hospital-marker-icon{background:transparent;border:0}
 .marker-cluster-hospital{background-color:rgba(220,38,38,.35)}
@@ -1602,7 +1683,7 @@
 <p class="methodology-caveat"><strong>Hasil uji awal:</strong> Indeks diuji terhadap insiden ISPA tahunan 2025 tingkat kelurahan (n = 260) sambil mengontrol kepadatan penduduk sebagai variabel perancu. Korelasi Spearman mentah antara indeks dan insiden hampir nol (rata-rata 4 kuartal: −0,04). Setelah kepadatan dikontrol, korelasinya negatif dan lemah–sedang (korelasi parsial aproksimasi ≈ −0,32), berlawanan dengan arah yang diharapkan (indeks lebih tinggi, insiden lebih tinggi); tambahan R² dari indeks ≈ 0,06 (R² model total ≈ 0,10). Indeks berkorelasi negatif cukup kuat dengan kepadatan penduduk (ρ ≈ −0,63): skor cenderung lebih rendah di kelurahan padat, sejalan dengan pola spasial PC1 di atas. Insiden bersumber dari kasus tercatat di fasilitas kesehatan sehingga dipengaruhi akses dan pelaporan, dan hasil ini adalah asosiasi tingkat kelurahan, bukan bukti sebab-akibat. Data kasus hanya tahunan 2025, sehingga slider kuartal belum divalidasi terhadap insiden kuartalan. Indeks sebaiknya dibaca sebagai gambaran kondisi lingkungan dan pola musiman, bukan sebagai penanda risiko kasus ISPA.</p>
 <p><strong>Rencana perbaikan:</strong> (1) menguji varian indeks yang memisahkan komponen musiman dan spasial (PC2, gabungan PC1–PC2, atau standardisasi per kuartal; standardisasi per kuartal mengorbankan perbandingan skor antar-kuartal); (2) uji bobot alternatif berbasis literatur; (3) validasi dengan data kasus per kuartal bila tersedia</p>
 </div></details>
-<span class="group-title">Variabel Lingkungan</span><label><input type="checkbox" id="ly-lst"> LST (Suhu Permukaan)</label><div class="opacity-row"><input type="range" id="op-lst" min="0" max="1" step="0.1" value="1" disabled><span id="op-lst-val">100%</span></div><div class="legend-row" id="legend-lst"><div class="legend-bar" style="background:linear-gradient(to right,#000,#fff)"></div><div class="legend-labels"><span>Rendah</span><span>Tinggi</span></div></div><label><input type="checkbox" id="ly-no2"> NO₂</label><div class="opacity-row"><input type="range" id="op-no2" min="0" max="1" step="0.1" value="1" disabled><span id="op-no2-val">100%</span></div><div class="legend-row" id="legend-no2"><div class="legend-bar" style="background:linear-gradient(to right,#000,#fff)"></div><div class="legend-labels"><span>Rendah</span><span>Tinggi</span></div></div><label><input type="checkbox" id="ly-ndvi"> NDVI</label><div class="opacity-row"><input type="range" id="op-ndvi" min="0" max="1" step="0.1" value="1" disabled><span id="op-ndvi-val">100%</span></div><div class="legend-row" id="legend-ndvi"><div class="legend-bar" style="background:linear-gradient(to right,#000,#fff)"></div><div class="legend-labels"><span>Rendah</span><span>Tinggi</span></div></div><label><input type="checkbox" id="ly-ndbi"> NDBI</label><div class="opacity-row"><input type="range" id="op-ndbi" min="0" max="1" step="0.1" value="1" disabled><span id="op-ndbi-val">100%</span></div><div class="legend-row" id="legend-ndbi"><div class="legend-bar" style="background:linear-gradient(to right,#000,#fff)"></div><div class="legend-labels"><span>Rendah</span><span>Tinggi</span></div></div><label><input type="checkbox" id="ly-proksi"> Proksi Jalan (Raster)</label><div class="opacity-row"><input type="range" id="op-proksi" min="0" max="1" step="0.1" value="1" disabled><span id="op-proksi-val">100%</span></div><hr><span class="group-title">Batas Wilayah</span><label><input type="checkbox" id="ly-batas-kota" checked> Batas Kota</label><div class="opacity-row"><input type="range" id="op-batas-kota" min="0" max="1" step="0.1" value="1"><span id="op-batas-kota-val">100%</span></div><label><input type="checkbox" id="ly-batas-kecamatan"> Batas Kecamatan</label><div class="opacity-row"><input type="range" id="op-batas-kecamatan" min="0" max="1" step="0.1" value="1" disabled><span id="op-batas-kecamatan-val">100%</span></div><label><input type="checkbox" id="ly-batas-kelurahan"> Batas Kelurahan</label><div class="opacity-row"><input type="range" id="op-batas-kelurahan" min="0" max="1" step="0.1" value="1" disabled><span id="op-batas-kelurahan-val">100%</span></div><hr><span class="group-title">Fasilitas Kesehatan</span><label><input type="checkbox" id="ly-faskes" checked> Tampilkan Titik Faskes</label></div></div>
+<span class="group-title">Variabel Lingkungan</span><label><input type="checkbox" id="ly-lst"> LST (Suhu Permukaan)</label><div class="opacity-row"><input type="range" id="op-lst" min="0" max="1" step="0.1" value="1" disabled><span id="op-lst-val">100%</span></div><div class="legend-row" id="legend-lst"><div class="legend-bar" style="background:linear-gradient(to right,#000,#fff)"></div><div class="legend-labels"><span>Rendah</span><span>Tinggi</span></div></div><label><input type="checkbox" id="ly-no2"> NO₂</label><div class="opacity-row"><input type="range" id="op-no2" min="0" max="1" step="0.1" value="1" disabled><span id="op-no2-val">100%</span></div><div class="legend-row" id="legend-no2"><div class="legend-bar" style="background:linear-gradient(to right,#000,#fff)"></div><div class="legend-labels"><span>Rendah</span><span>Tinggi</span></div></div><label><input type="checkbox" id="ly-ndvi"> NDVI</label><div class="opacity-row"><input type="range" id="op-ndvi" min="0" max="1" step="0.1" value="1" disabled><span id="op-ndvi-val">100%</span></div><div class="legend-row" id="legend-ndvi"><div class="legend-bar" style="background:linear-gradient(to right,#000,#fff)"></div><div class="legend-labels"><span>Rendah</span><span>Tinggi</span></div></div><label><input type="checkbox" id="ly-ndbi"> NDBI</label><div class="opacity-row"><input type="range" id="op-ndbi" min="0" max="1" step="0.1" value="1" disabled><span id="op-ndbi-val">100%</span></div><div class="legend-row" id="legend-ndbi"><div class="legend-bar" style="background:linear-gradient(to right,#000,#fff)"></div><div class="legend-labels"><span>Rendah</span><span>Tinggi</span></div></div><label><input type="checkbox" id="ly-proksi"> Proksi Jalan (Raster)</label><div class="opacity-row"><input type="range" id="op-proksi" min="0" max="1" step="0.1" value="1" disabled><span id="op-proksi-val">100%</span></div><hr><span class="group-title">Batas Wilayah</span><label><input type="checkbox" id="ly-batas-kota" checked> Batas Kota</label><div class="opacity-row"><input type="range" id="op-batas-kota" min="0" max="1" step="0.1" value="1"><span id="op-batas-kota-val">100%</span></div><label><input type="checkbox" id="ly-batas-kecamatan"> Batas Kecamatan</label><div class="opacity-row"><input type="range" id="op-batas-kecamatan" min="0" max="1" step="0.1" value="1" disabled><span id="op-batas-kecamatan-val">100%</span></div><label><input type="checkbox" id="ly-batas-kelurahan"> Batas Kelurahan</label><div class="opacity-row"><input type="range" id="op-batas-kelurahan" min="0" max="1" step="0.1" value="1" disabled><span id="op-batas-kelurahan-val">100%</span></div><hr><span class="group-title">Fasilitas Kesehatan</span><label><input type="checkbox" id="ly-faskes" checked> Tampilkan Titik Faskes</label><fieldset class="faskes-source-options" aria-label="Sumber fasilitas kesehatan"><label><input type="radio" name="faskes-source" id="faskes-source-healthsites" value="healthsites" checked> Healthsites.io </label><label><input type="radio" name="faskes-source" id="faskes-source-osm" value="osm"> Rumah sakit OSM</label><div id="faskes-source-status" role="status" aria-live="polite"></div></fieldset></div></div>
 <div id="topright-stack"><button id="btn-locate" class="round-btn" title="Lokasi Saya" aria-label="Lokasi Saya"><i class="fas fa-location-arrow" aria-hidden="true"></i></button><button id="btn-swipe-panel" class="round-btn" type="button" title="Buka panel Perbandingan Peta" aria-label="Buka panel Perbandingan Peta" aria-controls="swipe-comparison" aria-pressed="false"><i class="fas fa-columns" aria-hidden="true"></i></button><div id="buffer-control" class="wgis-card"><label for="buffer-radius">Radius pencarian faskes</label><select id="buffer-radius"><option value="500">500 m</option><option value="1000" selected>1 km</option><option value="2000">2 km</option><option value="5000">5 km</option></select></div></div><div id="nearby-faskes-panel" class="wgis-card"><h4>Faskes Terdekat</h4><div id="nearby-faskes-list" aria-live="polite"></div></div><div id="bottomright-stack"><div id="attribute-panel" class="wgis-card"></div><div id="credit-panel" class="wgis-card"><div class="credit-title">Dibuat oleh</div><div class="credit-logos"><img src="images/UGMlogo.png" alt="Logo UGM"><img src="images/WaindoLogo.png" alt="Logo Waindo SpecTerra"></div><hr><div class="credit-people"><div class="credit-person"><img src="images/andhi.png" alt="Andhika Bayu Darmawan"><span>Andhika Bayu<br>Darmawan</span></div><div class="credit-person"><img src="images/arda.png" alt="Ardra Adhyatma"><span>Ardra<br>Adhyatma</span></div></div></div></div><div id="coord-display" class="wgis-card">Lat: -, Lng: -</div>
 <script>
 (function(){
@@ -1639,8 +1720,8 @@ var environmentalDataInfo={
     },
     'ly-faskes':{
         title:'Fasilitas Kesehatan',
-        source:'HealthSite.io.',
-        process:'Data diakses pada 10 September 2026 pukul 10.24 WIB.'
+        source:'Healthsites.io.',
+        process:'Data statis lokal; tidak ada permintaan jaringan saat halaman dimuat.'
     },
     'ly-lst':{
         title:'LST (Land Surface Temperature)',
@@ -1680,14 +1761,11 @@ var environmentalTooltip=document.createElement('div');
 environmentalTooltip.className='wgis-card env-tooltip';
 environmentalTooltip.setAttribute('role','tooltip');
 document.body.appendChild(environmentalTooltip);
-Object.keys(environmentalDataInfo).forEach(function(id){
-    var checkbox=document.getElementById(id);
-    if(!checkbox)return;
-    var help=document.createElement('span');
+var facilityInfoHelp=null;
+function attachEnvironmentalHelp(help,info){
     help.className='env-help';
     help.textContent='?';
     help.setAttribute('role','img');
-    var info=environmentalDataInfo[id];
     help.setAttribute('aria-label',info.title+': Sumber: '+info.source+' Proses: '+info.process+(info.clarification?' Data Sentinel-2: '+info.clarification.join(' '):''));
     help.addEventListener('mouseenter',function(){
         environmentalTooltip.replaceChildren();
@@ -1703,34 +1781,65 @@ Object.keys(environmentalDataInfo).forEach(function(id){
             environmentalTooltip.appendChild(paragraph);
         });
         if(info.clarification){
-                var warning=document.createElement('div');
-                warning.className='env-warning';
-                var clarificationHeading=document.createElement('h4');
-                clarificationHeading.textContent='Data Sentinel-2';
-                warning.appendChild(clarificationHeading);
-                info.clarification.forEach(function(note){
-                    var clarification=document.createElement('p');
-                    clarification.textContent=note;
-                    warning.appendChild(clarification);
-                });
-                environmentalTooltip.appendChild(warning);
-            }
+            var warning=document.createElement('div');
+            warning.className='env-warning';
+            var clarificationHeading=document.createElement('h4');
+            clarificationHeading.textContent='Data Sentinel-2';
+            warning.appendChild(clarificationHeading);
+            info.clarification.forEach(function(note){
+                var clarification=document.createElement('p');
+                clarification.textContent=note;
+                warning.appendChild(clarification);
+            });
+            environmentalTooltip.appendChild(warning);
+        }
         environmentalTooltip.style.display='block';
         var iconBounds=help.getBoundingClientRect();
         var tooltipBounds=environmentalTooltip.getBoundingClientRect();
         var left=Math.max(12,Math.min(iconBounds.left,window.innerWidth-tooltipBounds.width-12));
         var top=iconBounds.bottom+8;
-        if(top+tooltipBounds.height>window.innerHeight-12){
-            top=iconBounds.top-tooltipBounds.height-8;
-        }
+        if(top+tooltipBounds.height>window.innerHeight-12)top=iconBounds.top-tooltipBounds.height-8;
         environmentalTooltip.style.left=left+'px';
         environmentalTooltip.style.top=Math.max(12,top)+'px';
     });
     help.addEventListener('mouseleave',function(){
         environmentalTooltip.style.display='none';
     });
-    checkbox.parentNode.appendChild(help);
+}
+Object.keys(environmentalDataInfo).forEach(function(id){
+    var checkbox=document.getElementById(id);
+    if(!checkbox)return;
+    var help=document.createElement('span');
+    var info=environmentalDataInfo[id];
+    attachEnvironmentalHelp(help,info);
+    if(id==='ly-faskes'){
+        facilityInfoHelp=help;
+        document.getElementById('faskes-source-osm').parentNode.appendChild(help);
+    }else checkbox.parentNode.appendChild(help);
 });
+var healthsitesInfo={
+    title:'Healthsites.io',
+    source:'Healthsites.io.',
+    process:'Data diakses pada 10 September 2026 pukul 10.24 WIB melalui healthsites.io.'
+};
+var healthsitesHelp=document.createElement('span');
+attachEnvironmentalHelp(healthsitesHelp,healthsitesInfo);
+document.getElementById('faskes-source-healthsites').parentNode.appendChild(healthsitesHelp);
+window.updateFaskesInfo=function(source){
+    var info=environmentalDataInfo['ly-faskes'];
+    if(source==='osm'){
+        info.source='OpenStreetMap contributors, melalui Overpass API.';
+        var generatedAt=json_FasilitasKesehatan_OSM.generated_at;
+        info.process='Rumah sakit di Jakarta dari data OSM terbaru yang diunduh pada '+(generatedAt?new Date(generatedAt).toLocaleString('id-ID'):'tanggal tidak tersedia')+'. Sebagian fasilitas mungkin tercatat lebih dari sekali; data dideduplikasi berdasarkan nama dan koordinat, tetapi duplikasi dengan nama atau lokasi berbeda masih mungkin.';
+    }else{
+        info.source='Healthsites.io.';
+        info.process='Data diakses pada 10 September 2026 pukul 10.24 WIB melalui healthsites.io.';
+    }
+    if(facilityInfoHelp){
+        facilityInfoHelp.setAttribute('aria-label',info.title+': Sumber: '+info.source+' Proses: '+info.process);
+    }
+};
+window.initializeFaskesControls();
 var riskInfo={'Sangat Rendah':{color:'#FFF5F0',text:'#000'},Rendah:{color:'#FCBEA5',text:'#000'},Sedang:{color:'#FB7050',text:'#000'},Tinggi:{color:'#D32020',text:'#fff'},'Sangat Tinggi':{color:'#67000D',text:'#fff'}}; 
 function riskFor(value){return riskInfo[value]||{color:'#e0e0e0',text:'#000'}}function safe(value){return value===undefined||value===null||value===''?'-':Number(value).toFixed(3)}function setVisible(layer,visible){if(visible){if(!map.hasLayer(layer))map.addLayer(layer)}else if(map.hasLayer(layer))map.removeLayer(layer)}function setOpacity(layer,value){if(typeof layer.setOpacity==='function')layer.setOpacity(value);else if(typeof layer.eachLayer==='function')layer.eachLayer(function(item){item.setStyle({opacity:value,fillOpacity:value})})}
 var currentTimeIndex=0,quarterlyLayers={risikoKelurahan:[layer_RisikoISPAKelurahanQ1_26,layer_RisikoISPAKelurahanQ2_25,layer_RisikoISPAKelurahanQ3_24,layer_RisikoISPAKelurahanQ4_23],risikoRaster:[layer_RisikoISPAQ1_22,layer_RisikoISPAQ2_21,layer_RisikoISPAQ3_20,layer_RisikoISPAQ4_19],lst:[layer_LandSurfaceTempeartureQ1_6,layer_LandSurfaceTemperatureQ2_5,layer_LandSurfaceTemperatureQ3_4,layer_LandSurfaceTemperatureQ4_3],no2:[layer_MeanKadarNO2Q1_10,layer_MeanKadarNO2Q2_9,layer_MeanKadarNO2Q3_8,layer_MeanKadarNO2Q4_7],ndvi:[layer_NDVIQ1_18,layer_NDVIQ2_17,layer_NDVIQ3_16,layer_NDVIQ4_15],ndbi:[layer_NDBIQ1_14,layer_NDBIQ2_13,layer_NDBIQ3_12,layer_NDBIQ4_11]},quarterlyState={};Object.keys(quarterlyLayers).forEach(function(type){quarterlyState[type]={checked:false,opacity:1};quarterlyLayers[type].forEach(function(layer){setVisible(layer,false)})});
@@ -2078,6 +2187,9 @@ function updateBufferAndNearby(latlng){
     });
     nearbyPanel.style.display='block';
 }
+window.refreshFaskesNearby=function(){
+    if(lastLatLng)updateBufferAndNearby(lastLatLng);
+};
 function showNearbyMessage(message,className){nearbyList.innerHTML='';var status=document.createElement('div');status.className=className;status.textContent=message;nearbyList.appendChild(status);nearbyPanel.style.display='block'}
 function clearNearbyLocation(){
     if(meMarker){map.removeLayer(meMarker);meMarker=null}
